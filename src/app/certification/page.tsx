@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { certificationLevels } from '@/data/certification-levels';
+import { CertificationBadge } from '@/components/badges/CertificationBadge';
 
 export const metadata: Metadata = {
   title: 'ARA Certification Levels',
@@ -74,20 +75,31 @@ export default function CertificationPage() {
             <div className="border border-border rounded-lg overflow-hidden">
               {/* Section header */}
               <div className="bg-slate-50 border-b border-border px-6 py-5">
-                <div className="flex items-center gap-3 mb-2">
-                  <LevelBadge level={cl.level} />
-                  <h2 className="text-xl font-semibold text-charcoal">
-                    {cl.name}
-                  </h2>
+                <div className="flex items-start gap-5">
+                  <div className="shrink-0 badge-glow">
+                    <CertificationBadge
+                      level={Number(cl.level.replace('L', '')) as 1 | 2 | 3}
+                      size={72}
+                      variant="dark-on-light"
+                    />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <LevelBadge level={cl.level} />
+                      <h2 className="text-xl font-semibold text-charcoal">
+                        {cl.name}
+                      </h2>
+                    </div>
+                    <p className="text-sm text-muted max-w-2xl">
+                      Level {levelNumber(cl.level)} certification for{' '}
+                      {cl.level === 'L1'
+                        ? 'systems operating under direct human supervision with autonomous components augmenting human decision-making.'
+                        : cl.level === 'L2'
+                          ? 'systems exercising significant autonomy within defined operational boundaries and constraints.'
+                          : 'systems operating autonomously in high-stakes environments where actions may be irreversible, safety-critical, or materially consequential.'}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm text-muted max-w-2xl">
-                  Level {levelNumber(cl.level)} certification for{' '}
-                  {cl.level === 'L1'
-                    ? 'systems operating under direct human supervision with autonomous components augmenting human decision-making.'
-                    : cl.level === 'L2'
-                      ? 'systems exercising significant autonomy within defined operational boundaries and constraints.'
-                      : 'systems operating autonomously in high-stakes environments where actions may be irreversible, safety-critical, or materially consequential.'}
-                </p>
               </div>
 
               {/* Section body */}

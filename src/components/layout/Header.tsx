@@ -26,9 +26,13 @@ export function Header() {
         {/* Top bar */}
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-3 group">
-            <span className="text-lg font-semibold tracking-tight text-charcoal">
-              ARAF
-            </span>
+            <img
+              src="/logos/araf-logo.svg"
+              alt="ARAF — Autonomous Reliability Assurance Foundation"
+              width={120}
+              height={30}
+              className="h-7 w-auto"
+            />
             <span className="hidden sm:inline text-xs font-medium text-muted tracking-wide uppercase">
               ARA Standard
             </span>
