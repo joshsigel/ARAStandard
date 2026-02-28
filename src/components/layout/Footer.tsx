@@ -67,14 +67,23 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-semibold text-charcoal">
-              Autonomous Reliability Assurance Foundation
-            </p>
-            <p className="text-xs text-muted mt-1">
-              ARAF, ARA, and the ARA Certification Mark are registered trademarks
-              of the Autonomous Reliability Assurance Foundation.
-            </p>
+          <div className="flex items-start gap-5">
+            <img
+              src="/logos/araf-wordmark.svg"
+              alt="ARAF"
+              width={80}
+              height={24}
+              className="h-6 w-auto mt-0.5 shrink-0"
+            />
+            <div>
+              <p className="text-sm font-semibold text-charcoal">
+                Autonomous Reliability Assurance Foundation
+              </p>
+              <p className="text-xs text-muted mt-1">
+                ARAF, ARA, and the ARA Certification Mark are registered trademarks
+                of the Autonomous Reliability Assurance Foundation.
+              </p>
+            </div>
           </div>
           <p className="text-xs text-slate-400">
             &copy; {new Date().getFullYear()} ARAF. All rights reserved.

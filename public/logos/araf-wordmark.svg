@@ -1,12 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 120" fill="none">
-  <g fill="#111111">
-    <!-- A (first) -->
-    <path d="M0 120 L48 0 h24 L120 120 h-28 L81.5 88 H38.5 L28 120 H0z M46 66 h30 L61 24 L46 66z"/>
-    <!-- R -->
-    <path d="M132 0 h56 c28 0 46 16 46 38 c0 19-12 32-30 36.5 L238 120 h-30 L178 78 h-18 v42 h-28 V0z M186 58 c14 0 22-8 22-20 s-8-18-22-18 H160 v38 h26z"/>
-    <!-- A (second) -->
-    <path d="M248 120 L296 0 h24 L368 120 h-28 L329.5 88 H286.5 L276 120 H248z M294 66 h30 L309 24 L294 66z"/>
-    <!-- F -->
-    <path d="M380 0 h88 v22 h-60 v26 h52 v22 h-52 v50 h-28 V0z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 250" fill="none">
+  <!--
+    ARAF Wordmark — Bold Geometric Sans-Serif
+    Proportions reconstructed from reference images.
+    Cap height: 250 units. Stroke weight: ~46 units horizontal.
+    Letters: A(210) + R(190) + A(210) + F(182), spacing 16 between each.
+  -->
+  <g fill="#111111" fill-rule="evenodd">
+    <!-- A (first): 0–210 -->
+    <path d="
+      M 0,250 L 105,0 L 210,250 Z
+      M 86,155 L 124,155 L 105,108 Z
+    "/>
+    <!-- R: 226–416 -->
+    <path d="
+      M 226,250
+      L 226,0
+      L 358,0
+      Q 412,0 412,60
+      Q 412,120 358,120
+      L 342,120
+      L 416,250
+      L 370,250
+      L 304,138
+      L 272,138
+      L 272,250
+      Z
+      M 272,42
+      L 340,42
+      Q 370,42 370,72
+      Q 370,98 340,98
+      L 272,98
+      Z
+    "/>
+    <!-- A (second): 432–642 -->
+    <path d="
+      M 432,250 L 537,0 L 642,250 Z
+      M 518,155 L 556,155 L 537,108 Z
+    "/>
   </g>
+  <!-- F: 658–840 (no counter, no evenodd needed) -->
+  <path fill="#111111" d="
+    M 658,250
+    L 658,0
+    L 840,0
+    L 840,44
+    L 704,44
+    L 704,110
+    L 818,110
+    L 818,154
+    L 704,154
+    L 704,250
+    Z
+  "/>
 </svg>
