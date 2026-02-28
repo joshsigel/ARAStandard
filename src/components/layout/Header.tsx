@@ -27,9 +27,9 @@ export function Header() {
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-3 group">
             <img
-              src="/logos/araf-logo.svg"
+              src="/logos/araf-wordmark.svg"
               alt="ARAF — Autonomous Reliability Assurance Foundation"
-              width={120}
+              width={122}
               height={30}
               className="h-7 w-auto"
             />

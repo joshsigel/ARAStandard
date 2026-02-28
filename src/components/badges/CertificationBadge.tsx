@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
 
 interface CertificationBadgeProps {
   level: 1 | 2 | 3;
@@ -15,80 +15,103 @@ export function CertificationBadge({
   size = 240,
   variant = 'dark-on-light',
 }: CertificationBadgeProps) {
+  const uid = useId().replace(/:/g, '');
+
   const colors = {
     'dark-on-light': {
-      border: '#000000',
+      ring: '#000000',
       text: '#000000',
       wordmark: '#000000',
       certId: '#555555',
-      bg: 'transparent',
+      divider: '#000000',
     },
     'light-on-dark': {
-      border: '#FFFFFF',
+      ring: '#FFFFFF',
       text: '#FFFFFF',
       wordmark: '#FFFFFF',
       certId: '#AAAAAA',
-      bg: 'transparent',
+      divider: '#FFFFFF',
     },
     'mono-black': {
-      border: '#000000',
+      ring: '#000000',
       text: '#000000',
       wordmark: '#000000',
       certId: '#333333',
-      bg: 'transparent',
+      divider: '#000000',
     },
     'mono-white': {
-      border: '#FFFFFF',
+      ring: '#FFFFFF',
       text: '#FFFFFF',
       wordmark: '#FFFFFF',
       certId: '#CCCCCC',
-      bg: 'transparent',
+      divider: '#FFFFFF',
     },
   };
 
   const c = colors[variant];
-  const cx = 120;
-  const cy = 120;
-  const outerR = 110;
-  const innerR = 88;
+
+  // High-resolution viewBox for crisp rendering
+  const vb = 480;
+  const cx = vb / 2;
+  const cy = vb / 2;
+  const outerR = 220;
+  const innerR = 176;
+  const textR = 198; // radius for arc text (between rings)
 
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 240 240"
+      viewBox={`0 0 ${vb} ${vb}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label={`ARA Level ${level} Certification Mark — ${certificationId}`}
     >
-      {/* Outer border */}
-      <circle cx={cx} cy={cy} r={outerR} stroke={c.border} strokeWidth="2.5" fill={c.bg} />
+      {/* Outer ring — thick */}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={outerR}
+        stroke={c.ring}
+        strokeWidth="5"
+        fill="none"
+      />
 
-      {/* Inner border */}
-      <circle cx={cx} cy={cy} r={innerR} stroke={c.border} strokeWidth="1.5" fill="none" />
+      {/* Inner ring — thinner */}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={innerR}
+        stroke={c.ring}
+        strokeWidth="2.5"
+        fill="none"
+      />
 
-      {/* Outer ring text — "AUTONOMOUS RELIABILITY ASSURANCE" */}
+      {/* Arc paths for curved text */}
       <defs>
+        {/* Upper arc — text reads left-to-right along the top */}
         <path
-          id={`upperArc-${level}`}
-          d={`M ${cx - outerR + 12},${cy} A ${outerR - 12},${outerR - 12} 0 1,1 ${cx + outerR - 12},${cy}`}
+          id={`upper-${uid}`}
+          d={`M ${cx - textR},${cy} A ${textR},${textR} 0 1,1 ${cx + textR},${cy}`}
         />
+        {/* Lower arc — text reads left-to-right along the bottom (reversed sweep) */}
         <path
-          id={`lowerArc-${level}`}
-          d={`M ${cx + outerR - 14},${cy + 4} A ${outerR - 14},${outerR - 14} 0 1,1 ${cx - outerR + 14},${cy + 4}`}
+          id={`lower-${uid}`}
+          d={`M ${cx + textR},${cy + 6} A ${textR},${textR} 0 1,1 ${cx - textR},${cy + 6}`}
         />
       </defs>
 
+      {/* Upper ring text: "AUTONOMOUS RELIABILITY ASSURANCE" */}
       <text
         fill={c.text}
-        fontSize="9.5"
+        fontSize="19"
         fontFamily="Inter, system-ui, sans-serif"
-        fontWeight="500"
+        fontWeight="600"
         letterSpacing="0.18em"
       >
         <textPath
-          href={`#upperArc-${level}`}
+          href={`#upper-${uid}`}
           startOffset="50%"
           textAnchor="middle"
         >
@@ -96,16 +119,16 @@ export function CertificationBadge({
         </textPath>
       </text>
 
-      {/* Lower ring text — "CERTIFIED" */}
+      {/* Lower ring text: "CERTIFIED" */}
       <text
         fill={c.text}
-        fontSize="10"
+        fontSize="20"
         fontFamily="Inter, system-ui, sans-serif"
-        fontWeight="700"
-        letterSpacing="0.22em"
+        fontWeight="800"
+        letterSpacing="0.24em"
       >
         <textPath
-          href={`#lowerArc-${level}`}
+          href={`#lower-${uid}`}
           startOffset="50%"
           textAnchor="middle"
         >
@@ -113,31 +136,42 @@ export function CertificationBadge({
         </textPath>
       </text>
 
-      {/* Central ARA wordmark */}
+      {/* Central "ARA" wordmark — large, bold */}
       <text
         x={cx}
-        y={cy - 4}
+        y={cy - 12}
         textAnchor="middle"
         dominantBaseline="central"
         fill={c.wordmark}
-        fontSize="48"
+        fontSize="96"
         fontFamily="Inter, system-ui, sans-serif"
-        fontWeight="800"
+        fontWeight="900"
         letterSpacing="-0.02em"
       >
         ARA
       </text>
 
-      {/* Level text */}
+      {/* Horizontal divider line */}
+      <line
+        x1={cx - 42}
+        y1={cy + 28}
+        x2={cx + 42}
+        y2={cy + 28}
+        stroke={c.divider}
+        strokeWidth="1.5"
+        opacity="0.4"
+      />
+
+      {/* "LEVEL X" text */}
       <text
         x={cx}
-        y={cy + 28}
+        y={cy + 52}
         textAnchor="middle"
         fill={c.text}
-        fontSize="13"
+        fontSize="26"
         fontFamily="Inter, system-ui, sans-serif"
-        fontWeight="700"
-        letterSpacing="0.16em"
+        fontWeight="800"
+        letterSpacing="0.18em"
       >
         LEVEL {level}
       </text>
@@ -145,10 +179,10 @@ export function CertificationBadge({
       {/* Certification ID */}
       <text
         x={cx}
-        y={cy + 52}
+        y={cy + 100}
         textAnchor="middle"
         fill={c.certId}
-        fontSize="6.5"
+        fontSize="12.5"
         fontFamily="Inter, system-ui, sans-serif"
         fontWeight="400"
         letterSpacing="0.04em"
