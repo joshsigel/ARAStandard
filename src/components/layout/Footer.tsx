@@ -43,8 +43,8 @@ const footerSections = [
 export function Footer() {
   return (
     <footer className="border-t border-border bg-slate-50">
-      <div className="max-w-[1400px] mx-auto px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4 sm:gap-8 mb-12">
           {footerSections.map((section) => (
             <div key={section.title}>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-charcoal mb-3">
@@ -66,7 +66,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-5">
             <img
               src="/logos/araf-wordmark.svg"

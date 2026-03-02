@@ -1,50 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" fill="none">
-  <g fill="#FFFFFF" fill-rule="evenodd">
-    <!-- A (first): 0–210 -->
-    <path d="
-      M 0,250 L 105,0 L 210,250 Z
-      M 86,155 L 124,155 L 105,108 Z
-    "/>
-    <!-- R: 226–416 -->
-    <path d="
-      M 226,250
-      L 226,0
-      L 358,0
-      Q 412,0 412,60
-      Q 412,120 358,120
-      L 342,120
-      L 416,250
-      L 370,250
-      L 304,138
-      L 272,138
-      L 272,250
-      Z
-      M 272,42
-      L 340,42
-      Q 370,42 370,72
-      Q 370,98 340,98
-      L 272,98
-      Z
-    "/>
-    <!-- A (second): 432–642 -->
-    <path d="
-      M 432,250 L 537,0 L 642,250 Z
-      M 518,155 L 556,155 L 537,108 Z
-    "/>
-  </g>
-  <path fill="#FFFFFF" d="
-    M 658,250
-    L 658,0
-    L 840,0
-    L 840,44
-    L 704,44
-    L 704,110
-    L 818,110
-    L 818,154
-    L 704,154
-    L 704,250
-    Z
-  "/>
-  <text x="0" y="296" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="500" fill="rgba(255,255,255,0.7)" letter-spacing="0.01em">Autonomous Reliability</text>
-  <text x="0" y="328" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="500" fill="rgba(255,255,255,0.7)" letter-spacing="0.01em">Assurance Foundation</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3444 1360" fill="none">
+  <path fill="#FFFFFF" d="M 3365,600 L 2943,602 L 2942,999 L 2502,999 C 2438,821 2301,449 2234,274 C 2155,484 2040,791 1960,999 L 1591,1000 C 1503,846 1371,621 1286,468 L 1438,464 C 1482,460 1524,446 1553,414 C 1594,348 1588,274 1539,213 C 1510,199 1479,188 1446,180 L 1203,183 L 1201,999 L 771,999 L 727,888 L 605,551 L 500,280 C 441,441 308,790 245,953 L 222,1000 L 0,998 C 96,760 295,261 388,24 C 394,11 410,1 425,0 L 614,1 C 678,176 823,548 892,723 C 923,806 951,882 992,963 L 994,1 L 1491,1 C 1560,7 1622,30 1678,66 C 1734,111 1767,172 1780,243 C 1798,329 1788,413 1746,489 C 1707,543 1658,576 1595,604 C 1613,637 1749,861 1772,899 C 1880,623 2018,279 2124,1 L 2344,0 C 2444,249 2623,724 2723,975 L 2734,873 C 2733,723 2734,160 2734,1 L 3440,1 L 3444,181 L 2942,181 L 2943,423 L 3365,422 L 3365,600 Z"/>
+  <text x="0" y="1180" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="120" font-weight="500" fill="rgba(255,255,255,0.7)" letter-spacing="0.01em">Autonomous Reliability</text>
+  <text x="0" y="1310" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="120" font-weight="500" fill="rgba(255,255,255,0.7)" letter-spacing="0.01em">Assurance Foundation</text>
 </svg>

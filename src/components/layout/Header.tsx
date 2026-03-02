@@ -22,7 +22,7 @@ export function Header() {
 
   return (
     <header className="border-b border-border bg-white sticky top-0 z-40">
-      <div className="max-w-[1400px] mx-auto px-6">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
         {/* Top bar */}
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-3 group">
@@ -33,8 +33,10 @@ export function Header() {
               height={30}
               className="h-7 w-auto"
             />
-            <span className="hidden sm:inline text-xs font-medium text-muted tracking-wide uppercase">
-              ARA Standard
+            <span className="hidden sm:inline text-[11px] leading-[14px] font-medium text-muted tracking-wide uppercase">
+              Autonomous Reliability
+              <br />
+              Assurance Foundation
             </span>
           </Link>
 
@@ -47,7 +49,7 @@ export function Header() {
                 });
                 document.dispatchEvent(event);
               }}
-              className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm text-muted border border-border rounded-md hover:border-border-dark transition-colors"
+              className="hidden lg:flex items-center gap-2 px-3 py-1.5 text-sm text-muted border border-border rounded-md hover:border-border-dark transition-colors"
             >
               <span>Search</span>
               <kbd className="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded text-slate-400">
@@ -57,7 +59,7 @@ export function Header() {
 
             <Link
               href="/standard/v1.0"
-              className="hidden md:inline-flex version-badge hover:bg-slate-50 transition-colors"
+              className="hidden lg:inline-flex version-badge hover:bg-slate-50 transition-colors"
             >
               v1.0
             </Link>
@@ -65,7 +67,7 @@ export function Header() {
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 text-steel"
+              className="lg:hidden p-2 text-steel"
               aria-label="Toggle menu"
             >
               {mobileOpen ? (
@@ -82,7 +84,7 @@ export function Header() {
         </div>
 
         {/* Desktop navigation */}
-        <nav className="hidden md:flex items-center gap-0 -mb-px" aria-label="Main navigation">
+        <nav className="hidden lg:flex items-center gap-0 -mb-px" aria-label="Main navigation">
           {navigation.map((item) => {
             const isActive =
               item.href === '/'
@@ -107,7 +109,7 @@ export function Header() {
 
       {/* Mobile navigation */}
       {mobileOpen && (
-        <nav className="md:hidden border-t border-border bg-white" aria-label="Mobile navigation">
+        <nav className="lg:hidden border-t border-border bg-white" aria-label="Mobile navigation">
           <div className="px-6 py-3 space-y-1">
             {navigation.map((item) => {
               const isActive =

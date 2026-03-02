@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <circle cx="300" cy="300" r="276" stroke="#111111" stroke-width="18" fill="none"/>
+  <circle cx="300" cy="300" r="222" stroke="#111111" stroke-width="6" fill="none"/>
+  <defs>
+    <path id="upper" d="M 54,300 A 246,246 0 1,1 546,300"/>
+    <path id="lower" d="M 54,300 A 246,246 0 0,0 546,300"/>
+  </defs>
+  <text fill="#111111" font-size="28" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="800" letter-spacing="0.13em">
+    <textPath href="#upper" startOffset="50%" text-anchor="middle">AUTONOMOUS RELIABILITY ASSURANCE</textPath>
+  </text>
+  <circle cx="54" cy="300" r="4.5" fill="#111111"/>
+  <circle cx="546" cy="300" r="4.5" fill="#111111"/>
+  <text fill="#111111" font-size="36" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="900" letter-spacing="0.22em" dy="22">
+    <textPath href="#lower" startOffset="50%" text-anchor="middle">CERTIFIED</textPath>
+  </text>
+  <g transform="translate(157, 229.5) scale(0.105)" fill="#111111">
+    <path d="M 2723,975 L 2502,999 C 2438,821 2301,449 2234,274 C 2155,484 2040,791 1960,999 L 1591,1000 C 1503,846 1371,621 1286,468 L 1438,464 C 1482,460 1524,446 1553,414 C 1594,348 1588,274 1539,213 C 1510,199 1479,188 1446,180 L 1203,183 L 1201,999 L 771,999 L 727,888 L 605,551 L 500,280 C 441,441 308,790 245,953 L 222,1000 L 0,998 C 96,760 295,261 388,24 C 394,11 410,1 425,0 L 614,1 C 678,176 823,548 892,723 C 923,806 951,882 992,963 L 994,1 L 1491,1 C 1560,7 1622,30 1678,66 C 1734,111 1767,172 1780,243 C 1798,329 1788,413 1746,489 C 1707,543 1658,576 1595,604 C 1613,637 1749,861 1772,899 C 1880,623 2018,279 2124,1 L 2344,0 C 2444,249 2623,724 2723,975 Z"/>
+  </g>
+  <text x="300" y="360.5" text-anchor="middle" fill="#111111" font-size="34" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="900" letter-spacing="0.18em">LEVEL 1</text>
+  <text x="300" y="491" text-anchor="middle" fill="#333333" font-size="14" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="500" letter-spacing="0.02em">Certification ID: ARA-2026-XXXXX</text>
+</svg>

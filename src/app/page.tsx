@@ -18,15 +18,15 @@ export default function HomePage() {
       <section className="border-b border-border bg-charcoal relative overflow-hidden">
         {/* Animated grid overlay */}
         <div className="absolute inset-0 grid-motif-animated" />
-        <div className="relative max-w-[1400px] mx-auto px-6 py-24 md:py-32">
+        <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-16 sm:py-20 md:py-24 lg:py-32">
           <div className="max-w-3xl animate-fade-in-up">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/50 mb-5">
               Autonomous Reliability Assurance Foundation
             </p>
-            <h1 className="text-4xl md:text-[3.25rem] font-semibold tracking-tight text-white leading-[1.1] mb-6">
+            <h1 className="text-[clamp(2rem,1.25rem+2vw,3.25rem)] font-semibold tracking-tight text-white leading-[1.1] mb-6">
               Autonomous systems should prove they work before they&apos;re deployed.
             </h1>
-            <p className="text-lg text-white/70 leading-relaxed max-w-2xl mb-10">
+            <p className="text-base sm:text-lg text-white/70 leading-relaxed max-w-2xl mb-10">
               The ARA Standard is the first comprehensive, testable framework
               for certifying that autonomous systems meet minimum operational
               reliability requirements — before they operate in environments
@@ -34,9 +34,9 @@ export default function HomePage() {
             </p>
 
             {/* Animated stat counters */}
-            <div className="flex flex-wrap items-start gap-8 md:gap-12 mb-10">
+            <div className="flex flex-wrap items-start gap-6 sm:gap-8 md:gap-12 mb-10">
               <div className="flex flex-col items-start">
-                <span className="text-3xl md:text-4xl font-bold text-white font-mono tracking-tight">
+                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-white font-mono tracking-tight">
                   <AnimatedCounter end={352} duration={1800} />
                 </span>
                 <div className="section-divider mt-2 mb-1.5 opacity-50" />
@@ -45,7 +45,7 @@ export default function HomePage() {
                 </span>
               </div>
               <div className="flex flex-col items-start">
-                <span className="text-3xl md:text-4xl font-bold text-white font-mono tracking-tight">
+                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-white font-mono tracking-tight">
                   <AnimatedCounter end={13} duration={1200} />
                 </span>
                 <div className="section-divider mt-2 mb-1.5 opacity-50" />
@@ -54,7 +54,7 @@ export default function HomePage() {
                 </span>
               </div>
               <div className="flex flex-col items-start">
-                <span className="text-3xl md:text-4xl font-bold text-white font-mono tracking-tight">
+                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-white font-mono tracking-tight">
                   <AnimatedCounter end={3} duration={800} />
                 </span>
                 <div className="section-divider mt-2 mb-1.5 opacity-50" />
@@ -67,7 +67,7 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/standard/v1.0"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-charcoal text-sm font-semibold rounded-md hover:bg-slate-100 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 bg-white text-charcoal text-sm font-semibold rounded-md hover:bg-slate-100 transition-colors"
               >
                 Read the Standard
                 <span className="font-mono text-[10px] font-medium text-muted bg-slate-100 px-1.5 py-0.5 rounded">
@@ -76,7 +76,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/registry"
-                className="inline-flex items-center px-6 py-3 border border-white/20 text-sm font-medium text-white rounded-md hover:bg-white/10 transition-colors"
+                className="inline-flex items-center px-4 py-2.5 sm:px-6 sm:py-3 border border-white/20 text-sm font-medium text-white rounded-md hover:bg-white/10 transition-colors"
               >
                 Verify a Certification
               </Link>
@@ -87,10 +87,10 @@ export default function HomePage() {
 
       {/* Mission Statement */}
       <section className="border-b border-border">
-        <div className="max-w-[1400px] mx-auto px-6 py-20">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-12 sm:py-16 md:py-20">
           <ScrollReveal className="max-w-3xl mx-auto text-center">
             <div className="section-divider mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-semibold text-charcoal mb-6 leading-snug">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-charcoal mb-6 leading-snug">
               A reliability standard built for the age of autonomous systems
             </h2>
             <p className="text-base text-steel leading-relaxed mb-4">
@@ -113,8 +113,8 @@ export default function HomePage() {
 
       {/* What ARA Is / Why It Matters */}
       <section className="border-b border-border bg-slate-50">
-        <div className="max-w-[1400px] mx-auto px-6 py-16">
-          <div className="grid md:grid-cols-3 gap-10">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {[
               {
                 title: 'The Problem',
@@ -146,9 +146,9 @@ export default function HomePage() {
 
       {/* How Certification Works */}
       <section className="border-b border-border">
-        <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
           <ScrollReveal>
-            <h2 className="text-2xl font-semibold text-charcoal mb-2">
+            <h2 className="text-xl sm:text-2xl font-semibold text-charcoal mb-2">
               How Certification Works
             </h2>
             <p className="text-sm text-muted mb-10 max-w-2xl">
@@ -157,9 +157,9 @@ export default function HomePage() {
             </p>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-4 gap-0 relative">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 relative">
             {/* Connector line (desktop only) */}
-            <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-px border-t-2 border-dashed border-slate-200" />
+            <div className="hidden lg:block absolute top-8 left-[12.5%] right-[12.5%] h-px border-t-2 border-dashed border-slate-200" />
 
             {[
               {
@@ -203,9 +203,9 @@ export default function HomePage() {
 
       {/* Certification Levels */}
       <section className="border-b border-border bg-slate-50">
-        <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
           <ScrollReveal>
-            <h2 className="text-2xl font-semibold text-charcoal mb-2">
+            <h2 className="text-xl sm:text-2xl font-semibold text-charcoal mb-2">
               Certification Levels
             </h2>
             <p className="text-sm text-muted mb-8 max-w-2xl">
@@ -213,7 +213,7 @@ export default function HomePage() {
               autonomous authority, operational risk, and evaluation rigor.
             </p>
           </ScrollReveal>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
             {certificationLevels.map((level, i) => (
               <ScrollReveal key={level.level} delay={i * 100}>
                 <div className="bg-white border border-border rounded-lg p-6 card-hover gradient-border h-full">
@@ -276,9 +276,9 @@ export default function HomePage() {
 
       {/* Domains Overview */}
       <section className="border-b border-border">
-        <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
           <ScrollReveal>
-            <h2 className="text-2xl font-semibold text-charcoal mb-2">
+            <h2 className="text-xl sm:text-2xl font-semibold text-charcoal mb-2">
               Evaluation Domains
             </h2>
             <p className="text-sm text-muted mb-8 max-w-2xl">
@@ -326,22 +326,23 @@ export default function HomePage() {
       {/* Featured Certification */}
       <section className="border-b border-border bg-charcoal relative overflow-hidden">
         <div className="absolute inset-0 grid-motif-animated" />
-        <div className="relative max-w-[1400px] mx-auto px-6 py-16">
+        <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
           <ScrollReveal>
-            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-              <div className="shrink-0 badge-glow">
+            <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
+              <div className="shrink-0 badge-glow w-24 sm:w-28 md:w-[140px]">
                 <CertificationBadge
                   level={Number(featuredEntry.certificationLevel.replace('L', '')) as 1 | 2 | 3}
                   certificationId={featuredEntry.certificationId}
                   size={140}
                   variant="light-on-dark"
+                  className="!w-full !h-auto"
                 />
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-3">
                   Certification in Practice
                 </p>
-                <h2 className="text-2xl font-semibold text-white mb-2">
+                <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2">
                   {featuredEntry.systemName}
                 </h2>
                 <p className="text-sm text-white/60 mb-1">
@@ -380,11 +381,11 @@ export default function HomePage() {
 
       {/* Registry Lookup CTA */}
       <section className="border-b border-border bg-slate-50">
-        <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
           <ScrollReveal>
             <div className="max-w-xl">
               <div className="border-l-2 border-navy pl-6">
-                <h2 className="text-2xl font-semibold text-charcoal mb-2">
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal mb-2">
                   Public Certification Registry
                 </h2>
                 <p className="text-sm text-steel mb-6">
@@ -414,10 +415,10 @@ export default function HomePage() {
 
       {/* Standard Version + Governance */}
       <section>
-        <div className="max-w-[1400px] mx-auto px-6 py-16">
-          <div className="grid md:grid-cols-2 gap-12">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
             <ScrollReveal>
-              <h2 className="text-2xl font-semibold text-charcoal mb-4">
+              <h2 className="text-xl sm:text-2xl font-semibold text-charcoal mb-4">
                 Current Standard
               </h2>
               <div className="border border-border rounded-lg p-6 card-hover">
@@ -449,7 +450,7 @@ export default function HomePage() {
               </div>
             </ScrollReveal>
             <ScrollReveal delay={100}>
-              <h2 className="text-2xl font-semibold text-charcoal mb-4">
+              <h2 className="text-xl sm:text-2xl font-semibold text-charcoal mb-4">
                 Governance
               </h2>
               <div className="prose">

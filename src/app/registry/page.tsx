@@ -135,7 +135,7 @@ export default function RegistryPage() {
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-10">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10">
       {/* Breadcrumbs */}
       <nav aria-label="Breadcrumb" className="mb-8">
         <ol className="flex items-center gap-2 text-sm text-muted">
@@ -327,8 +327,41 @@ export default function RegistryPage() {
         Showing {filtered.length} of {registryEntries.length} certified systems
       </div>
 
-      {/* Results Table */}
-      <section>
+      {/* Results — Mobile Cards */}
+      <section className="lg:hidden">
+        {filtered.length === 0 ? (
+          <div className="px-4 py-12 text-center text-muted border border-border rounded-lg">
+            No registry entries match the current filters.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filtered.map((entry) => (
+              <Link
+                key={entry.certificationId}
+                href={`/registry/verify/${entry.certificationId}`}
+                className="block border border-border rounded-lg p-4 hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-mono text-sm font-medium text-navy">
+                    {entry.certificationId}
+                  </span>
+                  <LevelBadge level={entry.certificationLevel} />
+                </div>
+                <p className="text-sm font-medium text-charcoal">{entry.organization}</p>
+                <p className="text-xs text-steel mt-0.5">{entry.systemName}</p>
+                <p className="text-xs text-muted mt-0.5">{entry.category}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <StatusBadge status={entry.certificationStatus} />
+                  <MonitoringBadge status={entry.monitoringStatus} />
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Results — Desktop Table */}
+      <section className="hidden lg:block">
         <div className="overflow-x-auto border border-border rounded-lg">
           <table className="w-full text-sm">
             <thead>
