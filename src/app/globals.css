@@ -548,3 +548,519 @@ h1, h2, h3, h4, h5, h6 {
     display: none !important;
   }
 }
+
+/* ========================================
+   ARA Living Certification Badge System v2
+   ======================================== */
+
+/* ─── Badge CSS Custom Properties ───────────────────────────────────────── */
+
+:root {
+  --badge-ring-active: #16A34A;
+  --badge-ring-monitoring: #3B82F6;
+  --badge-ring-delayed: #D97706;
+  --badge-ring-revalidation: #D97706;
+  --badge-ring-suspended: #DC2626;
+  --badge-ring-expired: #94A3B8;
+}
+
+/* ─── Primary Badge Wrapper ─────────────────────────────────────────────── */
+
+.ara-badge-wrapper {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  will-change: transform;
+}
+
+.ara-badge-interactive {
+  cursor: pointer;
+}
+
+.ara-badge-interactive:hover {
+  transform: scale(1.02);
+}
+
+.ara-badge-interactive:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+/* ─── Living Badge Animations ───────────────────────────────────────────── */
+
+/* Active: slow subtle green glow pulse */
+@keyframes ara-pulse-active {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(22, 163, 74, 0)); }
+  50% { filter: drop-shadow(0 0 8px rgba(22, 163, 74, 0.15)); }
+}
+
+.ara-badge-active {
+  animation: ara-pulse-active 4s ease-in-out infinite;
+}
+
+/* Monitoring Connected: blue heartbeat pulse */
+@keyframes ara-heartbeat {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); }
+  15% { filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.12)); }
+  30% { filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); }
+  45% { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.18)); }
+  60% { filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); }
+}
+
+.ara-badge-heartbeat {
+  animation: ara-heartbeat 3s ease-in-out infinite;
+}
+
+/* Monitoring Delayed: intermittent amber tick */
+@keyframes ara-intermittent {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
+  10% { filter: drop-shadow(0 0 6px rgba(217, 119, 6, 0.2)); }
+  20% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
+  60% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
+  70% { filter: drop-shadow(0 0 8px rgba(217, 119, 6, 0.25)); }
+  80% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
+}
+
+.ara-badge-intermittent {
+  animation: ara-intermittent 2s ease-in-out infinite;
+}
+
+/* Revalidation Required: steady amber glow */
+@keyframes ara-alert {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(217, 119, 6, 0.15)); }
+  50% { filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.3)); }
+}
+
+.ara-badge-alert {
+  animation: ara-alert 1.5s ease-in-out infinite;
+}
+
+/* Suspended: static red tint */
+.ara-badge-static {
+  filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.12));
+}
+
+/* Expired: muted and desaturated */
+.ara-badge-off {
+  filter: grayscale(0.7) opacity(0.55);
+}
+
+/* ─── Holographic Shimmer ───────────────────────────────────────────────── */
+
+.ara-badge-shimmer {
+  pointer-events: none;
+}
+
+/* ─── Verification Tooltip ──────────────────────────────────────────────── */
+
+.ara-badge-tooltip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  pointer-events: none;
+  animation: ara-tooltip-enter 0.2s ease-out both;
+}
+
+@keyframes ara-tooltip-enter {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.ara-badge-tooltip-inner {
+  background: #0F172A;
+  color: white;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.ara-badge-tooltip-inner::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #0F172A;
+}
+
+.ara-badge-tooltip-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.ara-badge-tooltip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.ara-badge-dot-active { background: #16A34A; }
+.ara-badge-dot-monitoring_connected { background: #3B82F6; }
+.ara-badge-dot-monitoring_delayed { background: #D97706; }
+.ara-badge-dot-revalidation_required { background: #D97706; }
+.ara-badge-dot-suspended { background: #DC2626; }
+.ara-badge-dot-expired { background: #94A3B8; }
+
+.ara-badge-tooltip-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: #94A3B8;
+  margin-top: 2px;
+}
+
+.ara-badge-tooltip-org {
+  font-size: 11px;
+  color: #CBD5E1;
+}
+
+.ara-badge-tooltip-action {
+  font-size: 10px;
+  color: #64748B;
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Compact Badge ─────────────────────────────────────────────────────── */
+
+.ara-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.ara-compact:hover {
+  border-color: var(--color-border-dark);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.ara-compact:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 2px;
+}
+
+.ara-compact-mark {
+  font-size: 10px;
+  font-weight: 900;
+  color: #0F172A;
+  letter-spacing: 0.04em;
+}
+
+.ara-compact-level {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
+
+.ara-compact-level-1 {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #CBD5E1;
+}
+
+.ara-compact-level-2 {
+  background: #1E293B;
+  color: white;
+}
+
+.ara-compact-level-3 {
+  background: #0F172A;
+  color: white;
+}
+
+.ara-compact-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ara-compact-dot-pulse {
+  animation: ara-compact-pulse var(--pulse-speed, 3s) ease-in-out infinite;
+}
+
+@keyframes ara-compact-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ─── Embed Badge ───────────────────────────────────────────────────────── */
+
+.ara-embed {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  background: white;
+  text-decoration: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.ara-embed:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ara-embed-seal {
+  flex-shrink: 0;
+}
+
+.ara-embed-info {
+  min-width: 0;
+}
+
+.ara-embed-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ara-embed-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: 0.06em;
+}
+
+.ara-embed-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.ara-embed-designation {
+  font-size: 11px;
+  color: #64748B;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin-top: 1px;
+}
+
+.ara-embed-certid {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: #94A3B8;
+  margin-top: 2px;
+}
+
+.ara-embed-verify {
+  font-size: 10px;
+  color: #3B82F6;
+  font-weight: 600;
+  margin-top: 4px;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Hero Badge ────────────────────────────────────────────────────────── */
+
+.ara-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.ara-hero-glow {
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.5s ease;
+}
+
+.ara-hero:hover .ara-hero-glow {
+  opacity: 1;
+}
+
+.ara-hero-badge {
+  width: 340px;
+  height: 340px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .ara-hero-badge {
+    width: 420px;
+    height: 420px;
+  }
+}
+
+.ara-hero-info {
+  text-align: center;
+  margin-top: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.ara-hero-org {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-charcoal);
+  letter-spacing: -0.01em;
+}
+
+.ara-hero-system {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+.ara-hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--color-slate-400);
+}
+
+.ara-hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ara-hero-meta-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.ara-hero-meta-sep {
+  color: var(--color-slate-300);
+}
+
+/* ─── QR Badge ──────────────────────────────────────────────────────────── */
+
+.ara-qr {
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  background: white;
+  overflow: hidden;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.ara-qr-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.ara-qr-header-text {
+  min-width: 0;
+}
+
+.ara-qr-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: 0.06em;
+}
+
+.ara-qr-subtitle {
+  font-size: 10px;
+  color: #64748B;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.ara-qr-code {
+  padding: 16px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.ara-qr-footer {
+  padding: 8px 12px;
+  border-top: 1px solid #F1F5F9;
+  text-align: center;
+}
+
+.ara-qr-certid {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.ara-qr-scan {
+  font-size: 9px;
+  color: #94A3B8;
+  margin-top: 2px;
+  letter-spacing: 0.03em;
+}
+
+/* ─── Print Badge ───────────────────────────────────────────────────────── */
+
+.ara-badge-print {
+  /* No animations, clean rendering */
+}
+
+@media print {
+  .ara-badge-wrapper,
+  .ara-badge-active,
+  .ara-badge-heartbeat,
+  .ara-badge-intermittent,
+  .ara-badge-alert {
+    animation: none !important;
+    filter: none !important;
+  }
+
+  .ara-badge-tooltip {
+    display: none !important;
+  }
+
+  .ara-hero-glow {
+    display: none !important;
+  }
+}
+
+/* ─── Reduced Motion ────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .ara-badge-active,
+  .ara-badge-heartbeat,
+  .ara-badge-intermittent,
+  .ara-badge-alert,
+  .ara-compact-dot-pulse {
+    animation: none !important;
+  }
+
+  .ara-badge-wrapper {
+    transition: none !important;
+  }
+
+  .ara-badge-shimmer animate,
+  .ara-badge-svg animate {
+    display: none;
+  }
+}

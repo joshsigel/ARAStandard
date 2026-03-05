@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
-import { CertificationBadge } from '@/components/badges/CertificationBadge';
+import { AraBadgeHero } from '@/components/badges/AraBadgeHero';
 import { TwoAxisMatrix } from '@/components/visualizations/TwoAxisMatrix';
 import { SystemProfileChart } from '@/components/visualizations/SystemProfileChart';
 import { CertificationLifecycle } from '@/components/visualizations/CertificationLifecycle';
@@ -335,27 +335,34 @@ export default function HomePage() {
         <div className="absolute inset-0 grid-motif-animated" />
         <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
           <ScrollReveal>
-            <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
-              <div className="shrink-0 badge-glow badge-state-active w-24 sm:w-28 md:w-[140px]">
-                <CertificationBadge
-                  level={2}
-                  certificationId="ARA-2026-00187"
-                  size={140}
-                  variant="light-on-dark"
-                  className="!w-full !h-auto"
+            <div className="flex flex-col lg:flex-row items-center gap-8 md:gap-12 lg:gap-16">
+              <div className="shrink-0">
+                <AraBadgeHero
+                  data={{
+                    certId: 'ARA-2026-00187',
+                    orgName: 'Meridian Autonomous Systems',
+                    systemName: 'Navigator AI v4.2',
+                    level: 2,
+                    assuranceClass: 'B',
+                    standardVersion: '1.1',
+                    status: 'monitoring_connected',
+                    lastCheckIn: new Date().toISOString(),
+                    nextReassessment: '2027-01-15',
+                  }}
                 />
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-3">
-                  Living Certification Badge
+                  ARA Dynamic Assurance Mark
                 </p>
                 <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2">
-                  Real-time operational state
+                  Living certification badges
                 </h2>
                 <p className="text-sm text-white/60 mb-4 max-w-lg">
-                  Every ARA certification carries a living badge — a dynamic credential
-                  that reflects the system&apos;s current operational state. Active monitoring,
-                  assurance class, and certification status are embedded in real-time.
+                  Every ARA certification carries a living badge — a cryptographic trust
+                  seal that reflects the system&apos;s real-time operational state. Level,
+                  assurance class, monitoring status, and certification validity are
+                  encoded directly into the badge&apos;s visual grammar.
                 </p>
                 <div className="flex items-center gap-3 mb-6 flex-wrap">
                   <span className="level-badge level-badge-l2">L2</span>
@@ -363,21 +370,21 @@ export default function HomePage() {
                     Class B
                   </span>
                   <span className="inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded status-active">
-                    Active
+                    Monitoring Connected
                   </span>
                 </div>
                 <div className="flex gap-3">
                   <Link
-                    href="/badge-generator"
+                    href="/badge-showcase"
                     className="inline-flex items-center px-5 py-2.5 bg-white text-charcoal text-sm font-medium rounded-md hover:bg-slate-100 transition-colors"
                   >
-                    Badge Generator
+                    Badge Showcase
                   </Link>
                   <Link
-                    href="/registry"
+                    href="/badge-generator"
                     className="inline-flex items-center px-5 py-2.5 border border-white/20 text-sm font-medium text-white rounded-md hover:bg-white/10 transition-colors"
                   >
-                    View Registry
+                    Badge Generator
                   </Link>
                 </div>
               </div>

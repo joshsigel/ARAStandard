@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { TwoAxisMatrix } from '@/components/visualizations/TwoAxisMatrix';
 import { SystemProfileChart } from '@/components/visualizations/SystemProfileChart';
-import { CertificationBadge } from '@/components/badges/CertificationBadge';
+import { AraBadge } from '@/components/badges/AraBadge';
 import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
+import type { BadgeData } from '@/components/badges/types';
 import { getCertificationLevels } from '@/lib/data';
 
 export const metadata: Metadata = {
@@ -203,11 +204,16 @@ export default async function CertificationPage() {
               {/* Card header */}
               <div className="bg-slate-50 border-b border-border px-6 py-5">
                 <div className="flex items-start gap-5">
-                  <div className="shrink-0 badge-glow">
-                    <CertificationBadge
-                      level={Number(el.level.replace('L', '')) as 1 | 2 | 3}
-                      size={72}
-                      variant="dark-on-light"
+                  <div className="shrink-0">
+                    <AraBadge
+                      data={{
+                        certId: `ARA-DEMO-${el.level}`,
+                        level: Number(el.level.replace('L', '')) as 1 | 2 | 3,
+                        assuranceClass: 'B',
+                        standardVersion: '1.1',
+                        status: 'active',
+                      }}
+                      size={80}
                     />
                   </div>
                   <div>

@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { AraBadgeCompact } from '@/components/badges/AraBadgeCompact';
+import { registryEntryToBadgeData } from '@/components/badges/types';
 import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
 import { CertTypeBadge } from '@/components/badges/CertTypeBadge';
 import type {
@@ -426,9 +428,12 @@ export function RegistryClient({ initialEntries }: Props) {
                 className="block border border-border rounded-lg p-4 hover:bg-slate-50 transition-colors"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-sm font-medium text-navy">
-                    {entry.certificationId}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <AraBadgeCompact data={registryEntryToBadgeData(entry)} />
+                    <span className="font-mono text-sm font-medium text-navy">
+                      {entry.certificationId}
+                    </span>
+                  </div>
                   <LevelBadge level={entry.certificationLevel} />
                 </div>
                 <p className="text-sm font-medium text-charcoal">{entry.organization}</p>
@@ -500,12 +505,15 @@ export function RegistryClient({ initialEntries }: Props) {
                     className="hover:bg-slate-50 transition-colors"
                   >
                     <td className="px-4 py-3">
-                      <Link
-                        href={`/registry/verify/${entry.certificationId}`}
-                        className="font-mono text-sm font-medium text-navy hover:underline"
-                      >
-                        {entry.certificationId}
-                      </Link>
+                      <div className="flex items-center gap-2">
+                        <AraBadgeCompact data={registryEntryToBadgeData(entry)} />
+                        <Link
+                          href={`/registry/verify/${entry.certificationId}`}
+                          className="font-mono text-sm font-medium text-navy hover:underline"
+                        >
+                          {entry.certificationId}
+                        </Link>
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-steel">
                       {entry.organization}

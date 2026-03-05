@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import { getRegistryEntry, getRegistryEntries } from '@/lib/data';
-import { CertificationBadge } from '@/components/badges/CertificationBadge';
+import { AraBadge } from '@/components/badges/AraBadge';
+import { registryEntryToBadgeData } from '@/components/badges/types';
 import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
 import { CertTypeBadge } from '@/components/badges/CertTypeBadge';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
@@ -327,16 +328,13 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
         {/* Sidebar — Badge, QR Code, and verification */}
         <aside>
           <div className="border border-border rounded-lg p-6 sticky top-24">
-            {/* Certification Badge */}
+            {/* Living Certification Badge */}
             <div className="flex justify-center mb-6 pb-6 border-b border-border">
-              <div className="badge-glow">
-                <CertificationBadge
-                  level={Number(entry.certificationLevel.replace('L', '')) as 1 | 2 | 3}
-                  certificationId={entry.certificationId}
-                  size={160}
-                  variant="dark-on-light"
-                />
-              </div>
+              <AraBadge
+                data={registryEntryToBadgeData(entry)}
+                size={180}
+                interactive
+              />
             </div>
 
             <h3 className="text-sm font-semibold text-charcoal mb-1">
