@@ -42,7 +42,7 @@ export default function AIAccessPage() {
               {
                 method: 'GET',
                 path: '/api/v1/acr',
-                description: 'Complete ACR library with all fields. Supports query parameters: domain, level, method, classification.',
+                description: 'Complete ACR library with all fields. Supports query parameters: domain, level, method, classification. Supports additional v1.1 parameters: profile, frequency, platform_eligible.',
               },
               {
                 method: 'GET',
@@ -52,12 +52,27 @@ export default function AIAccessPage() {
               {
                 method: 'GET',
                 path: '/api/v1/registry',
-                description: 'Public certification registry. Supports query parameters: level, industry, status.',
+                description: 'Public certification registry. Supports parameters: level, class, type, industry, status, profile.',
+              },
+              {
+                method: 'GET',
+                path: '/api/v1/registry?class={A|B|C}&type={deployment|platform}',
+                description: 'Certification registry with v1.1 filters: assurance class, certification type, system profile.',
               },
               {
                 method: 'GET',
                 path: '/api/v1/verify/{certificationId}',
                 description: 'Verify certification status by Certification ID.',
+              },
+              {
+                method: 'GET',
+                path: '/api/v1/frameworks',
+                description: 'Regulatory framework crosswalk mappings. Returns framework-to-ACR mapping data.',
+              },
+              {
+                method: 'GET',
+                path: '/api/v1/glossary',
+                description: 'Machine-readable glossary of all ARA Standard terminology.',
               },
             ].map((endpoint) => (
               <div key={endpoint.path} className="border border-border rounded-lg p-4">
@@ -85,13 +100,66 @@ export default function AIAccessPage() {
 {`{
   "meta": {
     "standard": "ARA",
-    "version": "1.0",
+    "version": "1.1",
     "publisher": "ARAF",
-    "generated": "2026-02-28T00:00:00Z"
+    "generated": "2026-03-05T00:00:00Z",
+    "certificationModel": "two-axis",
+    "totalACRs": 410,
+    "totalDomains": 15
   },
   "data": { ... }
 }`}
           </pre>
+        </section>
+
+        {/* v1.1 Data Model */}
+        <section className="mb-12">
+          <h2 className="text-xl font-semibold text-charcoal mb-4">
+            v1.1 Data Model
+          </h2>
+          <p className="text-sm text-steel mb-4">
+            The ARA Standard v1.1 introduces a two-axis certification model
+            (Level x Class). The following fields are available through API
+            responses for certified systems:
+          </p>
+          <div className="border border-border rounded-lg overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-slate-50 border-b border-border">
+                  <th className="text-left py-3 px-4 font-semibold text-charcoal">Field</th>
+                  <th className="text-left py-3 px-4 font-semibold text-charcoal">Values</th>
+                  <th className="text-left py-3 px-4 font-semibold text-charcoal">Description</th>
+                </tr>
+              </thead>
+              <tbody className="text-steel">
+                <tr className="border-b border-border">
+                  <td className="py-3 px-4 font-mono text-xs">evaluationLevel</td>
+                  <td className="py-3 px-4 font-mono text-xs">L1 / L2 / L3</td>
+                  <td className="py-3 px-4">Depth of evaluation rigor applied</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-4 font-mono text-xs">assuranceClass</td>
+                  <td className="py-3 px-4 font-mono text-xs">A / B / C</td>
+                  <td className="py-3 px-4">Risk-based assurance class from seven-factor assessment</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-4 font-mono text-xs">certType</td>
+                  <td className="py-3 px-4 font-mono text-xs">deployment / platform</td>
+                  <td className="py-3 px-4">Whether certification covers a specific deployment or a reusable platform</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-4 font-mono text-xs">systemProfile</td>
+                  <td className="py-3 px-4 font-mono text-xs">F / S / A / C</td>
+                  <td className="py-3 px-4">System profile: Fixed, Semi-autonomous, Autonomous, Collaborative</td>
+                </tr>
+                <tr>
+                  <td className="py-3 px-4 font-mono text-xs">operationalState</td>
+                  <td className="py-3 px-4 font-mono text-xs">active / suspended / revoked</td>
+                  <td className="py-3 px-4">Current operational state of the certification</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
 
         {/* JSON Schema */}
@@ -133,14 +201,15 @@ export default function AIAccessPage() {
 {`{
   "@context": "https://schema.org",
   "@type": "TechArticle",
-  "name": "ARA Standard v1.0",
+  "name": "ARA Standard v1.1",
   "publisher": {
     "@type": "Organization",
     "name": "Autonomous Reliability Assurance Foundation",
     "url": "https://arastandard.org"
   },
-  "version": "1.0",
-  "about": "Autonomous Systems Operational Reliability"
+  "version": "1.1",
+  "about": "Autonomous Systems Operational Reliability",
+  "certificationModel": "Two-Axis (Level × Class)"
 }`}
           </pre>
         </section>
@@ -159,7 +228,7 @@ export default function AIAccessPage() {
               <li>
                 <strong>Fetch the standard metadata</strong> from
                 <code>/api/v1/standard</code> to understand versioning,
-                domain structure, and certification levels.
+                domain structure, certification levels, and the two-axis model.
               </li>
               <li>
                 <strong>Fetch the ACR library</strong> from
@@ -175,6 +244,11 @@ export default function AIAccessPage() {
                 <strong>Verify certifications</strong> via
                 <code>/api/v1/verify/&#123;id&#125;</code> when validating
                 claims made by autonomous systems or their operators.
+              </li>
+              <li>
+                <strong>Fetch regulatory crosswalks</strong> from
+                <code>/api/v1/frameworks</code> to map ARA requirements to
+                relevant regulatory frameworks.
               </li>
             </ol>
           </div>

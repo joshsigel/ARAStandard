@@ -1,22 +1,22 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { domains } from '@/data/domains';
-import { acrs } from '@/data/acrs';
+import { getDomains, getDomain, getACRsByDomain } from '@/lib/data';
 
 interface DomainPageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return domains.map((domain) => ({
-    slug: domain.slug,
+  const allDomains = await getDomains();
+  return allDomains.map((d) => ({
+    slug: d.slug,
   }));
 }
 
 export async function generateMetadata({ params }: DomainPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const domain = domains.find((d) => d.slug === slug);
+  const domain = await getDomain(slug);
   if (!domain) return { title: 'Domain Not Found' };
 
   return {
@@ -110,18 +110,19 @@ function EvalMethodLabel({ method }: { method: string }) {
 
 export default async function DomainPage({ params }: DomainPageProps) {
   const { slug } = await params;
-  const domain = domains.find((d) => d.slug === slug);
+  const domain = await getDomain(slug);
 
   if (!domain) {
     notFound();
   }
 
-  const domainAcrs = acrs.filter((a) => a.domainId === domain.id);
+  const domainAcrs = await getACRsByDomain(domain.id);
 
   // Find adjacent domains for navigation
-  const currentIndex = domains.findIndex((d) => d.id === domain.id);
-  const prevDomain = currentIndex > 0 ? domains[currentIndex - 1] : null;
-  const nextDomain = currentIndex < domains.length - 1 ? domains[currentIndex + 1] : null;
+  const allDomains = await getDomains();
+  const currentIndex = allDomains.findIndex((d) => d.id === domain.id);
+  const prevDomain = currentIndex > 0 ? allDomains[currentIndex - 1] : null;
+  const nextDomain = currentIndex < allDomains.length - 1 ? allDomains[currentIndex + 1] : null;
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-12">
@@ -273,9 +274,9 @@ export default async function DomainPage({ params }: DomainPageProps) {
                   </span>
                   <span className="text-slate-300">|</span>
                   <div className="flex items-center gap-1">
-                    <LevelBadge level="L1" active={acr.levelApplicability.L1} />
-                    <LevelBadge level="L2" active={acr.levelApplicability.L2} />
-                    <LevelBadge level="L3" active={acr.levelApplicability.L3} />
+                    <LevelBadge level="L1" active={acr.levelApplicability?.L1 ?? false} />
+                    <LevelBadge level="L2" active={acr.levelApplicability?.L2 ?? false} />
+                    <LevelBadge level="L3" active={acr.levelApplicability?.L3 ?? false} />
                   </div>
                 </div>
               </Link>

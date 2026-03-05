@@ -24,12 +24,12 @@ export const metadata: Metadata = {
     template: '%s | ARA Standard',
   },
   description:
-    'ARAF defines and governs the minimum operational reliability standard for autonomous systems deployed in real-world environments.',
+    'The operational reliability standard for autonomous systems. 410 ACRs across 15 domains, two-axis certification (Level x Class), living badges, and ecosystem directories.',
   metadataBase: new URL('https://arastandard.org'),
   openGraph: {
     title: 'ARA Standard — Autonomous Reliability Assurance Foundation',
     description:
-      'The global reliability floor for autonomous systems. Standards, certification, and registry.',
+      'The operational reliability standard for autonomous systems — 410 ACRs, 15 domains, two-axis certification.',
     url: 'https://arastandard.org',
     siteName: 'ARA Standard',
     locale: 'en_US',

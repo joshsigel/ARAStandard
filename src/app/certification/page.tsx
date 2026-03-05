@@ -1,15 +1,20 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { certificationLevels } from '@/data/certification-levels';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { TwoAxisMatrix } from '@/components/visualizations/TwoAxisMatrix';
+import { SystemProfileChart } from '@/components/visualizations/SystemProfileChart';
 import { CertificationBadge } from '@/components/badges/CertificationBadge';
+import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
+import { getCertificationLevels } from '@/lib/data';
 
 export const metadata: Metadata = {
-  title: 'ARA Certification Levels',
-  description:
-    'Three-tier certification model for autonomous systems: L1 Supervised Operational Reliability, L2 Bounded Autonomous Deployment, and L3 High-Stakes Autonomous Certification.',
+  title: 'Certification — ARA Standard',
+  description: 'ARA two-axis certification model.',
 };
 
-const levelNumber = (level: string) => level.replace('L', '');
+/* ---------------------------------------------------------------------------
+ * Helpers & local data
+ * --------------------------------------------------------------------------- */
 
 function LevelBadge({ level }: { level: string }) {
   const cls =
@@ -21,199 +26,527 @@ function LevelBadge({ level }: { level: string }) {
   return <span className={cls}>{level}</span>;
 }
 
-export default function CertificationPage() {
-  const allDomains = Object.keys(certificationLevels[2].domainThresholds);
+const evaluationLevels = [
+  {
+    level: 'L1',
+    name: 'Foundation',
+    description:
+      'Structured self-assessment with AVB oversight. Express pathway available for low-risk systems, completing certification in 3\u20134 weeks. Suitable for Foundational and Standard system profiles.',
+    metrics: {
+      acrScope: 'Foundational (97) or Standard (215) profile',
+      adversarialTesting: 'Automated suite only',
+      timeline: '3\u20134 weeks (express) or 6\u20138 weeks (standard)',
+      reassessment: 'Annual',
+    },
+  },
+  {
+    level: 'L2',
+    name: 'Operational',
+    description:
+      'Full independent evaluation by an accredited AVB. Includes automated and human adversarial testing with a minimum of 40 hours of structured simulation. Suitable for Standard and Advanced system profiles.',
+    metrics: {
+      acrScope: 'Standard (215) or Advanced (368) profile',
+      adversarialTesting: 'Automated + human adversarial (40+ hrs)',
+      timeline: '8\u201312 weeks',
+      reassessment: 'Semi-annual',
+    },
+  },
+  {
+    level: 'L3',
+    name: 'Comprehensive',
+    description:
+      'Maximum evaluation rigor. Requires an independent red team engagement (80+ hours), a 30-day continuous runtime stress test, and full coverage of all 410 ACRs. Suitable for Advanced and Comprehensive system profiles.',
+    metrics: {
+      acrScope: 'All 410 ACRs (Comprehensive profile)',
+      adversarialTesting: 'Automated + human (80+ hrs) + independent red team + 30-day stress test',
+      timeline: '16\u201324 weeks',
+      reassessment: 'Quarterly',
+    },
+  },
+] as const;
+
+const assuranceClasses = [
+  {
+    class: 'A' as const,
+    name: 'Periodic',
+    description:
+      'Self-assessment with AVB spot checks. Designed for systems where periodic validation is sufficient to maintain assurance. No continuous oversight infrastructure is required.',
+    monitoring: 'Self-assessment with AVB spot checks',
+    cadence: 'Annual renewal',
+    lapseWindow: '90 days',
+    capoRequired: false,
+  },
+  {
+    class: 'B' as const,
+    name: 'Monitored',
+    description:
+      'Monthly CAPO monitoring reports with automated telemetry collection. Provides an ongoing assurance signal between evaluation cycles through structured reporting and drift detection.',
+    monitoring: 'Monthly CAPO monitoring reports',
+    cadence: 'Quarterly review',
+    lapseWindow: '60 days',
+    capoRequired: true,
+  },
+  {
+    class: 'C' as const,
+    name: 'Continuously Assured',
+    description:
+      'Full 24/7 CAPO oversight with real-time alerting and a complete telemetry pipeline. The highest assurance posture, providing continuous verification that the certified system remains within compliance boundaries.',
+    monitoring: '24/7 CAPO oversight with real-time alerting',
+    cadence: 'Continuous review',
+    lapseWindow: '30 days',
+    capoRequired: true,
+  },
+] as const;
+
+const systemProfiles = [
+  {
+    code: 'F' as const,
+    name: 'Foundational',
+    acrCount: 97,
+    targetSystems: 'Single-purpose agents, limited-scope internal tools, low-risk chatbots',
+  },
+  {
+    code: 'S' as const,
+    name: 'Standard',
+    acrCount: 215,
+    targetSystems: 'General-purpose agents, customer-facing systems, enterprise copilots',
+  },
+  {
+    code: 'A' as const,
+    name: 'Advanced',
+    acrCount: 368,
+    targetSystems: 'Multi-agent orchestration, high-autonomy deployments, financial automation',
+  },
+  {
+    code: 'C' as const,
+    name: 'Comprehensive',
+    acrCount: 410,
+    targetSystems: 'Safety-critical systems, physical autonomy, cross-domain AI platforms',
+  },
+] as const;
+
+/* ---------------------------------------------------------------------------
+ * Page component
+ * --------------------------------------------------------------------------- */
+
+export default async function CertificationPage() {
+  const certificationLevels = await getCertificationLevels();
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-10">
-      {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-sm text-muted">
-          <li>
-            <Link href="/" className="hover:text-charcoal transition-colors">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li className="text-charcoal font-medium">Certification</li>
-        </ol>
-      </nav>
+      {/* ---- Breadcrumb ---- */}
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Certification' },
+        ]}
+        className="mb-8"
+      />
 
-      {/* Page header */}
+      {/* ---- Page header ---- */}
       <header className="mb-12">
         <h1 className="text-3xl font-semibold tracking-tight text-charcoal mb-4">
-          ARA Certification Levels
+          Two-Axis Certification Model
         </h1>
         <div className="prose max-w-3xl">
           <p>
-            The ARA Standard defines a three-tier certification model that maps
-            autonomous system capabilities and risk profiles to graduated
-            reliability requirements. Each level prescribes minimum Autonomy
-            Compliance Requirements (ACRs), evaluation scope, adversarial
-            testing intensity, and ongoing monitoring obligations proportional
-            to the degree of operational autonomy and the potential consequences
-            of system failure.
+            ARA v1.1 introduces a two-axis certification framework that combines{' '}
+            <strong>Evaluation Level</strong> (the depth of initial assessment)
+            with <strong>Assurance Class</strong> (the intensity of ongoing
+            monitoring) to produce nine distinct certification designations. This
+            model decouples how thoroughly a system is evaluated from how
+            continuously its compliance is verified, enabling organizations to
+            select a certification posture that matches both the risk profile of
+            the system and the operational oversight capacity available.
           </p>
           <p>
             Certification is issued per system, per deployment scope. An
-            organization may hold different certification levels for different
-            systems or different deployment contexts of the same system.
-            Certification does not transfer between systems, versions, or
-            deployment environments without re-evaluation.
+            organization may hold different designations for different systems or
+            different deployment contexts of the same system. Certification does
+            not transfer between systems, versions, or deployment environments
+            without re-evaluation.
           </p>
         </div>
       </header>
 
-      {/* Level detail sections */}
-      <div className="space-y-16 mb-20">
-        {certificationLevels.map((cl) => (
-          <section
-            key={cl.level}
-            id={cl.level.toLowerCase()}
-            className="scroll-mt-24"
-          >
-            <div className="border border-border rounded-lg overflow-hidden">
-              {/* Section header */}
+      {/* ---- Interactive Two-Axis Matrix ---- */}
+      <section className="mb-20">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          Evaluation Level &times; Assurance Class
+        </h2>
+        <p className="text-sm text-muted mb-6 max-w-2xl">
+          Click any cell to see the combination of evaluation rigor and
+          assurance intensity. Each of the nine designations maps to a unique
+          set of requirements.
+        </p>
+        <TwoAxisMatrix className="max-w-3xl" />
+      </section>
+
+      {/* ---- Three Evaluation Levels ---- */}
+      <section className="mb-20">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          Evaluation Levels
+        </h2>
+        <p className="text-sm text-muted mb-8 max-w-2xl">
+          The evaluation level determines the depth and rigor of the initial
+          certification assessment, including ACR scope, adversarial testing
+          intensity, and evaluation timeline.
+        </p>
+
+        <div className="space-y-8">
+          {evaluationLevels.map((el) => (
+            <div
+              key={el.level}
+              id={el.level.toLowerCase()}
+              className="border border-border rounded-lg overflow-hidden scroll-mt-24"
+            >
+              {/* Card header */}
               <div className="bg-slate-50 border-b border-border px-6 py-5">
                 <div className="flex items-start gap-5">
                   <div className="shrink-0 badge-glow">
                     <CertificationBadge
-                      level={Number(cl.level.replace('L', '')) as 1 | 2 | 3}
+                      level={Number(el.level.replace('L', '')) as 1 | 2 | 3}
                       size={72}
                       variant="dark-on-light"
                     />
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <LevelBadge level={cl.level} />
-                      <h2 className="text-xl font-semibold text-charcoal">
-                        {cl.name}
-                      </h2>
+                      <LevelBadge level={el.level} />
+                      <h3 className="text-xl font-semibold text-charcoal">
+                        {el.name}
+                      </h3>
                     </div>
                     <p className="text-sm text-muted max-w-2xl">
-                      Level {levelNumber(cl.level)} certification for{' '}
-                      {cl.level === 'L1'
-                        ? 'systems operating under direct human supervision with autonomous components augmenting human decision-making.'
-                        : cl.level === 'L2'
-                          ? 'systems exercising significant autonomy within defined operational boundaries and constraints.'
-                          : 'systems operating autonomously in high-stakes environments where actions may be irreversible, safety-critical, or materially consequential.'}
+                      {el.description}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Section body */}
-              <div className="px-6 py-6">
-                <div className="grid md:grid-cols-2 gap-x-10 gap-y-6">
-                  {/* Autonomy Model */}
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
-                      Autonomy Model
-                    </h3>
-                    <p className="text-sm text-steel leading-relaxed">
-                      {cl.autonomyModel}
-                    </p>
-                  </div>
-
-                  {/* Human Requirements */}
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
-                      Human Requirements
-                    </h3>
-                    <p className="text-sm text-steel leading-relaxed">
-                      {cl.humanRequirement}
-                    </p>
-                  </div>
-
-                  {/* Minimum ACRs */}
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
-                      Minimum ACRs
-                    </h3>
-                    <p className="text-sm text-steel">
-                      <span className="font-mono font-semibold text-charcoal">
-                        {cl.minimumACRs}
-                      </span>{' '}
-                      Autonomy Compliance Requirements must be satisfied.
-                    </p>
-                  </div>
-
-                  {/* Evaluation Scope */}
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
-                      Evaluation Scope
-                    </h3>
-                    <p className="text-sm text-steel leading-relaxed">
-                      {cl.evaluationScope}
-                    </p>
-                  </div>
-
-                  {/* Adversarial Testing */}
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
-                      Adversarial Testing
-                    </h3>
-                    <p className="text-sm text-steel leading-relaxed">
-                      {cl.adversarialTesting}
-                    </p>
-                  </div>
-
-                  {/* Monitoring */}
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
-                      Monitoring
-                    </h3>
-                    <p className="text-sm text-steel leading-relaxed">
-                      {cl.monitoring}
-                    </p>
-                  </div>
-
-                  {/* Reassessment Schedule */}
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
-                      Reassessment Schedule
-                    </h3>
-                    <p className="text-sm text-steel">{cl.reassessment}</p>
-                  </div>
+              {/* Key metrics */}
+              <div className="px-6 py-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
+                    ACR Scope
+                  </h4>
+                  <p className="text-sm text-steel leading-relaxed">
+                    {el.metrics.acrScope}
+                  </p>
                 </div>
-
-                {/* Applicable System Types */}
-                <div className="mt-8 pt-6 border-t border-border">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-3">
-                    Applicable System Types
-                  </h3>
-                  <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-1.5">
-                    {cl.applicableSystems.map((sys) => (
-                      <li
-                        key={sys}
-                        className="text-sm text-steel flex items-start gap-2"
-                      >
-                        <span
-                          className="text-slate-400 mt-1.5 shrink-0"
-                          aria-hidden="true"
-                        >
-                          &bull;
-                        </span>
-                        {sys}
-                      </li>
-                    ))}
-                  </ul>
+                <div>
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
+                    Adversarial Testing
+                  </h4>
+                  <p className="text-sm text-steel leading-relaxed">
+                    {el.metrics.adversarialTesting}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
+                    Timeline
+                  </h4>
+                  <p className="text-sm text-steel leading-relaxed">
+                    {el.metrics.timeline}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
+                    Reassessment
+                  </h4>
+                  <p className="text-sm text-steel leading-relaxed">
+                    {el.metrics.reassessment}
+                  </p>
                 </div>
               </div>
             </div>
-          </section>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
 
-      {/* Comparison Table */}
-      <section className="mb-16">
+      {/* ---- Three Assurance Classes ---- */}
+      <section className="mb-20">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          Assurance Classes
+        </h2>
+        <p className="text-sm text-muted mb-8 max-w-2xl">
+          The assurance class determines the intensity and cadence of ongoing
+          compliance monitoring after initial certification is granted.
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {assuranceClasses.map((ac) => (
+            <div
+              key={ac.class}
+              className="border border-border rounded-lg overflow-hidden flex flex-col"
+            >
+              {/* Card header */}
+              <div className="bg-slate-50 border-b border-border px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <AssuranceClassBadge assuranceClass={ac.class} />
+                  <h3 className="text-base font-semibold text-charcoal">
+                    {ac.name}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Card body */}
+              <div className="px-5 py-5 flex-1 space-y-4">
+                <p className="text-sm text-steel leading-relaxed">
+                  {ac.description}
+                </p>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-0.5">
+                      Monitoring
+                    </h4>
+                    <p className="text-xs text-steel">{ac.monitoring}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-0.5">
+                      Cadence
+                    </h4>
+                    <p className="text-xs text-steel">{ac.cadence}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-0.5">
+                      Lapse Window
+                    </h4>
+                    <p className="text-xs text-steel">{ac.lapseWindow}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-0.5">
+                      CAPO Required
+                    </h4>
+                    <p className="text-xs text-steel">
+                      {ac.capoRequired ? 'Yes' : 'No'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ---- System Profiles ---- */}
+      <section className="mb-20">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          System Profiles
+        </h2>
+        <p className="text-sm text-muted mb-8 max-w-2xl">
+          System profiles determine which subset of the 410 Autonomy Compliance
+          Requirements apply to a given system, based on its capabilities,
+          deployment context, and risk exposure.
+        </p>
+
+        <div className="grid lg:grid-cols-[1fr_1fr] gap-10 items-start">
+          {/* Chart */}
+          <SystemProfileChart className="max-w-lg" />
+
+          {/* Profile list */}
+          <div className="space-y-4">
+            {systemProfiles.map((sp) => (
+              <div
+                key={sp.code}
+                className="flex items-start gap-4 p-4 border border-border rounded-lg"
+              >
+                <span className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 font-mono text-sm font-bold text-charcoal">
+                  {sp.code}
+                </span>
+                <div>
+                  <h3 className="text-sm font-semibold text-charcoal">
+                    {sp.name}{' '}
+                    <span className="text-muted font-mono font-normal">
+                      ({sp.acrCount} ACRs)
+                    </span>
+                  </h3>
+                  <p className="text-xs text-steel mt-0.5">
+                    {sp.targetSystems}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---- Certification Inheritance ---- */}
+      <section className="mb-20">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          Certification Inheritance
+        </h2>
+        <div className="prose max-w-3xl">
+          <p>
+            Platform certification enables ACR inheritance for deployment-level
+            certifications. When a platform has been certified at a given level,
+            deployments built on that platform may inherit the platform&apos;s
+            satisfied ACRs rather than re-evaluating them independently. This
+            reduces the evaluation burden for individual deployments while
+            preserving the integrity of the certification chain.
+          </p>
+          <p>
+            Inherited ACRs do not require re-evaluation as long as the
+            underlying platform certification remains valid and the
+            deployment&apos;s use of the platform falls within the certified
+            scope. If the platform certification lapses or is revoked, inherited
+            ACRs revert to unevaluated status and the deployment must be
+            re-assessed.
+          </p>
+        </div>
+        <div className="mt-4">
+          <Link
+            href="/certification/platform"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-charcoal hover:underline"
+          >
+            Platform Certification details &rarr;
+          </Link>
+        </div>
+      </section>
+
+      {/* ---- CAPO Requirements by Class ---- */}
+      <section className="mb-20">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          CAPO Requirements by Class
+        </h2>
+        <p className="text-sm text-muted mb-6 max-w-2xl">
+          Certified Autonomous-system Performance Observers (CAPOs) provide the
+          ongoing monitoring infrastructure required for Class B and Class C
+          assurance.
+        </p>
+
+        <div className="overflow-x-auto border border-border rounded-lg">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-slate-50 border-b border-border">
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  Requirement
+                </th>
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  <AssuranceClassBadge assuranceClass="A" size="sm" />
+                </th>
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  <AssuranceClassBadge assuranceClass="B" size="sm" />
+                </th>
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  <AssuranceClassBadge assuranceClass="C" size="sm" />
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  CAPO Designation
+                </td>
+                <td className="px-5 py-3 text-steel">Not required</td>
+                <td className="px-5 py-3 text-steel">Required</td>
+                <td className="px-5 py-3 text-steel">Required</td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  Reporting
+                </td>
+                <td className="px-5 py-3 text-steel">Self-reporting</td>
+                <td className="px-5 py-3 text-steel">Monthly reports</td>
+                <td className="px-5 py-3 text-steel">24/7 monitoring</td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  Review Cadence
+                </td>
+                <td className="px-5 py-3 text-steel">Annual review</td>
+                <td className="px-5 py-3 text-steel">Quarterly review</td>
+                <td className="px-5 py-3 text-steel">Continuous review</td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  Telemetry
+                </td>
+                <td className="px-5 py-3 text-steel">Basic (self-collected)</td>
+                <td className="px-5 py-3 text-steel">Automated collection</td>
+                <td className="px-5 py-3 text-steel">Full pipeline (real-time)</td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  Drift Detection
+                </td>
+                <td className="px-5 py-3 text-steel">Manual check at renewal</td>
+                <td className="px-5 py-3 text-steel">Automated, monthly threshold checks</td>
+                <td className="px-5 py-3 text-steel">Real-time alerting</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* ---- Lapse Windows & Remediation ---- */}
+      <section className="mb-20">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          Lapse Windows &amp; Remediation
+        </h2>
+        <p className="text-sm text-muted mb-6 max-w-3xl">
+          Each assurance class defines a lapse window: the maximum period a
+          certification holder may operate without completing its scheduled
+          monitoring obligations before the assurance state degrades. After the
+          lapse window expires, the certification remains technically valid but
+          the status transitions to <strong>Assurance Lapsed</strong>, which is
+          visible on the public registry.
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          {[
+            { class: 'A' as const, window: '90 days', note: 'Annual renewal deadline plus 90-day grace period.' },
+            { class: 'B' as const, window: '60 days', note: 'Monthly report deadline plus 60-day grace period.' },
+            { class: 'C' as const, window: '30 days', note: 'Continuous monitoring gap exceeding 30 days triggers lapse.' },
+          ].map((lw) => (
+            <div
+              key={lw.class}
+              className="border border-border rounded-lg p-5"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <AssuranceClassBadge assuranceClass={lw.class} size="sm" />
+                <span className="font-mono text-lg font-bold text-charcoal">
+                  {lw.window}
+                </span>
+              </div>
+              <p className="text-xs text-steel leading-relaxed">{lw.note}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="border border-border rounded-lg p-6 bg-slate-50">
+          <h3 className="text-base font-semibold text-charcoal mb-3">
+            After Lapse
+          </h3>
+          <ul className="space-y-2">
+            {[
+              'The certification remains on record but the assurance state transitions to Assurance Lapsed.',
+              'The lapsed status is published in the public registry and is visible to all querying parties.',
+              'The certified organization must complete the outstanding monitoring obligations and submit a remediation report to the certifying AVB to restore active assurance.',
+              'If the lapse exceeds twice the original lapse window, the AVB may require a partial or full re-evaluation.',
+            ].map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2.5 text-sm text-steel"
+              >
+                <span className="text-slate-400 mt-0.5 shrink-0">&bull;</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ---- Level Comparison (retained from v1.0) ---- */}
+      <section className="mb-20">
         <h2 className="text-2xl font-semibold text-charcoal mb-2">
           Level Comparison
         </h2>
         <p className="text-sm text-muted mb-6 max-w-2xl">
           Side-by-side comparison of certification requirements across all three
-          levels. All values represent minimum thresholds for certification
-          eligibility.
+          evaluation levels. All values represent minimum thresholds for
+          certification eligibility.
         </p>
 
         <div className="overflow-x-auto border border-border rounded-lg">
@@ -347,16 +680,15 @@ export default function CertificationPage() {
         </div>
       </section>
 
-      {/* Domain Score Thresholds */}
-      <section className="mb-16">
+      {/* ---- Domain Score Thresholds (retained from v1.0) ---- */}
+      <section className="mb-20">
         <h2 className="text-2xl font-semibold text-charcoal mb-2">
           Domain Score Thresholds
         </h2>
         <p className="text-sm text-muted mb-6 max-w-2xl">
-          Each certification level requires minimum passing scores across all
+          Each evaluation level requires minimum passing scores across all
           applicable evaluation domains. Scores are expressed as percentages of
-          full compliance within each domain. A system must meet or exceed every
-          applicable threshold to qualify for certification at that level.
+          full compliance within each domain.
         </p>
 
         <div className="overflow-x-auto border border-border rounded-lg">
@@ -379,220 +711,72 @@ export default function CertificationPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {allDomains.map((domain) => (
-                <tr key={domain}>
-                  <td className="px-5 py-3 font-medium text-charcoal whitespace-nowrap">
-                    {domain}
-                  </td>
-                  {certificationLevels.map((cl) => {
-                    const score = cl.domainThresholds[domain];
-                    return (
-                      <td
-                        key={cl.level}
-                        className="px-5 py-3 text-center font-mono text-steel"
-                      >
-                        {score !== undefined ? `${score}%` : '\u2014'}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
+              {Object.keys(certificationLevels[2]?.domainThresholds ?? {}).map(
+                (domain) => (
+                  <tr key={domain}>
+                    <td className="px-5 py-3 font-medium text-charcoal whitespace-nowrap">
+                      {domain}
+                    </td>
+                    {certificationLevels.map((cl) => {
+                      const score = cl.domainThresholds?.[domain];
+                      return (
+                        <td
+                          key={cl.level}
+                          className="px-5 py-3 text-center font-mono text-steel"
+                        >
+                          {score !== undefined ? `${score}%` : '\u2014'}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ),
+              )}
             </tbody>
           </table>
         </div>
       </section>
 
-      {/* Recertification Requirements */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          Recertification Requirements
+      {/* ---- Navigation links ---- */}
+      <section className="border-t border-border pt-10">
+        <h2 className="text-lg font-semibold text-charcoal mb-4">
+          Continue Reading
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
-            Certification validity is bounded by both time and operational
-            continuity. Recertification is required under the following
-            conditions:
-          </p>
-        </div>
-
-        <div className="mt-6 border border-border rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-slate-50 border-b border-border">
-                <th className="text-left font-semibold px-5 py-3 text-charcoal">
-                  Trigger
-                </th>
-                <th className="text-left font-semibold px-5 py-3 text-charcoal">
-                  Requirement
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              <tr>
-                <td className="px-5 py-3 font-medium text-charcoal align-top">
-                  Scheduled expiry
-                </td>
-                <td className="px-5 py-3 text-steel">
-                  L1 certifications expire after 12 months. L2 certifications
-                  expire after 12 months with semi-annual interim reviews. L3
-                  certifications expire after 12 months with quarterly interim
-                  reviews. All levels require full re-evaluation upon expiry.
-                </td>
-              </tr>
-              <tr>
-                <td className="px-5 py-3 font-medium text-charcoal align-top">
-                  Material system change
-                </td>
-                <td className="px-5 py-3 text-steel">
-                  Any modification to the system that alters its decision-making
-                  logic, autonomy boundaries, tool integrations, or model
-                  weights requires recertification. Minor configuration
-                  adjustments within documented operational parameters may be
-                  covered by the change control process without triggering full
-                  re-evaluation, subject to AVB determination.
-                </td>
-              </tr>
-              <tr>
-                <td className="px-5 py-3 font-medium text-charcoal align-top">
-                  Scope expansion
-                </td>
-                <td className="px-5 py-3 text-steel">
-                  Extending the certified system to new deployment environments,
-                  user populations, geographic regions, or operational contexts
-                  not covered by the original scope statement requires
-                  supplemental evaluation or full recertification.
-                </td>
-              </tr>
-              <tr>
-                <td className="px-5 py-3 font-medium text-charcoal align-top">
-                  Standard version update
-                </td>
-                <td className="px-5 py-3 text-steel">
-                  When a new version of the ARA Standard is ratified, existing
-                  certifications remain valid until their scheduled expiry.
-                  Recertification upon renewal must be conducted against the
-                  current standard version. Transition periods are defined in
-                  each version&apos;s release notes.
-                </td>
-              </tr>
-              <tr>
-                <td className="px-5 py-3 font-medium text-charcoal align-top">
-                  Monitoring threshold breach
-                </td>
-                <td className="px-5 py-3 text-steel">
-                  If continuous monitoring detects drift, behavioral anomalies,
-                  or compliance threshold breaches that are not resolved within
-                  the prescribed remediation window, the certifying AVB may
-                  require accelerated recertification.
-                </td>
-              </tr>
-              <tr>
-                <td className="px-5 py-3 font-medium text-charcoal align-top">
-                  Post-incident review
-                </td>
-                <td className="px-5 py-3 text-steel">
-                  Following a material safety incident, operational failure, or
-                  unauthorized autonomous action, ARAF or the certifying AVB may
-                  mandate recertification as a condition of continued
-                  operational authorization.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Revocation Rules */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          Revocation and Suspension
-        </h2>
-        <div className="prose max-w-3xl">
-          <p>
-            ARAF reserves the authority to suspend or revoke any ARA
-            certification. Revocation actions are recorded in the public
-            registry and are visible to all parties who query the affected
-            certification ID.
-          </p>
-        </div>
-
-        <div className="mt-6 space-y-6">
-          <div className="border border-border rounded-lg p-6">
-            <h3 className="text-base font-semibold text-charcoal mb-3">
-              Grounds for Suspension
+        <div className="grid sm:grid-cols-3 gap-4">
+          <Link
+            href="/certification/risk-classification"
+            className="group block border border-border rounded-lg p-5 hover:border-charcoal transition-colors"
+          >
+            <h3 className="text-sm font-semibold text-charcoal group-hover:underline mb-1">
+              Risk Classification
             </h3>
-            <p className="text-sm text-steel mb-4">
-              Suspension places a temporary hold on a certification. The system
-              may not represent itself as ARA-certified during the suspension
-              period. Suspension may be lifted upon remediation.
+            <p className="text-xs text-muted">
+              How deployment risk tiers map to evaluation levels and assurance
+              classes.
             </p>
-            <ul className="space-y-2">
-              {[
-                'Failure to complete a scheduled interim review within the prescribed window.',
-                'Monitoring data indicates non-compliance with one or more domain thresholds, with remediation in progress.',
-                'Incomplete or overdue submission of required audit artifacts to the certifying AVB.',
-                'Material change to the certified system deployed without prior notification to the certifying AVB.',
-                'Failure to maintain operational governance controls as documented at time of certification.',
-              ].map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-2.5 text-sm text-steel"
-                >
-                  <span className="text-slate-400 mt-0.5 shrink-0">
-                    &bull;
-                  </span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="border border-border rounded-lg p-6">
-            <h3 className="text-base font-semibold text-charcoal mb-3">
-              Grounds for Revocation
+          </Link>
+          <Link
+            href="/certification/platform"
+            className="group block border border-border rounded-lg p-5 hover:border-charcoal transition-colors"
+          >
+            <h3 className="text-sm font-semibold text-charcoal group-hover:underline mb-1">
+              Platform Certification
             </h3>
-            <p className="text-sm text-steel mb-4">
-              Revocation permanently invalidates a certification. A revoked
-              certification cannot be reinstated. The organization must apply
-              for a new certification through the standard evaluation process.
+            <p className="text-xs text-muted">
+              Certify the platform once, inherit ACRs across deployments.
             </p>
-            <ul className="space-y-2">
-              {[
-                'Confirmed material safety incident caused by failures within the certified scope.',
-                'Fraudulent representation of system capabilities, test results, or operational parameters during the evaluation process.',
-                'Sustained non-compliance across multiple monitoring cycles without adequate remediation effort.',
-                'Unauthorized use of ARA certification marks on systems or deployments outside the certified scope.',
-                'Refusal to cooperate with ARAF or AVB audit, investigation, or incident review processes.',
-                'System operation beyond certified autonomy boundaries resulting in unauthorized actions with material consequences.',
-              ].map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-2.5 text-sm text-steel"
-                >
-                  <span className="text-slate-400 mt-0.5 shrink-0">
-                    &bull;
-                  </span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="border border-border rounded-lg p-6">
-            <h3 className="text-base font-semibold text-charcoal mb-3">
-              Appeals Process
+          </Link>
+          <Link
+            href="/evaluation"
+            className="group block border border-border rounded-lg p-5 hover:border-charcoal transition-colors"
+          >
+            <h3 className="text-sm font-semibold text-charcoal group-hover:underline mb-1">
+              Evaluation Methodology
             </h3>
-            <p className="text-sm text-steel">
-              Organizations may appeal suspension or revocation decisions to the
-              ARAF Technical Governance Board within 30 calendar days of the
-              action. Appeals must include a written response addressing the
-              cited grounds, supporting evidence, and a proposed remediation
-              plan where applicable. The Governance Board will render a decision
-              within 45 calendar days of receiving a complete appeal submission.
-              Appeal decisions are final and are published in the governance
-              record.
+            <p className="text-xs text-muted">
+              The end-to-end evaluation process from scoping through final
+              certification decision.
             </p>
-          </div>
+          </Link>
         </div>
       </section>
     </div>

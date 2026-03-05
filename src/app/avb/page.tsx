@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
 export const metadata: Metadata = {
-  title: 'Authorized Validation Bodies',
+  title: 'Authorized Validation Bodies — v1.1',
   description:
-    'AVB program overview: authorization levels, independence requirements, insurance obligations, renewal process, and revocation procedures for ARA certification evaluators.',
+    'AVB program overview v1.1: authorization levels, risk classification responsibility, platform certification evaluation, Domain 5 & 13 competency, independence requirements, insurance-relevant reporting, renewal process, and revocation procedures.',
 };
 
 const authorizationLevels = [
@@ -13,47 +14,56 @@ const authorizationLevels = [
     scope: 'L1 evaluations only',
     requirements: [
       'Minimum 3 qualified assessors on staff',
-      'Demonstrated competence in at least 8 of 12 core evaluation domains',
+      'Demonstrated competence in at least 8 of 15 evaluation domains',
+      'Must complete Domain 5 (Data Privacy) specialist training',
       'Completed ARAF AVB Accreditation Program (Basic tier)',
       'Quality management system compliant with ISO/IEC 17020 or equivalent',
       'Professional indemnity insurance meeting ARAF minimum thresholds',
       'No active conflicts of interest with prospective certification applicants',
+      'Can conduct risk classification for Class A systems only',
     ],
     evaluationScope:
-      'L1 (Supervised Operational Reliability) certifications. Automated adversarial suite execution. Standard evidence inspection and documentation review.',
+      'L1 (Foundation) certifications only. Automated adversarial suite execution. Standard evidence inspection and documentation review. Risk classification authority limited to Class A systems.',
   },
   {
     level: 'Enhanced',
     scope: 'L1 and L2 evaluations',
     requirements: [
-      'Minimum 8 qualified assessors on staff, covering all 12 core domains',
+      'Minimum 8 qualified assessors on staff, covering all 15 evaluation domains',
       'At least 2 assessors with demonstrated adversarial testing expertise',
+      'Must demonstrate Domain 5 (Data Privacy) and Domain 13 (Societal Impact) competency',
       'Completed ARAF AVB Accreditation Program (Enhanced tier)',
       'Minimum 12 months of active Basic authorization with satisfactory performance record',
       'Capability to conduct structured human adversarial simulation (40+ hour engagements)',
+      'Can conduct risk classification for all Assurance Classes (A, B, C)',
+      'Can evaluate platform certifications (basic scope)',
       'Enhanced professional indemnity and errors & omissions insurance coverage',
       'Annual quality audit by an ARAF-appointed reviewer',
     ],
     evaluationScope:
-      'L1 and L2 (Bounded Autonomous Deployment) certifications. Automated and human adversarial testing. Full 12-domain evaluation scope. Continuous monitoring verification.',
+      'L1 and L2 (Operational) certifications. Automated and human adversarial testing. Full 15-domain evaluation scope. Basic platform certification evaluation. Risk classification for all Assurance Classes. Continuous monitoring verification.',
   },
   {
     level: 'Full',
     scope: 'L1, L2, and L3 evaluations',
     requirements: [
-      'Minimum 15 qualified assessors on staff, covering all 13 domains including Domain 13',
+      'Minimum 12 qualified assessors on staff, covering all 15 domains',
       'Dedicated adversarial testing team (minimum 4 specialists)',
+      'Domain 5 (Data Privacy) and Domain 13 (Societal Impact) specialist assessors required',
       'Completed ARAF AVB Accreditation Program (Full tier)',
       'Minimum 24 months of active Enhanced authorization with exemplary performance record',
       'Capability to coordinate independent red team engagements',
       'Capability to conduct 30-day continuous runtime stress testing',
-      'Physical systems evaluation competence (for Domain 13)',
+      'Full platform certification authority',
+      'Risk classification authority for all Assurance Classes (A, B, C)',
+      'Insurance-relevant reporting capability (RIP-compatible)',
+      'Physical systems evaluation competence (for Domain 15)',
       'Maximum-tier professional indemnity, errors & omissions, and general liability insurance',
       'Semi-annual quality audit by an ARAF-appointed reviewer',
       'Dedicated quality assurance function independent of evaluation operations',
     ],
     evaluationScope:
-      'All certification levels including L3 (High-Stakes Autonomous Certification). Full adversarial testing suite including independent red team coordination. Domain 13 physical actuation safety evaluation. 30-day stress testing oversight.',
+      'All certification levels including L3 (High-Stakes). Full adversarial testing suite including independent red team coordination. Domain 15 physical safety evaluation. 30-day stress testing oversight. Complete platform certification authority. Insurance-relevant reporting for RIP framework.',
   },
 ];
 
@@ -61,37 +71,31 @@ export default function AVBPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-10">
       {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-sm text-muted">
-          <li>
-            <Link href="/" className="hover:text-charcoal transition-colors">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li className="text-charcoal font-medium">AVB Program</li>
-        </ol>
-      </nav>
+      <Breadcrumb
+        items={[{ label: 'Home', href: '/' }, { label: 'AVB Program' }]}
+        className="mb-8"
+      />
 
       {/* Page header */}
       <header className="mb-12">
         <h1 className="text-3xl font-semibold tracking-tight text-charcoal mb-4">
-          Authorized Validation Bodies
+          Authorized Validation Bodies — v1.1
         </h1>
         <div className="prose max-w-3xl">
           <p>
             Authorized Validation Bodies (AVBs) are independent organizations
             accredited by ARAF to conduct ARA certification evaluations. AVBs
             are the operational layer of the certification system — they
-            perform the assessments, apply the scoring methodology, render
-            certification decisions, and oversee post-certification monitoring.
+            perform the assessments, conduct risk classification, apply the
+            scoring methodology, render certification decisions, and oversee
+            post-certification monitoring.
           </p>
           <p>
             ARAF does not conduct evaluations directly. All certification
             assessments are performed by AVBs operating under ARAF governance,
-            quality standards, and oversight. This separation ensures that the
-            standard-setting body maintains independence from the
-            certification-granting function.
+            quality standards, and oversight. v1.1 expands AVB responsibilities
+            to include mandatory risk classification, platform certification
+            evaluation, and insurance-relevant reporting.
           </p>
         </div>
       </header>
@@ -119,11 +123,12 @@ export default function AVBPage() {
               Role of AVBs
             </h3>
             <p className="text-sm text-steel leading-relaxed">
-              AVBs conduct certification evaluations, apply the ARA scoring
-              methodology, render certification decisions, publish results to
-              the registry, and oversee continuous monitoring for their
-              certified systems. They are the primary point of contact for
-              organizations seeking ARA certification.
+              AVBs conduct certification evaluations, perform risk
+              classification, apply the ARA scoring methodology, render
+              certification decisions, publish results to the registry, and
+              oversee continuous monitoring for their certified systems. They
+              are the primary point of contact for organizations seeking ARA
+              certification.
             </p>
           </div>
           <div className="border border-border rounded-lg p-6">
@@ -146,7 +151,11 @@ export default function AVBPage() {
               The AVB program is designed to support global certification
               coverage. AVBs may operate in any jurisdiction and may specialize
               in specific industries, system types, or evaluation domains. ARAF
-              maintains a public directory of all authorized AVBs.
+              maintains a{' '}
+              <Link href="/ecosystem/avbs" className="text-navy hover:underline">
+                public directory
+              </Link>{' '}
+              of all authorized AVBs.
             </p>
           </div>
         </div>
@@ -162,8 +171,8 @@ export default function AVBPage() {
         <p className="text-sm text-muted mb-6 max-w-3xl">
           AVB authorization is tiered to match the certification levels they
           are permitted to evaluate. Higher authorization levels require more
-          staff, broader domain coverage, greater testing capabilities, and
-          more extensive insurance.
+          staff, broader domain coverage across all 15 evaluation domains,
+          greater testing capabilities, and more extensive insurance.
         </p>
 
         <div className="space-y-6">
@@ -223,6 +232,282 @@ export default function AVBPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Risk Classification Responsibility */}
+      <section id="risk-classification" className="mb-20 scroll-mt-24">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          <a
+            href="#risk-classification"
+            className="hover:text-navy transition-colors"
+          >
+            Risk Classification Responsibility
+          </a>
+        </h2>
+        <div className="prose max-w-3xl">
+          <p>
+            Under v1.1, AVBs are responsible for conducting the mandatory
+            7-factor risk assessment during Phase 2 of the certification
+            lifecycle. The risk classification determines the system&apos;s
+            Assurance Class (A, B, or C), which in turn governs monitoring
+            requirements, certification designation, and insurance relevance.
+          </p>
+        </div>
+
+        <div className="mt-6 border border-border rounded-lg overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-slate-50 border-b border-border">
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  AVB Tier
+                </th>
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  Risk Classification Authority
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">Basic</td>
+                <td className="px-5 py-3 text-steel">
+                  Class A systems only. Systems classified as Class B or C must
+                  be referred to an Enhanced or Full AVB.
+                </td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">Enhanced</td>
+                <td className="px-5 py-3 text-steel">
+                  All Assurance Classes (A, B, and C). Full 7-factor assessment
+                  authority.
+                </td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">Full</td>
+                <td className="px-5 py-3 text-steel">
+                  All Assurance Classes (A, B, and C). Full 7-factor assessment
+                  authority. May serve as classification reviewer for disputed
+                  or escalated assessments.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-6 border border-border rounded-lg p-6 bg-slate-50">
+          <h3 className="text-base font-semibold text-charcoal mb-2">
+            7-Factor Assessment
+          </h3>
+          <p className="text-sm text-steel leading-relaxed mb-3">
+            The risk classification evaluates seven factors, each scored and
+            weighted to produce an overall Assurance Class determination:
+          </p>
+          <div className="grid sm:grid-cols-2 gap-x-8 gap-y-1.5">
+            {[
+              'Autonomy level',
+              'Decision impact severity',
+              'Data sensitivity',
+              'Operational environment',
+              'Human oversight capacity',
+              'Action reversibility',
+              'Deployment scale',
+            ].map((factor) => (
+              <div
+                key={factor}
+                className="flex items-start gap-2.5 text-sm text-steel"
+              >
+                <span className="text-slate-400 mt-0.5 shrink-0">&bull;</span>
+                {factor}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Certification Evaluation */}
+      <section id="platform-certification" className="mb-20 scroll-mt-24">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          <a
+            href="#platform-certification"
+            className="hover:text-navy transition-colors"
+          >
+            Platform Certification Evaluation
+          </a>
+        </h2>
+        <div className="prose max-w-3xl">
+          <p>
+            v1.1 introduces platform certification as a distinct certification
+            variant. Platform certifications allow infrastructure and framework
+            providers to certify their platforms, enabling downstream systems
+            built on those platforms to inherit qualifying domain scores. AVB
+            authority for platform evaluations varies by tier.
+          </p>
+        </div>
+
+        <div className="mt-6 border border-border rounded-lg overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-slate-50 border-b border-border">
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  AVB Tier
+                </th>
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  Platform Certification Authority
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">Basic</td>
+                <td className="px-5 py-3 text-muted">
+                  No platform certification authority.
+                </td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">Enhanced</td>
+                <td className="px-5 py-3 text-steel">
+                  Basic platform evaluations. Limited to L1 and L2 platform
+                  certifications. Can validate platform inheritance claims for
+                  downstream system evaluations.
+                </td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">Full</td>
+                <td className="px-5 py-3 text-steel">
+                  Complete platform certification authority across all levels.
+                  Can evaluate complex multi-layer platform architectures,
+                  validate cross-platform inheritance chains, and issue L3
+                  platform certifications.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Domain 5 & 13 Competency */}
+      <section id="domain-competency" className="mb-20 scroll-mt-24">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          <a
+            href="#domain-competency"
+            className="hover:text-navy transition-colors"
+          >
+            Domain 5 &amp; 13 Competency
+          </a>
+        </h2>
+        <div className="prose max-w-3xl">
+          <p>
+            v1.1 expands the evaluation framework to 15 domains, with Domain 5
+            (Data Privacy) and Domain 13 (Societal Impact) receiving particular
+            emphasis due to their cross-cutting nature and regulatory
+            significance. All AVB tiers must demonstrate competency in these
+            two domains.
+          </p>
+        </div>
+
+        <div className="mt-6 grid md:grid-cols-2 gap-6">
+          <div className="border border-border rounded-lg p-6">
+            <h3 className="text-base font-semibold text-charcoal mb-3">
+              Domain 5 — Data Privacy
+            </h3>
+            <ul className="space-y-2">
+              {[
+                'All AVB tiers must complete Domain 5 specialist training',
+                'Covers data collection transparency, consent mechanisms, retention policies, and cross-border data handling',
+                'Training includes GDPR, CCPA, and emerging AI-specific privacy regulation alignment',
+                'Full-tier AVBs must maintain at least one Domain 5 specialist assessor',
+                'Annual recertification required for Domain 5 competency',
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="flex items-start gap-2.5 text-sm text-steel"
+                >
+                  <span className="text-slate-400 mt-0.5 shrink-0">
+                    &bull;
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="border border-border rounded-lg p-6">
+            <h3 className="text-base font-semibold text-charcoal mb-3">
+              Domain 13 — Societal Impact
+            </h3>
+            <ul className="space-y-2">
+              {[
+                'Enhanced and Full AVBs must demonstrate Domain 13 competency',
+                'Covers bias assessment, equity impact analysis, accessibility compliance, and community impact evaluation',
+                'Evaluation methodology includes structured stakeholder impact mapping',
+                'Full-tier AVBs must maintain at least one Domain 13 specialist assessor',
+                'Domain 13 competency is prerequisite for L2 and L3 evaluation authority',
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="flex items-start gap-2.5 text-sm text-steel"
+                >
+                  <span className="text-slate-400 mt-0.5 shrink-0">
+                    &bull;
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Insurance-Relevant Reporting */}
+      <section id="insurance-reporting" className="mb-20 scroll-mt-24">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          <a
+            href="#insurance-reporting"
+            className="hover:text-navy transition-colors"
+          >
+            Insurance-Relevant Reporting
+          </a>
+        </h2>
+        <div className="prose max-w-3xl">
+          <p>
+            Full-tier AVBs must produce certification reports that are
+            compatible with the ARA Risk-Informed Pricing (RIP) assessment
+            framework. Insurance-relevant reports provide structured risk data
+            that insurance carriers can use to price autonomous system coverage.
+          </p>
+        </div>
+
+        <div className="mt-6 border border-border rounded-lg p-6">
+          <h3 className="text-base font-semibold text-charcoal mb-3">
+            RIP Report Requirements
+          </h3>
+          <ul className="space-y-2">
+            {[
+              'Structured risk factor data aligned with the 7-factor classification model',
+              'Domain-level scoring with confidence intervals for each evaluation domain',
+              'Adversarial testing summary with vulnerability severity classification',
+              'Continuous monitoring baseline metrics and drift tolerance thresholds',
+              'Assurance Class rationale with factor-by-factor breakdown',
+              'Historical compliance trajectory for renewal certifications',
+              'Reports must follow the standardized RIP Data Schema (published by ARAF)',
+            ].map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2.5 text-sm text-steel"
+              >
+                <span className="text-slate-400 mt-0.5 shrink-0">
+                  &bull;
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="text-xs text-muted mt-3 max-w-3xl">
+          Basic and Enhanced AVBs are not required to produce RIP-compatible
+          reports but are encouraged to adopt the reporting schema to support
+          ecosystem-wide insurance integration.
+        </p>
       </section>
 
       {/* Independence Requirements */}
@@ -419,6 +704,50 @@ export default function AVBPage() {
         </p>
       </section>
 
+      {/* Revalidation Triggers */}
+      <section id="revalidation-triggers" className="mb-20 scroll-mt-24">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          <a
+            href="#revalidation-triggers"
+            className="hover:text-navy transition-colors"
+          >
+            Revalidation Triggers
+          </a>
+        </h2>
+        <div className="prose max-w-3xl">
+          <p>
+            v1.1 updates the conditions that trigger revalidation of AVB
+            authorization outside of the standard renewal cycle. AVBs must
+            initiate a revalidation review when any of the following conditions
+            occur.
+          </p>
+        </div>
+
+        <div className="mt-6 border border-border rounded-lg p-6">
+          <ul className="space-y-2">
+            {[
+              'Assurance Class lapse: an AVB fails to maintain the competency or staffing requirements for a previously authorized Assurance Class scope.',
+              'Assurance Class escalation request: an AVB seeks to expand its risk classification authority (e.g., Basic AVB requesting Class B authority).',
+              'Platform cert dependency change: an AVB\u2019s platform certification authority is affected by changes to a platform\u2019s certification status.',
+              'Domain competency gap: loss of Domain 5 or Domain 13 specialist assessors below minimum thresholds.',
+              'Insurance coverage change: material change to insurance coverage that affects the AVB\u2019s authorized evaluation scope.',
+              'Organizational restructuring: material change to the AVB\u2019s corporate structure, ownership, or operational independence.',
+              'Performance deficiency: identification of systematic evaluation quality issues through ARAF audit or inter-AVB calibration.',
+            ].map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2.5 text-sm text-steel"
+              >
+                <span className="text-slate-400 mt-0.5 shrink-0">
+                  &bull;
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* Renewal Requirements */}
       <section id="renewal" className="mb-20 scroll-mt-24">
         <h2 className="text-2xl font-semibold text-charcoal mb-2">
@@ -465,6 +794,16 @@ export default function AVBPage() {
                   AVB&apos;s evaluation processes, evidence handling, scoring
                   consistency, and certification decisions. The audit scope
                   includes a sample review of completed evaluations.
+                </td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal align-top whitespace-nowrap">
+                  Domain competency
+                </td>
+                <td className="px-5 py-3 text-steel">
+                  Demonstrated competency across all 15 evaluation domains
+                  must be verified at renewal. Domain 5 and Domain 13
+                  specialist credentials are independently validated.
                 </td>
               </tr>
               <tr>
@@ -545,6 +884,7 @@ export default function AVBPage() {
                 'Scoring inconsistency detected through inter-AVB calibration exercises.',
                 'Assessor credential deficiencies affecting more than 25% of the AVB\u2019s evaluation staff.',
                 'Failure to submit required reports or documentation to ARAF within prescribed deadlines.',
+                'Loss of Domain 5 or Domain 13 competency below minimum thresholds.',
               ].map((item) => (
                 <li
                   key={item}
@@ -576,6 +916,7 @@ export default function AVBPage() {
                 'Material breach of ARAF governance policies or program agreements.',
                 'Issuance of certifications outside the AVB\u2019s authorized scope (e.g., a Basic AVB issuing L2 certifications).',
                 'Refusal to cooperate with an ARAF investigation or incident review.',
+                'Fraudulent risk classification to circumvent Assurance Class requirements.',
               ].map((item) => (
                 <li
                   key={item}
@@ -635,19 +976,19 @@ export default function AVBPage() {
               step: 2,
               title: 'Eligibility Assessment',
               description:
-                'ARAF conducts a preliminary eligibility assessment to verify that the organization meets the minimum structural, personnel, and insurance requirements for the requested authorization level.',
+                'ARAF conducts a preliminary eligibility assessment to verify that the organization meets the minimum structural, personnel, and insurance requirements for the requested authorization level. Domain 5 and Domain 13 competency is assessed at this stage.',
             },
             {
               step: 3,
               title: 'Accreditation Program',
               description:
-                'Eligible organizations complete the ARAF AVB Accreditation Program at the appropriate tier. The program includes training on the ARA Standard, evaluation methodology, scoring model, evidence handling, and quality management requirements.',
+                'Eligible organizations complete the ARAF AVB Accreditation Program at the appropriate tier. The program includes training on the ARA Standard, evaluation methodology, scoring model, evidence handling, risk classification procedures, and quality management requirements.',
             },
             {
               step: 4,
               title: 'Supervised Evaluation',
               description:
-                'The applicant AVB conducts a supervised evaluation under the observation of an ARAF quality reviewer. The supervised evaluation is assessed for procedural compliance, scoring accuracy, evidence quality, and reporting standards.',
+                'The applicant AVB conducts a supervised evaluation under the observation of an ARAF quality reviewer. The supervised evaluation is assessed for procedural compliance, scoring accuracy, risk classification methodology, evidence quality, and reporting standards.',
             },
             {
               step: 5,
@@ -697,7 +1038,7 @@ export default function AVBPage() {
         <h2 className="text-lg font-semibold text-charcoal mb-4">
           Related Documentation
         </h2>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
           <Link
             href="/evaluation"
             className="group block border border-border rounded-lg p-5 hover:border-border-dark hover:bg-slate-50 transition-colors"
@@ -719,6 +1060,18 @@ export default function AVBPage() {
             </h3>
             <p className="text-xs text-muted">
               L1, L2, and L3 certification requirements and domain thresholds.
+            </p>
+          </Link>
+          <Link
+            href="/ecosystem/avbs"
+            className="group block border border-border rounded-lg p-5 hover:border-border-dark hover:bg-slate-50 transition-colors"
+          >
+            <h3 className="text-sm font-semibold text-charcoal group-hover:text-navy transition-colors mb-1">
+              AVB Directory
+            </h3>
+            <p className="text-xs text-muted">
+              Public directory of all authorized AVBs with tier and scope
+              information.
             </p>
           </Link>
           <Link

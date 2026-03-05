@@ -1,0 +1,341 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { getACR, getACRs, getACRsByDomain, getDomains } from '@/lib/data';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+
+interface ACRPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export async function generateStaticParams() {
+  const { data: allAcrs } = await getACRs();
+  return allAcrs.map((a) => ({
+    id: a.id,
+  }));
+}
+
+export async function generateMetadata({ params }: ACRPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const acr = await getACR(id);
+  if (!acr) return { title: 'ACR Not Found' };
+
+  return {
+    title: `${acr.id}: ${acr.title ?? 'ACR Detail'} — ARA Standard v1.1`,
+    description: acr.description ?? acr.requirementStatement,
+  };
+}
+
+function LevelBadge({ level, active }: { level: string; active: boolean }) {
+  if (!active) {
+    return (
+      <span className="inline-flex items-center justify-center font-mono text-[11px] font-bold w-8 h-[22px] rounded-[3px] bg-white text-slate-300 border border-slate-200">
+        {level}
+      </span>
+    );
+  }
+  const classes: Record<string, string> = {
+    L1: 'level-badge level-badge-l1',
+    L2: 'level-badge level-badge-l2',
+    L3: 'level-badge level-badge-l3',
+  };
+  return <span className={classes[level]}>{level}</span>;
+}
+
+function SectionAnchor({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <h2 id={id} className="text-base font-semibold text-charcoal mt-8 mb-3 scroll-mt-24">
+      <a href={`#${id}`} className="group">
+        {children}
+        <span className="ml-2 opacity-0 group-hover:opacity-40 transition-opacity text-muted">#</span>
+      </a>
+    </h2>
+  );
+}
+
+const evalMethodLabels: Record<string, string> = {
+  AT: 'Automated Testing',
+  HS: 'Human Simulation',
+  EI: 'Evidence Inspection',
+  CM: 'Continuous Monitoring',
+  TP: 'Third-Party Attestation',
+  OP: 'Operational Proof',
+};
+
+const evalMethodDescriptions: Record<string, string> = {
+  AT: 'Compliance is evaluated through automated test suites that exercise the control under structured test conditions. Results are deterministically reproducible.',
+  HS: 'Compliance is evaluated through structured scenarios where qualified human evaluators simulate realistic operational conditions and adversarial interactions.',
+  EI: 'Compliance is evaluated through inspection of documentary evidence including architecture documents, configuration artifacts, and operational records.',
+  CM: 'Compliance is evaluated through analysis of continuous monitoring telemetry collected over a defined observation period during live or simulated operations.',
+  TP: 'Compliance is evaluated through independent third-party attestation. Evidence is provided by external parties with no direct relationship to the system operator.',
+  OP: 'Compliance is demonstrated through operational performance data collected during production operations over a defined measurement period.',
+};
+
+export default async function ACRDetailPage({ params }: ACRPageProps) {
+  const { id } = await params;
+  const acr = await getACR(id);
+
+  if (!acr) {
+    notFound();
+  }
+
+  const allDomains = await getDomains();
+  const domain = allDomains.find((d) => d.id === acr.domainId);
+
+  // Find same-domain ACRs for navigation
+  const domainAcrs = await getACRsByDomain(acr.domainId);
+
+  // Pre-fetch related/cross-referenced controls for display
+  const relatedIds = [...(acr.relatedControls ?? []), ...(acr.crossReferences ?? [])];
+  const relatedAcrs = new Map<string, Awaited<ReturnType<typeof getACR>>>();
+  for (const ctrlId of relatedIds) {
+    relatedAcrs.set(ctrlId, await getACR(ctrlId));
+  }
+  const currentIndex = domainAcrs.findIndex((a) => a.id === acr.id);
+  const prevACR = currentIndex > 0 ? domainAcrs[currentIndex - 1] : null;
+  const nextACR = currentIndex < domainAcrs.length - 1 ? domainAcrs[currentIndex + 1] : null;
+
+  const displayTitle = acr.title ?? acr.requirementStatement?.slice(0, 120) ?? acr.id;
+  const displayDescription = acr.description ?? acr.requirementStatement;
+
+  return (
+    <div className="max-w-[1400px] mx-auto px-6 py-12">
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Standard', href: '/standard' },
+          { label: 'v1.1', href: '/standard/v1.1' },
+          { label: 'ACR Library', href: '/standard/v1.1/acr' },
+          { label: acr.id },
+        ]}
+        className="mb-8"
+      />
+
+      <div className="max-w-[72ch]">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-3 flex-wrap">
+            <span className="acr-id text-lg">{acr.id}</span>
+            <span
+              className={`text-xs font-medium px-2 py-0.5 rounded ${
+                acr.classification === 'Blocking'
+                  ? 'bg-charcoal text-white'
+                  : 'bg-slate-100 text-steel border border-border'
+              }`}
+            >
+              {acr.classification}
+            </span>
+            <span className="text-xs text-muted">
+              v{acr.versionIntroduced}
+            </span>
+          </div>
+          <h1 className="text-2xl font-semibold text-charcoal tracking-tight mb-4">
+            {displayTitle}
+          </h1>
+
+          {/* Summary metadata */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-slate-50 border border-border rounded-lg">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Domain</p>
+              <Link
+                href={`/standard/v1.1/domains/${domain?.slug}`}
+                className="text-sm text-navy underline"
+              >
+                {String(acr.domainId).padStart(2, '0')} &mdash; {acr.domain}
+              </Link>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Eval Method</p>
+              <span className="inline-flex items-center gap-1.5 text-sm">
+                <span className="font-mono font-semibold text-navy">{acr.evaluationMethod}</span>
+                <span className="text-steel">{evalMethodLabels[acr.evaluationMethod] ?? acr.evaluationMethod}</span>
+              </span>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Risk Weight</p>
+              <span className="text-sm">
+                <span className="font-mono font-semibold text-charcoal">{acr.riskWeight}</span>
+                <span className="text-muted"> / 10</span>
+              </span>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Applicability</p>
+              <div className="flex items-center gap-1">
+                <LevelBadge level="L1" active={acr.levelApplicability?.L1 ?? false} />
+                <LevelBadge level="L2" active={acr.levelApplicability?.L2 ?? false} />
+                <LevelBadge level="L3" active={acr.levelApplicability?.L3 ?? false} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Description */}
+        <SectionAnchor id="description">Description</SectionAnchor>
+        <p className="text-steel leading-relaxed">
+          {displayDescription}
+        </p>
+
+        {/* Evaluation Method */}
+        <SectionAnchor id="evaluation-method">Evaluation Method</SectionAnchor>
+        <div className="bg-slate-50 border border-border rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-mono text-sm font-semibold text-navy bg-white px-2 py-0.5 rounded border border-border">
+              {acr.evaluationMethod}
+            </span>
+            <span className="text-sm font-semibold text-charcoal">
+              {evalMethodLabels[acr.evaluationMethod] ?? acr.evaluationMethod}
+            </span>
+          </div>
+          <p className="text-sm text-steel leading-relaxed">
+            {evalMethodDescriptions[acr.evaluationMethod] ?? 'Evaluation methodology as specified by the assigned method code.'}
+          </p>
+        </div>
+
+        {/* Evidence Requirements */}
+        {acr.evidenceRequirements && acr.evidenceRequirements.length > 0 && (
+          <>
+            <SectionAnchor id="evidence-requirements">Evidence Requirements</SectionAnchor>
+            <p className="text-sm text-muted mb-3">
+              The following evidence artifacts must be provided to demonstrate compliance with this control:
+            </p>
+            <ol className="space-y-3">
+              {acr.evidenceRequirements.map((req, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm text-steel">
+                  <span className="font-mono text-xs font-semibold text-navy bg-slate-50 px-1.5 py-0.5 rounded border border-border shrink-0 mt-0.5">
+                    {i + 1}
+                  </span>
+                  <span className="leading-relaxed">{req}</span>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
+
+        {/* v1.1 fields */}
+        {(acr.profileApplicability || acr.evaluationFrequency || acr.platformCertEligible != null || acr.frameworkCrosswalkRefs) && (
+          <>
+            <SectionAnchor id="v11-details">v1.1 Details</SectionAnchor>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-slate-50 border border-border rounded-lg">
+              {acr.profileApplicability && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Profile Applicability</p>
+                  <p className="text-sm text-steel">{acr.profileApplicability}</p>
+                </div>
+              )}
+              {acr.evaluationFrequency && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Evaluation Frequency</p>
+                  <p className="text-sm text-steel">{acr.evaluationFrequency}</p>
+                </div>
+              )}
+              {acr.platformCertEligible != null && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Platform Cert Eligible</p>
+                  <p className="text-sm text-steel">{acr.platformCertEligible ? 'Yes' : 'No'}</p>
+                </div>
+              )}
+              {acr.frameworkCrosswalkRefs && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Framework Crosswalk Refs</p>
+                  <p className="text-sm text-steel">{acr.frameworkCrosswalkRefs}</p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* Classification */}
+        <SectionAnchor id="classification">Classification</SectionAnchor>
+        <div className="bg-slate-50 border border-border rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span
+              className={`text-xs font-medium px-2 py-0.5 rounded ${
+                acr.classification === 'Blocking'
+                  ? 'bg-charcoal text-white'
+                  : 'bg-white text-steel border border-border'
+              }`}
+            >
+              {acr.classification}
+            </span>
+            <span className="text-sm font-semibold text-charcoal">
+              {acr.classification === 'Blocking' ? 'Blocking Control' : 'Conditional Control'}
+            </span>
+          </div>
+          <p className="text-sm text-steel leading-relaxed">
+            {acr.classification === 'Blocking'
+              ? 'This is a blocking control. Non-compliance with this ACR results in automatic certification denial at all applicable levels. No conditional certification or remediation period is available for blocking controls. The system must demonstrate full compliance before certification can be granted.'
+              : 'This is a conditional control. Non-compliance with this ACR may result in conditional certification with a mandated remediation period. The Authorized Verification Body will specify the remediation timeline and required evidence for the condition to be cleared. If remediation is not completed within the specified period, the conditional certification will be revoked.'}
+          </p>
+        </div>
+
+        {/* Related Controls / Cross-references */}
+        {((acr.relatedControls && acr.relatedControls.length > 0) || (acr.crossReferences && acr.crossReferences.length > 0)) && (
+          <>
+            <SectionAnchor id="cross-references">Cross-References</SectionAnchor>
+            <p className="text-sm text-muted mb-3">
+              This ACR has dependencies or relationships with the following controls:
+            </p>
+            <div className="space-y-2">
+              {[...(acr.relatedControls ?? []), ...(acr.crossReferences ?? [])].map((ctrlId) => {
+                const related = relatedAcrs.get(ctrlId) ?? null;
+                if (!related) {
+                  return (
+                    <div key={ctrlId} className="flex items-center gap-3 p-3 border border-border rounded-lg bg-slate-50">
+                      <span className="acr-id">{ctrlId}</span>
+                      <span className="text-sm text-muted">Not yet defined in this release</span>
+                    </div>
+                  );
+                }
+                return (
+                  <Link
+                    key={ctrlId}
+                    href={`/standard/v1.1/acr/${ctrlId}`}
+                    className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-border-dark transition-colors bg-white group"
+                  >
+                    <span className="acr-id shrink-0">{related.id}</span>
+                    <span className="text-sm text-steel group-hover:text-charcoal transition-colors">
+                      {related.title ?? related.requirementStatement?.slice(0, 80)}
+                    </span>
+                    <span className="text-xs text-muted ml-auto shrink-0">
+                      {related.domain}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </>
+        )}
+
+        {/* Navigation */}
+        <div className="mt-12 pt-8 border-t border-border flex items-center justify-between">
+          {prevACR ? (
+            <Link
+              href={`/standard/v1.1/acr/${prevACR.id}`}
+              className="group text-sm text-muted hover:text-charcoal transition-colors"
+            >
+              <span className="text-xs text-slate-400 block mb-0.5">&larr; Previous</span>
+              <span className="font-medium">
+                {prevACR.id}: {prevACR.title ?? prevACR.requirementStatement?.slice(0, 40)}
+              </span>
+            </Link>
+          ) : (
+            <div />
+          )}
+          {nextACR ? (
+            <Link
+              href={`/standard/v1.1/acr/${nextACR.id}`}
+              className="group text-sm text-muted hover:text-charcoal transition-colors text-right"
+            >
+              <span className="text-xs text-slate-400 block mb-0.5">Next &rarr;</span>
+              <span className="font-medium">
+                {nextACR.id}: {nextACR.title ?? nextACR.requirementStatement?.slice(0, 40)}
+              </span>
+            </Link>
+          ) : (
+            <div />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,29 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
 export const metadata: Metadata = {
   title: 'The ARA Standard',
   description:
     'The Autonomous Reliability Assurance Standard defines the minimum operational reliability requirements for autonomous systems deployed in real-world environments.',
 };
-
-function Breadcrumb() {
-  return (
-    <nav aria-label="Breadcrumb" className="mb-8">
-      <ol className="flex items-center gap-1.5 text-sm text-muted">
-        <li>
-          <Link href="/" className="hover:text-charcoal transition-colors">
-            Home
-          </Link>
-        </li>
-        <li aria-hidden="true" className="text-slate-300">/</li>
-        <li>
-          <span className="text-charcoal font-medium">Standard</span>
-        </li>
-      </ol>
-    </nav>
-  );
-}
 
 function SectionAnchor({ id, children }: { id: string; children: React.ReactNode }) {
   return (
@@ -39,14 +22,14 @@ function SectionAnchor({ id, children }: { id: string; children: React.ReactNode
 export default function StandardPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-12">
-      <Breadcrumb />
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Standard' }]} className="mb-8" />
 
       <div className="max-w-[72ch]">
         <h1 className="text-3xl font-semibold text-charcoal tracking-tight mb-2">
           The ARA Standard
         </h1>
         <p className="text-lg text-muted mb-8">
-          Autonomous Reliability Assurance Standard v1.0 — Public Review Draft
+          Autonomous Reliability Assurance Standard v1.1 — Ratified
         </p>
 
         <div className="prose">
@@ -98,6 +81,11 @@ export default function StandardPage() {
               is technically prevented.
             </li>
             <li>
+              <strong>Data privacy and consent management</strong> — the system enforces data
+              minimization, purpose limitation, and explicit consent protocols for all personal
+              and sensitive data processing.
+            </li>
+            <li>
               <strong>Failure mode containment</strong> — the system degrades gracefully,
               contains failure blast radius, and recovers to verified safe states.
             </li>
@@ -125,6 +113,11 @@ export default function StandardPage() {
             <li>
               <strong>Auditability and transparency</strong> — complete audit trails and
               decision explainability interfaces support independent review.
+            </li>
+            <li>
+              <strong>Societal impact assessment</strong> — the system is evaluated for
+              downstream societal effects including equity, accessibility, environmental
+              impact, and community-level consequences.
             </li>
             <li>
               <strong>Operational governance controls</strong> — organizational processes
@@ -220,6 +213,28 @@ export default function StandardPage() {
                 </td>
               </tr>
               <tr>
+                <td className="font-medium text-charcoal whitespace-nowrap">Assurance Class</td>
+                <td>
+                  One of three classes (A, B, C) determining the intensity of ongoing monitoring
+                  and reassessment requirements following initial certification.
+                </td>
+              </tr>
+              <tr>
+                <td className="font-medium text-charcoal whitespace-nowrap">System Profile</td>
+                <td>
+                  One of four profiles (Foundational, Standard, Advanced, Comprehensive) that
+                  determine which ACRs apply to a given system based on its capabilities and
+                  deployment context.
+                </td>
+              </tr>
+              <tr>
+                <td className="font-medium text-charcoal whitespace-nowrap">Risk Classification</td>
+                <td>
+                  A mandatory 7-factor assessment that evaluates a system&apos;s operational risk
+                  to determine the appropriate Assurance Class for certification.
+                </td>
+              </tr>
+              <tr>
                 <td className="font-medium text-charcoal whitespace-nowrap">Evaluation Method</td>
                 <td>
                   The prescribed technique for assessing compliance with an ACR: Automated
@@ -232,6 +247,28 @@ export default function StandardPage() {
                 <td>
                   Authorized Verification Body. An organization accredited by ARAF to conduct
                   ARA certification evaluations and issue certification decisions.
+                </td>
+              </tr>
+              <tr>
+                <td className="font-medium text-charcoal whitespace-nowrap">CAPO</td>
+                <td>
+                  Certified Assurance Platform Operator. An organization certified by ARAF to
+                  provide continuous monitoring infrastructure and ongoing assurance services
+                  for certified systems.
+                </td>
+              </tr>
+              <tr>
+                <td className="font-medium text-charcoal whitespace-nowrap">Platform Certification</td>
+                <td>
+                  Certification of a reusable platform or infrastructure layer, enabling downstream
+                  deployments to inherit certified controls rather than re-evaluating them independently.
+                </td>
+              </tr>
+              <tr>
+                <td className="font-medium text-charcoal whitespace-nowrap">Deployment Certification</td>
+                <td>
+                  Certification of a specific system deployment, evaluating the complete stack
+                  including any inherited platform controls and deployment-specific configurations.
                 </td>
               </tr>
               <tr>
@@ -256,23 +293,32 @@ export default function StandardPage() {
           {/* Current Version */}
           <SectionAnchor id="current-version">Current Version</SectionAnchor>
           <p>
-            The current version of the ARA Standard is <strong>v1.0</strong>, designated as a
-            Public Review Draft. This version was released for public comment on January 15, 2026
-            and defines the initial normative baseline for ARA certification.
+            The current version of the ARA Standard is <strong>v1.1</strong>, ratified following
+            the public review period for v1.0. This version establishes the full normative baseline
+            for ARA certification with expanded domain coverage and a structured certification
+            architecture.
           </p>
-          <p>Version 1.0 includes:</p>
+          <p>Version 1.1 includes:</p>
           <ul>
-            <li>13 reliability domains covering the full operational lifecycle</li>
-            <li>52 representative Autonomous Compliance Requirements (ACRs) across all domains</li>
-            <li>3 certification levels (L1, L2, L3) with distinct rigor and monitoring requirements</li>
+            <li>15 reliability domains covering the full operational lifecycle</li>
+            <li>410 Autonomous Compliance Requirements (ACRs) across all domains</li>
+            <li>3 certification levels (L1, L2, L3) &times; 3 assurance classes (A, B, C) defining rigor, scope, and monitoring intensity</li>
+            <li>4 system profiles (Foundational, Standard, Advanced, Comprehensive) determining applicable ACRs</li>
             <li>4 evaluation methods for assessing ACR compliance</li>
             <li>A 10-phase certification lifecycle from intake through ongoing monitoring</li>
           </ul>
           <p>
-            The full contents of version 1.0, including all domains, ACRs, and supporting
-            materials, are available at the version reference page.
+            The full contents of each version, including all domains, ACRs, and supporting
+            materials, are available at the version reference pages.
           </p>
-          <div className="mt-6">
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/standard/v1.1"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-charcoal rounded-md hover:bg-charcoal/90 transition-colors no-underline"
+            >
+              View Standard v1.1
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
             <Link
               href="/standard/v1.0"
               className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-charcoal border border-border rounded-md hover:bg-slate-50 transition-colors no-underline"
@@ -304,7 +350,7 @@ export default function StandardPage() {
             </li>
             <li>
               <strong>IEC 61508</strong> — Functional Safety of Electrical/Electronic/Programmable
-              Electronic Safety-related Systems. Referenced for Domain 13 physical actuation
+              Electronic Safety-related Systems. Referenced for Domain 15 physical actuation
               integrity requirements.
             </li>
             <li>
@@ -312,6 +358,44 @@ export default function StandardPage() {
               particularly prompt injection and data poisoning controls.
             </li>
           </ul>
+
+          {/* Version History */}
+          <SectionAnchor id="version-history">Version History</SectionAnchor>
+          <p>
+            The following table lists all published versions of the ARA Standard.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="font-medium text-charcoal">v1.1</td>
+                <td>Ratified</td>
+                <td>March 2026</td>
+                <td>
+                  <Link href="/standard/v1.1" className="text-blue-600 hover:underline">
+                    View v1.1
+                  </Link>
+                </td>
+              </tr>
+              <tr>
+                <td className="font-medium text-charcoal">v1.0</td>
+                <td>Public Review Draft</td>
+                <td>January 2026</td>
+                <td>
+                  <Link href="/standard/v1.0" className="text-blue-600 hover:underline">
+                    View v1.0
+                  </Link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

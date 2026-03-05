@@ -383,3 +383,168 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--color-navy);
   border-radius: 1px;
 }
+
+/* ========================================
+   v1.1 — Assurance Class Badges
+   ======================================== */
+
+.class-a {
+  background: var(--color-slate-50);
+  color: var(--color-steel);
+  border: 1px solid var(--color-slate-300);
+}
+
+.class-b {
+  background: var(--color-charcoal);
+  color: white;
+}
+
+.class-c {
+  background: var(--color-navy);
+  color: white;
+}
+
+/* ========================================
+   v1.1 — New Status Styles
+   ======================================== */
+
+.status-lapsed {
+  color: #92400E;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+}
+
+.status-revalidation {
+  color: #6B21A8;
+  background: #FAF5FF;
+  border: 1px solid #E9D5FF;
+}
+
+.status-conditional {
+  color: #1E40AF;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+}
+
+.status-compliant {
+  color: #166534;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+}
+
+.status-pending {
+  color: #636B78;
+  background: #F8F9FA;
+  border: 1px solid #E2E4E8;
+}
+
+/* ========================================
+   v1.1 — Living Badge Operational States
+   ======================================== */
+
+@keyframes badge-pulse-green {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(22, 163, 74, 0)); }
+  50% { filter: drop-shadow(0 0 6px rgba(22, 163, 74, 0.25)); }
+}
+
+@keyframes badge-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes badge-pulse-amber {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
+  50% { filter: drop-shadow(0 0 6px rgba(217, 119, 6, 0.3)); }
+}
+
+.badge-state-active {
+  animation: badge-pulse-green 3s ease-in-out infinite;
+}
+
+.badge-state-monitoring-active {
+  animation: badge-breathe 4s ease-in-out infinite;
+}
+
+.badge-state-monitoring-delayed {
+  animation: badge-pulse-amber 2s ease-in-out infinite;
+}
+
+.badge-state-revalidation {
+  filter: drop-shadow(0 0 4px rgba(217, 119, 6, 0.25));
+}
+
+.badge-state-suspended {
+  filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.2));
+}
+
+.badge-state-expired {
+  filter: grayscale(0.8);
+  opacity: 0.6;
+}
+
+/* ========================================
+   v1.1 — Stagger for 15 domains
+   ======================================== */
+
+.stagger-children > *:nth-child(14) { animation-delay: 1040ms; }
+.stagger-children > *:nth-child(15) { animation-delay: 1120ms; }
+
+/* ========================================
+   Reduced Motion
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .stagger-children > *,
+  .badge-glow,
+  .badge-state-active,
+  .badge-state-monitoring-active,
+  .badge-state-monitoring-delayed,
+  .grid-motif-animated {
+    animation: none !important;
+  }
+
+  .scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .card-hover {
+    transition: none !important;
+  }
+
+  .badge-state-revalidation,
+  .badge-state-suspended {
+    filter: none !important;
+  }
+
+  .badge-state-expired {
+    filter: grayscale(0.8) !important;
+  }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  .grid-motif,
+  .grid-motif-animated {
+    background: none !important;
+    animation: none !important;
+  }
+
+  .badge-glow,
+  .badge-state-active,
+  .badge-state-monitoring-active,
+  .badge-state-monitoring-delayed {
+    animation: none !important;
+    filter: none !important;
+  }
+
+  .cmd-overlay,
+  .skip-link {
+    display: none !important;
+  }
+}

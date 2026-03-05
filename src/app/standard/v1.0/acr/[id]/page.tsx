@@ -1,22 +1,22 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { acrs } from '@/data/acrs';
-import { domains } from '@/data/domains';
+import { getACR, getACRs, getACRsByDomain, getDomains } from '@/lib/data';
 
 interface ACRPageProps {
   params: Promise<{ id: string }>;
 }
 
 export async function generateStaticParams() {
-  return acrs.map((acr) => ({
-    id: acr.id,
+  const { data: allAcrs } = await getACRs();
+  return allAcrs.map((a) => ({
+    id: a.id,
   }));
 }
 
 export async function generateMetadata({ params }: ACRPageProps): Promise<Metadata> {
   const { id } = await params;
-  const acr = acrs.find((a) => a.id === id);
+  const acr = await getACR(id);
   if (!acr) return { title: 'ACR Not Found' };
 
   return {
@@ -104,16 +104,25 @@ const evalMethodDescriptions: Record<string, string> = {
 
 export default async function ACRDetailPage({ params }: ACRPageProps) {
   const { id } = await params;
-  const acr = acrs.find((a) => a.id === id);
+  const acr = await getACR(id);
 
   if (!acr) {
     notFound();
   }
 
-  const domain = domains.find((d) => d.id === acr.domainId);
+  const allDomains = await getDomains();
+  const domain = allDomains.find((d) => d.id === acr.domainId);
 
   // Find same-domain ACRs for navigation
-  const domainAcrs = acrs.filter((a) => a.domainId === acr.domainId);
+  const domainAcrs = await getACRsByDomain(acr.domainId);
+
+  // Pre-fetch related controls for display
+  const relatedIds = acr.relatedControls ?? [];
+  const relatedAcrs = new Map<string, Awaited<ReturnType<typeof getACR>>>();
+  for (const ctrlId of relatedIds) {
+    relatedAcrs.set(ctrlId, await getACR(ctrlId));
+  }
+
   const currentIndex = domainAcrs.findIndex((a) => a.id === acr.id);
   const prevACR = currentIndex > 0 ? domainAcrs[currentIndex - 1] : null;
   const nextACR = currentIndex < domainAcrs.length - 1 ? domainAcrs[currentIndex + 1] : null;
@@ -172,9 +181,9 @@ export default async function ACRDetailPage({ params }: ACRPageProps) {
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-1">Applicability</p>
               <div className="flex items-center gap-1">
-                <LevelBadge level="L1" active={acr.levelApplicability.L1} />
-                <LevelBadge level="L2" active={acr.levelApplicability.L2} />
-                <LevelBadge level="L3" active={acr.levelApplicability.L3} />
+                <LevelBadge level="L1" active={acr.levelApplicability?.L1 ?? false} />
+                <LevelBadge level="L2" active={acr.levelApplicability?.L2 ?? false} />
+                <LevelBadge level="L3" active={acr.levelApplicability?.L3 ?? false} />
               </div>
             </div>
           </div>
@@ -208,7 +217,7 @@ export default async function ACRDetailPage({ params }: ACRPageProps) {
           The following evidence artifacts must be provided to demonstrate compliance with this control:
         </p>
         <ol className="space-y-3">
-          {acr.evidenceRequirements.map((req, i) => (
+          {(acr.evidenceRequirements ?? []).map((req, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-steel">
               <span className="font-mono text-xs font-semibold text-navy bg-slate-50 px-1.5 py-0.5 rounded border border-border shrink-0 mt-0.5">
                 {i + 1}
@@ -232,13 +241,13 @@ export default async function ACRDetailPage({ params }: ACRPageProps) {
             <tbody>
               <tr>
                 <td className="px-4 py-3 border-b border-border">
-                  <LevelBadge level="L1" active={acr.levelApplicability.L1} />
+                  <LevelBadge level="L1" active={acr.levelApplicability?.L1 ?? false} />
                 </td>
                 <td className="px-4 py-3 border-b border-border text-muted">
-                  {acr.levelApplicability.L1 ? 'Yes' : 'No'}
+                  {acr.levelApplicability?.L1 ? 'Yes' : 'No'}
                 </td>
                 <td className="px-4 py-3 border-b border-border text-muted">
-                  {acr.levelApplicability.L1
+                  {acr.levelApplicability?.L1
                     ? acr.classification === 'Blocking'
                       ? 'Must pass for L1 certification. Non-compliance results in automatic denial.'
                       : 'Evaluated for L1 certification. Non-compliance may result in conditional certification.'
@@ -247,13 +256,13 @@ export default async function ACRDetailPage({ params }: ACRPageProps) {
               </tr>
               <tr>
                 <td className="px-4 py-3 border-b border-border">
-                  <LevelBadge level="L2" active={acr.levelApplicability.L2} />
+                  <LevelBadge level="L2" active={acr.levelApplicability?.L2 ?? false} />
                 </td>
                 <td className="px-4 py-3 border-b border-border text-muted">
-                  {acr.levelApplicability.L2 ? 'Yes' : 'No'}
+                  {acr.levelApplicability?.L2 ? 'Yes' : 'No'}
                 </td>
                 <td className="px-4 py-3 border-b border-border text-muted">
-                  {acr.levelApplicability.L2
+                  {acr.levelApplicability?.L2
                     ? acr.classification === 'Blocking'
                       ? 'Must pass for L2 certification. Non-compliance results in automatic denial.'
                       : 'Evaluated for L2 certification. Non-compliance may result in conditional certification.'
@@ -262,13 +271,13 @@ export default async function ACRDetailPage({ params }: ACRPageProps) {
               </tr>
               <tr>
                 <td className="px-4 py-3">
-                  <LevelBadge level="L3" active={acr.levelApplicability.L3} />
+                  <LevelBadge level="L3" active={acr.levelApplicability?.L3 ?? false} />
                 </td>
                 <td className="px-4 py-3 text-muted">
-                  {acr.levelApplicability.L3 ? 'Yes' : 'No'}
+                  {acr.levelApplicability?.L3 ? 'Yes' : 'No'}
                 </td>
                 <td className="px-4 py-3 text-muted">
-                  {acr.levelApplicability.L3
+                  {acr.levelApplicability?.L3
                     ? acr.classification === 'Blocking'
                       ? 'Must pass for L3 certification with maximum rigor evaluation.'
                       : 'Evaluated at L3 with extended evidence requirements.'
@@ -280,15 +289,15 @@ export default async function ACRDetailPage({ params }: ACRPageProps) {
         </div>
 
         {/* Related Controls */}
-        {acr.relatedControls.length > 0 && (
+        {acr.relatedControls && acr.relatedControls.length > 0 && (
           <>
             <SectionAnchor id="related-controls">Related Controls</SectionAnchor>
             <p className="text-sm text-muted mb-3">
               This ACR has dependencies or relationships with the following controls:
             </p>
             <div className="space-y-2">
-              {acr.relatedControls.map((ctrlId) => {
-                const related = acrs.find((a) => a.id === ctrlId);
+              {acr.relatedControls?.map((ctrlId) => {
+                const related = relatedAcrs.get(ctrlId) ?? null;
                 if (!related) {
                   return (
                     <div key={ctrlId} className="flex items-center gap-3 p-3 border border-border rounded-lg bg-slate-50">

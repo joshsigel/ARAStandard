@@ -2,8 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
-import { registryEntries } from '@/data/registry';
+import { getRegistryEntry, getRegistryEntries } from '@/lib/data';
 import { CertificationBadge } from '@/components/badges/CertificationBadge';
+import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
+import { CertTypeBadge } from '@/components/badges/CertTypeBadge';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import type {
   CertificationLevel,
   CertificationStatus,
@@ -15,8 +18,9 @@ interface VerifyPageProps {
 }
 
 export async function generateStaticParams() {
-  return registryEntries.map((entry) => ({
-    id: entry.certificationId,
+  const entries = await getRegistryEntries();
+  return entries.map((e) => ({
+    id: e.certificationId,
   }));
 }
 
@@ -24,7 +28,7 @@ export async function generateMetadata({
   params,
 }: VerifyPageProps): Promise<Metadata> {
   const { id } = await params;
-  const entry = registryEntries.find((e) => e.certificationId === id);
+  const entry = await getRegistryEntry(id);
   if (!entry) {
     return { title: 'Certification Not Found' };
   }
@@ -50,11 +54,15 @@ function StatusBadge({ status }: { status: CertificationStatus }) {
       ? 'status-active'
       : status === 'Conditional'
         ? 'status-warning'
-        : status === 'Suspended'
-          ? 'status-suspended'
-          : status === 'Revoked'
-            ? 'status-revoked'
-            : 'status-suspended';
+        : status === 'Active — Assurance Lapsed'
+          ? 'status-warning'
+          : status === 'Under Revalidation'
+            ? 'status-suspended'
+            : status === 'Suspended'
+              ? 'status-suspended'
+              : status === 'Revoked'
+                ? 'status-revoked'
+                : 'status-suspended';
   return (
     <span
       className={`inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded ${cls}`}
@@ -110,7 +118,7 @@ function DetailRow({
 
 export default async function VerifyPage({ params }: VerifyPageProps) {
   const { id } = await params;
-  const entry = registryEntries.find((e) => e.certificationId === id);
+  const entry = await getRegistryEntry(id);
 
   if (!entry) {
     notFound();
@@ -120,36 +128,22 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
   const isExpired = new Date(entry.expiryDate) < new Date();
   const levelName =
     entry.certificationLevel === 'L1'
-      ? 'Supervised Operational Reliability'
+      ? 'Foundation'
       : entry.certificationLevel === 'L2'
-        ? 'Bounded Autonomous Deployment'
-        : 'High-Stakes Autonomous Certification';
+        ? 'Operational'
+        : 'Comprehensive';
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-10">
       {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-sm text-muted">
-          <li>
-            <Link href="/" className="hover:text-charcoal transition-colors">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li>
-            <Link
-              href="/registry"
-              className="hover:text-charcoal transition-colors"
-            >
-              Registry
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li className="text-charcoal font-medium font-mono text-xs">
-            {entry.certificationId}
-          </li>
-        </ol>
-      </nav>
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Registry', href: '/registry' },
+          { label: entry.certificationId },
+        ]}
+        className="mb-8"
+      />
 
       {/* Page header */}
       <header className="mb-10">
@@ -198,6 +192,16 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
                     <span>{levelName}</span>
                   </div>
                 </DetailRow>
+                {entry.assuranceClass && (
+                  <DetailRow label="Assurance Class">
+                    <AssuranceClassBadge assuranceClass={entry.assuranceClass} />
+                  </DetailRow>
+                )}
+                {entry.certificationType && (
+                  <DetailRow label="Certification Type">
+                    <CertTypeBadge type={entry.certificationType} />
+                  </DetailRow>
+                )}
                 <DetailRow label="Version Certified Under">
                   <span className="version-badge">
                     v{entry.versionCertifiedUnder}
@@ -221,6 +225,26 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
                 <DetailRow label="Monitoring Status">
                   <MonitoringBadge status={entry.monitoringStatus} />
                 </DetailRow>
+                {entry.capoId && (
+                  <DetailRow label="CAPO">
+                    <span className="font-mono text-charcoal">{entry.capoId}</span>
+                  </DetailRow>
+                )}
+                {entry.platformCertId && (
+                  <DetailRow label="Platform Certification">
+                    <Link
+                      href={`/registry/verify/${entry.platformCertId}`}
+                      className="font-mono text-navy hover:underline"
+                    >
+                      {entry.platformCertId}
+                    </Link>
+                  </DetailRow>
+                )}
+                {entry.insuranceStatus && (
+                  <DetailRow label="Insurance Status">
+                    {entry.insuranceStatus}
+                  </DetailRow>
+                )}
               </dl>
             </div>
           </section>

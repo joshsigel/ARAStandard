@@ -1,12 +1,16 @@
 'use client';
 
+// TODO: Migrate to API route fetch for live data. Currently uses static imports
+// for instant client-side search responsiveness. An API route would allow live
+// Supabase data but would add latency to the command palette experience.
+
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { domains } from '@/data/domains';
 import { acrs } from '@/data/acrs';
 
 interface SearchResult {
-  type: 'domain' | 'acr' | 'page' | 'registry';
+  type: 'domain' | 'acr' | 'page' | 'registry' | 'ecosystem' | 'glossary';
   title: string;
   description: string;
   url: string;
@@ -14,20 +18,43 @@ interface SearchResult {
 }
 
 const staticPages: SearchResult[] = [
+  // Core
   { type: 'page', title: 'Home', description: 'ARA Standard overview', url: '/' },
   { type: 'page', title: 'Standard Overview', description: 'Scope, definitions, and what ARA certifies', url: '/standard' },
-  { type: 'page', title: 'ARA Standard v1.0', description: 'Current version of the ARA Standard', url: '/standard/v1.0' },
-  { type: 'page', title: 'ACR Library', description: 'Full searchable library of Autonomous Control Requirements', url: '/standard/v1.0/acr' },
-  { type: 'page', title: 'Certification Levels', description: 'Level 1, Level 2, and Level 3 certification requirements', url: '/certification' },
-  { type: 'page', title: 'Registry', description: 'Public certification registry and verification lookup', url: '/registry' },
+  // Standard v1.1
+  { type: 'page', title: 'ARA Standard v1.1', description: 'Current version — 15 domains, 410 ACRs, two-axis model', url: '/standard/v1.1' },
+  { type: 'page', title: 'ACR Library', description: 'Full searchable library of 410 Autonomous Control Requirements', url: '/standard/v1.1/acr' },
+  { type: 'page', title: 'Domains', description: '15 reliability domains covering operational, security, and governance', url: '/standard/v1.1/domains' },
+  { type: 'page', title: 'Glossary', description: 'ARA terminology and definitions', url: '/standard/v1.1/glossary' },
+  { type: 'page', title: 'Changelog', description: 'Version history and changes', url: '/standard/v1.1/changelog' },
+  // Certification
+  { type: 'page', title: 'Certification — Two-Axis Model', description: 'Evaluation Level (L1/L2/L3) x Assurance Class (A/B/C)', url: '/certification' },
+  { type: 'page', title: 'Risk Classification', description: '7-factor AVB assessment determining Assurance Class', url: '/certification/risk-classification' },
+  { type: 'page', title: 'Platform Certification', description: 'Vendor platform certification pathway and ACR inheritance', url: '/certification/platform' },
   { type: 'page', title: 'Evaluation Methodology', description: '10-phase certification lifecycle and scoring model', url: '/evaluation' },
-  { type: 'page', title: 'AVB Program', description: 'Authorized Validation Bodies program and requirements', url: '/avb' },
-  { type: 'page', title: 'Monitoring', description: 'Continuous Assurance Platform and telemetry requirements', url: '/monitoring' },
-  { type: 'page', title: 'API Reference', description: 'REST endpoints, JSON schemas, and webhook structure', url: '/monitoring/api' },
-  { type: 'page', title: 'Governance', description: 'ARAF governance structure and advisory bodies', url: '/governance' },
-  { type: 'page', title: 'Updates', description: 'Standard revisions, announcements, and public comment periods', url: '/updates' },
+  { type: 'page', title: 'Badge Generator', description: 'Generate ARA living certification badges', url: '/badge-generator' },
+  // Ecosystem
+  { type: 'page', title: 'Ecosystem', description: 'ARA ecosystem architecture and participants', url: '/ecosystem' },
+  { type: 'page', title: 'Registry', description: 'Public certification registry and verification lookup', url: '/registry' },
+  { type: 'page', title: 'Certified Platforms', description: 'Platform vendor certifications directory', url: '/ecosystem/platforms' },
+  { type: 'page', title: 'AVB Directory', description: 'Authorized Validation Bodies by region and specialization', url: '/ecosystem/avbs' },
+  { type: 'page', title: 'CAPO Directory', description: 'Continuous Assurance Platform Operators', url: '/ecosystem/capos' },
+  { type: 'page', title: 'Insurance Partners', description: 'Recognized Insurer Partners for ARA coverage', url: '/ecosystem/insurers' },
+  { type: 'page', title: 'Consortium', description: 'Industry consortium contributing members', url: '/ecosystem/consortium' },
+  // Developers
+  { type: 'page', title: 'Developer Portal', description: 'SDK integration, telemetry schemas, and API reference', url: '/developers' },
+  { type: 'page', title: 'SDK Guide', description: 'ARA SDK integration toolkit for developers', url: '/developers/sdk' },
+  { type: 'page', title: 'Telemetry Schema', description: 'Event specifications for CAPO monitoring', url: '/developers/telemetry' },
+  { type: 'page', title: 'API Reference', description: 'REST endpoints, JSON schemas, and webhook structure', url: '/developers/api' },
   { type: 'page', title: 'AI / Machine Access', description: 'Machine-readable standard, OpenAPI spec, JSON-LD', url: '/ai-access' },
-  { type: 'page', title: 'Badge Generator', description: 'Generate ARA certification badges for Level 1, 2, and 3', url: '/badge-generator' },
+  // Governance & landscape
+  { type: 'page', title: 'AI Standards Landscape', description: '14 frameworks positioned across regulation, governance, and operational layers', url: '/ai-landscape' },
+  { type: 'page', title: 'Governance', description: 'ARAF governance structure, TSB, DPSIC, and advisory bodies', url: '/governance' },
+  { type: 'page', title: 'AVB Program', description: 'Authorized Validation Bodies program and requirements', url: '/avb' },
+  { type: 'page', title: 'Monitoring', description: 'CAPO architecture and class-differentiated SLAs', url: '/monitoring' },
+  { type: 'page', title: 'Updates', description: 'Standard revisions, announcements, and public comment periods', url: '/updates' },
+  // Legacy
+  { type: 'page', title: 'ARA Standard v1.0', description: 'Previous version — 13 domains, 352 ACRs', url: '/standard/v1.0' },
 ];
 
 export function CommandPalette() {
@@ -81,14 +108,14 @@ export function CommandPalette() {
       for (const acr of acrs) {
         if (
           acr.id.toLowerCase().includes(lower) ||
-          acr.title.toLowerCase().includes(lower) ||
-          acr.description.toLowerCase().includes(lower) ||
+          (acr.title ?? '').toLowerCase().includes(lower) ||
+          (acr.description ?? '').toLowerCase().includes(lower) ||
           acr.domain.toLowerCase().includes(lower)
         ) {
           matched.push({
             type: 'acr',
-            title: `${acr.id} — ${acr.title}`,
-            description: acr.description.slice(0, 120) + '...',
+            title: `${acr.id} — ${acr.title ?? acr.id}`,
+            description: (acr.description ?? '').slice(0, 120) + '...',
             url: `/standard/v1.0/acr/${acr.id}`,
             meta: acr.domain,
           });
@@ -151,6 +178,8 @@ export function CommandPalette() {
     acr: 'ACR',
     page: 'Page',
     registry: 'Registry',
+    ecosystem: 'Ecosystem',
+    glossary: 'Glossary',
   };
 
   return (

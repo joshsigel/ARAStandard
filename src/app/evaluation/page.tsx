@@ -1,88 +1,146 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { CertificationLifecycle } from '@/components/visualizations/CertificationLifecycle';
 
 export const metadata: Metadata = {
-  title: 'Evaluation Methodology',
+  title: 'Evaluation Methodology — v1.1',
   description:
-    'The ARA certification lifecycle: 10-phase evaluation process, scoring methodology, adversarial testing requirements, and domain scoring thresholds for autonomous system certification.',
+    'The ARA certification lifecycle v1.1: 10-phase evaluation process, risk classification, evidence sufficiency matrix, scoring methodology, adversarial testing, and domain scoring thresholds for autonomous system certification.',
 };
 
 const phases = [
   {
     number: 1,
-    name: 'System Registration',
+    name: 'Intake & Scoping',
     description:
-      'The applicant organization submits a registration request through an Authorized Validation Body (AVB). The system is assigned a unique ARA System Identifier (ASI) that persists across all evaluation, certification, and monitoring records. Registration captures the system name, declared autonomy level, operational scope, deployment context, and the identity of the submitting organization.',
-    duration: '1\u20132 business days',
-    outputs: ['Unique ARA System Identifier (ASI)', 'Registration confirmation record', 'Assigned AVB acknowledgment'],
+      'The applicant organization initiates the certification process through an Authorized Validation Body (AVB). The system is registered and assigned a unique ARA System Identifier (ASI). The AVB works with the applicant to determine the applicable system profile — Foundational (F), Standard (S), Advanced (A), or Comprehensive (C) — based on the system\u2019s operational scope, deployment context, and autonomy characteristics.',
+    duration: '1\u20132 days',
+    outputs: [
+      'Unique ARA System Identifier (ASI)',
+      'AVB assignment confirmation',
+      'System profile selection (F/S/A/C)',
+      'Certification scope statement',
+    ],
   },
   {
     number: 2,
     name: 'Risk Classification',
     description:
-      'The AVB reviews the declared certification level (L1, L2, or L3) against the system\u2019s operational characteristics, autonomy boundaries, deployment context, and consequence profile. This phase confirms that the requested level is appropriate for the system\u2019s risk exposure. Systems that under-classify may be escalated; systems that over-classify are flagged for scope correction.',
-    duration: '3\u20135 business days',
-    outputs: ['Confirmed certification level', 'Risk classification rationale document', 'Escalation notice (if applicable)'],
+      'The AVB conducts a mandatory 7-factor risk assessment to determine the system\u2019s Assurance Class (A, B, or C). The seven factors are: autonomy level, decision impact severity, data sensitivity, operational environment, human oversight capacity, action reversibility, and deployment scale. Each factor is scored and weighted to produce an overall risk classification. This phase is new in v1.1 and replaces the simpler level-confirmation step in v1.0.',
+    duration: '1\u20132 weeks',
+    outputs: [
+      'Risk factor scores (7 factors)',
+      'Assurance Class determination (A/B/C)',
+      'Risk classification rationale document',
+      'Escalation notice (if applicable)',
+    ],
+    isNew: true,
   },
   {
     number: 3,
-    name: 'Domain Mapping',
+    name: 'Evidence Collection',
     description:
-      'The evaluation scope is determined by mapping the system\u2019s capabilities, integrations, and deployment context to the applicable ARA evaluation domains. All L1 and L2 systems are evaluated against the 12 core domains. L3 systems with physical actuation capabilities are additionally evaluated against Domain 13. Domain mapping defines the ACR subset and scoring thresholds that apply to this specific evaluation.',
-    duration: '3\u20135 business days',
-    outputs: ['Domain applicability matrix', 'Applicable ACR inventory', 'Scope statement document'],
+      'The applicant organization prepares and submits evidence across four defined categories based on the system profile. Evidence categories are: Log/Platform (LP) for telemetry, audit logs, and platform data; Technical Inspection (TI) for architecture review, configuration artifacts, and code analysis; Operational Proof (OP) for runtime behavior validation and operational testing; and Third-Party Attestation (TP) for independent audits, certifications, and external validation reports.',
+    duration: '2\u20136 weeks',
+    outputs: [
+      'Evidence portfolio organized by category (LP, TI, OP, TP)',
+      'Evidence sufficiency mapping per ACR',
+      'Gap analysis report',
+      'Platform certification inheritance claims (if applicable)',
+    ],
   },
   {
     number: 4,
     name: 'ACR Evaluation',
     description:
-      'The core evaluation phase. Each applicable Autonomy Compliance Requirement is assessed using one or more evaluation methods (Automated Testing, Human Simulation, Evidence Inspection, or Continuous Monitoring). The AVB evaluates compliance against the defined acceptance criteria for each ACR, records evidence, and assigns per-ACR scores. This phase accounts for the majority of evaluation calendar time.',
-    duration: '4\u20138 weeks (L1), 8\u201314 weeks (L2), 12\u201320 weeks (L3)',
-    outputs: ['Per-ACR compliance scores', 'Evidence artifact repository', 'Non-conformity register', 'Interim findings report'],
+      'The core evaluation phase. Each applicable Autonomy Compliance Requirement is assessed using one or more of six evaluation methods: Automated Testing (AT), Human Simulation (HS), Evidence Inspection (EI), Continuous Monitoring (CM), Third-Party Attestation (TP), and Operational Proof (OP). The last two methods are new in v1.1. The AVB evaluates compliance against the defined acceptance criteria for each ACR per the system\u2019s profile, records evidence, and assigns per-ACR scores.',
+    duration: '2\u20138 weeks',
+    outputs: [
+      'Per-ACR compliance scores',
+      'Evidence artifact repository',
+      'Non-conformity register',
+      'Interim findings report',
+    ],
   },
   {
     number: 5,
-    name: 'Adversarial Simulation',
+    name: 'Adversarial Testing',
     description:
       'Structured adversarial testing proportional to the certification level. L1 evaluations use automated adversarial test suites only. L2 evaluations add structured human adversarial simulation (minimum 40 hours). L3 evaluations require automated suites, human adversarial simulation (minimum 80 hours), an ARAF-approved independent red team engagement, and a minimum 30-day continuous runtime stress test.',
-    duration: '1\u20132 weeks (L1), 3\u20134 weeks (L2), 6\u20138 weeks (L3)',
-    outputs: ['Adversarial test results', 'Vulnerability findings log', 'Red team report (L3)', 'Stress test telemetry (L3)'],
+    duration: '1\u20133 weeks',
+    outputs: [
+      'Adversarial test results',
+      'Vulnerability findings log',
+      'Red team report (L2/L3)',
+      'Stress test telemetry (L3)',
+    ],
   },
   {
     number: 6,
-    name: 'Human Expert Review',
+    name: 'Scoring & Determination',
     description:
-      'Qualified human assessors review all evaluation findings, adversarial simulation results, and supporting evidence. The review panel must include at least one domain expert for each applicable evaluation domain. Reviewers verify that automated test results are consistent with observed system behavior, validate evidence integrity, and assess whether borderline findings warrant compliance or non-conformity classification.',
-    duration: '1\u20132 weeks',
-    outputs: ['Expert review findings', 'Evidence validation attestation', 'Borderline adjudication records'],
+      'Domain scores are calculated against the 15-domain threshold matrix for the requested certification level. The scoring model applies risk weighting and blocking ACR logic. Platform certification inheritance is applied where applicable, allowing systems built on certified platforms to inherit qualifying domain scores. The overall certification determination is pass/fail: all applicable domain thresholds must be met.',
+    duration: '1 week',
+    outputs: [
+      'Domain scorecard (15 domains)',
+      'Overall pass/fail determination',
+      'Platform cert inheritance applied',
+      'Conditional items register (if applicable)',
+    ],
   },
   {
     number: 7,
-    name: 'Certification Decision',
+    name: 'Certification Issuance',
     description:
-      'The AVB issues a formal certification decision based on the aggregate evaluation record. Four outcomes are possible: Certified (all domain thresholds met, no blocking ACR failures), Conditionally Certified (minor non-conformities with defined remediation timeline), Deferred (material gaps requiring re-evaluation of specific domains), or Denied (fundamental non-compliance or blocking ACR failures).',
-    outputs: ['Certification decision document', 'Conditions register (if applicable)', 'Remediation timeline (if applicable)', 'Appeal eligibility notice'],
+      'The AVB issues a formal two-axis certification designation combining the certification level and Assurance Class (e.g., L2-B). Platform certifications receive a level designation without an Assurance Class. A living badge is generated with real-time operational state tracking. The certification is published to the ARA Public Registry with full metadata.',
+    duration: '1\u20132 days',
+    outputs: [
+      'Two-axis designation (e.g., L2-B)',
+      'Platform cert variant (level only, no class)',
+      'Living certification badge',
+      'Public registry entry',
+      'Certification ID (e.g., ARA-2026-XXXXX)',
+    ],
   },
   {
     number: 8,
-    name: 'Registry Publication',
+    name: 'Continuous Monitoring',
     description:
-      'Certified and conditionally certified systems are published in the ARA Public Certification Registry. The registry entry includes the system identifier, organization name, certification level, certified scope, effective date, expiry date, certifying AVB, and current status. Registry entries are publicly queryable and machine-readable via the Registry API.',
-    outputs: ['Public registry entry', 'Certification ID (e.g., ARA-2026-XXXXX)', 'Embeddable certification badge', 'Machine-readable registry record'],
+      'Post-certification monitoring is calibrated to the system\u2019s Assurance Class. Class A systems perform periodic self-assessment with results reported to the registry. Class B systems are subject to monthly Continuous Assurance Platform Operator (CAPO) reports with telemetry monitoring. Class C systems require 24/7 CAPO oversight with real-time alerting and immediate escalation capabilities.',
+    duration: 'Ongoing',
+    outputs: [
+      'Monitoring reports (per class schedule)',
+      'Telemetry dashboards',
+      'CAPO engagement records (Class B/C)',
+      'Compliance status updates',
+    ],
   },
   {
     number: 9,
-    name: 'Continuous Monitoring Enrollment',
+    name: 'Renewal & Revalidation',
     description:
-      'The certified organization deploys the ARA Telemetry SDK within the production environment and configures continuous monitoring integrations. The SDK reports operational telemetry, drift metrics, and compliance signals to the Continuous Assurance Platform (CAP). Monitoring enrollment must be completed within 30 days of certification issuance.',
-    outputs: ['Telemetry SDK deployment confirmation', 'CAP enrollment record', 'Monitoring baseline established', 'Alert threshold configuration'],
+      'All certifications require annual renewal through a streamlined reassessment. Revalidation may be triggered outside the normal renewal cycle by three conditions: material change to the system\u2019s architecture or operational scope, a monitoring breach detected through continuous monitoring, or an assurance class lapse (e.g., Class B system failing to meet Class B monitoring requirements).',
+    duration: 'Ongoing',
+    outputs: [
+      'Annual renewal assessment',
+      'Updated certification record',
+      'Revalidation trigger documentation (if applicable)',
+      'Updated registry entry',
+    ],
   },
   {
     number: 10,
-    name: 'Reassessment',
+    name: 'Ecosystem Participation',
     description:
-      'Ongoing reassessment ensures continued compliance throughout the certification period. L1 systems undergo annual reassessment. L2 systems undergo semi-annual reassessment (every 6 months). L3 systems undergo quarterly reassessment (every 3 months). Reassessment may be accelerated if continuous monitoring detects material drift, behavioral anomalies, or compliance threshold breaches.',
-    outputs: ['Reassessment report', 'Updated compliance scores', 'Certification renewal or escalation', 'Updated registry entry'],
+      'Certified systems participate in the broader ARA ecosystem. This includes public listing in the ARA Certification Registry, display of the living certification badge, eligibility for ARA-linked insurance products through the Risk-Informed Pricing framework, and participation in regulatory equivalence and consortium programs.',
+    duration: 'Ongoing',
+    outputs: [
+      'Public registry listing',
+      'Living badge display rights',
+      'Insurance eligibility (RIP framework)',
+      'Consortium and regulatory participation',
+    ],
   },
 ];
 
@@ -115,131 +173,122 @@ const evaluationMethods = [
       'Ongoing telemetry collection and analysis during the system\u2019s production operation. Continuous monitoring validates that the system maintains compliance over time, detects behavioral drift, and triggers alerts when operational parameters deviate from certified baselines.',
     applicability: 'ACRs requiring sustained operational validation beyond point-in-time testing.',
   },
+  {
+    code: 'TP',
+    name: 'Third-Party Attestation',
+    description:
+      'Independent validation provided by qualified third parties. Includes external audit reports, industry certifications (SOC 2, ISO 27001, etc.), penetration test results from accredited firms, and expert attestation letters. Third-party evidence provides independent corroboration of compliance claims.',
+    applicability: 'ACRs where independent validation strengthens assurance, particularly in Domains 5, 6, and 13.',
+    isNew: true,
+  },
+  {
+    code: 'OP',
+    name: 'Operational Proof',
+    description:
+      'Validation through observed operational behavior in production or production-equivalent environments. Includes runtime performance data, incident response records, operational metrics, and demonstrated behavior under real-world conditions over defined observation periods.',
+    applicability: 'ACRs requiring evidence of sustained operational behavior rather than point-in-time testing.',
+    isNew: true,
+  },
 ];
 
-function LifecycleDiagram() {
-  return (
-    <div className="my-10 overflow-x-auto">
-      <svg
-        viewBox="0 0 920 120"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full max-w-4xl mx-auto"
-        role="img"
-        aria-label="10-phase certification lifecycle diagram showing sequential phases from Registration to Reassessment"
-      >
-        {phases.map((phase, i) => {
-          const cx = 50 + i * 92;
-          const cy = 60;
-          return (
-            <g key={phase.number}>
-              {/* Connector line */}
-              {i > 0 && (
-                <line
-                  x1={cx - 92 + 18}
-                  y1={cy}
-                  x2={cx - 18}
-                  y2={cy}
-                  stroke="#C8CCD2"
-                  strokeWidth="2"
-                  strokeDasharray="4 3"
-                />
-              )}
-              {/* Circle */}
-              <circle
-                cx={cx}
-                cy={cy}
-                r="18"
-                fill={phase.number <= 7 ? '#1A2333' : '#111111'}
-                stroke={phase.number <= 7 ? '#1A2333' : '#3A3A3A'}
-                strokeWidth="1.5"
-              />
-              {/* Number */}
-              <text
-                x={cx}
-                y={cy + 1}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="white"
-                fontSize="12"
-                fontWeight="700"
-                fontFamily="var(--font-mono), monospace"
-              >
-                {phase.number}
-              </text>
-              {/* Label */}
-              <text
-                x={cx}
-                y={cy + 38}
-                textAnchor="middle"
-                fill="#3A3A3A"
-                fontSize="9"
-                fontWeight="500"
-                fontFamily="var(--font-sans), sans-serif"
-              >
-                {phase.name.length > 14
-                  ? phase.name.split(' ').reduce((lines: string[], word: string) => {
-                      const last = lines[lines.length - 1];
-                      if (last && (last + ' ' + word).length <= 14) {
-                        lines[lines.length - 1] = last + ' ' + word;
-                      } else {
-                        lines.push(word);
-                      }
-                      return lines;
-                    }, []).map((line: string, li: number) => (
-                      <tspan key={li} x={cx} dy={li === 0 ? 0 : 12}>
-                        {line}
-                      </tspan>
-                    ))
-                  : phase.name}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
+const evidenceSufficiency = [
+  {
+    level: 'L1',
+    label: 'L1 — Foundation',
+    requirements: [
+      'LP (Log/Platform) + TI (Technical Inspection) sufficient for most ACRs',
+      'OP (Operational Proof) accepted as supplementary evidence',
+      'TP (Third-Party Attestation) not required but accepted for Domain 5 and Domain 6',
+    ],
+  },
+  {
+    level: 'L2',
+    label: 'L2 — Operational',
+    requirements: [
+      'LP + TI + OP required for all applicable ACRs',
+      'TP required for Domain 5 (Data Privacy), Domain 6 (Security), and Domain 13 (Societal Impact)',
+      'Platform certification inheritance may reduce evidence burden for inherited domains',
+    ],
+  },
+  {
+    level: 'L3',
+    label: 'L3 — High-Stakes',
+    requirements: [
+      'All four evidence categories (LP, TI, OP, TP) required',
+      'Independent third-party attestation mandatory for all critical-weight ACRs',
+      'Extended observation periods required for OP evidence (minimum 90 days)',
+      'Platform certification inheritance claims subject to independent verification',
+    ],
+  },
+];
+
+const specialGuidance = [
+  {
+    type: 'Voice AI Systems',
+    description:
+      'Voice AI systems require additional evaluation of real-time speech processing reliability, accent/dialect handling equity, voice consent and disclosure requirements, and emotional manipulation resistance. Domain 4 (Transparency) ACRs include voice-specific disclosure requirements. Domain 14 (Data Privacy) includes voice data retention and biometric consent provisions.',
+  },
+  {
+    type: 'Multimodal Systems',
+    description:
+      'Systems that process multiple input modalities (text, image, audio, video) are evaluated across all applicable modality-specific ACRs. Cross-modal interaction effects must be tested during adversarial testing. Evidence collection must cover each modality independently and in combination.',
+  },
+  {
+    type: 'Multi-Agent Orchestration',
+    description:
+      'Orchestration systems that coordinate multiple autonomous agents are evaluated as composite systems. The evaluation scope includes inter-agent communication integrity, delegation chain accountability, conflict resolution mechanisms, and cascading failure containment. Each subordinate agent\u2019s certification status is verified.',
+  },
+  {
+    type: 'Physical / Robotic Systems',
+    description:
+      'Systems with physical actuation capabilities are evaluated against Domain 15 (Physical Safety) ACRs in addition to all applicable digital domains. Physical safety testing requires controlled environment validation, emergency stop verification, and human proximity safety assessment. L3 certification required for systems with irreversible physical actions.',
+  },
+  {
+    type: 'MCP-Connected Agents',
+    description:
+      'Agents that use Model Context Protocol (MCP) connections to external tools and services are evaluated for tool-use authorization controls, scope limitation enforcement, data exfiltration prevention, and connection integrity monitoring. Each MCP tool connection is treated as an autonomy boundary expansion requiring specific ACR coverage.',
+  },
+];
 
 export default function EvaluationPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-10">
       {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-sm text-muted">
-          <li>
-            <Link href="/" className="hover:text-charcoal transition-colors">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li className="text-charcoal font-medium">Evaluation</li>
-        </ol>
-      </nav>
+      <Breadcrumb
+        items={[{ label: 'Home', href: '/' }, { label: 'Evaluation' }]}
+        className="mb-8"
+      />
 
       {/* Page header */}
       <header className="mb-12">
         <h1 className="text-3xl font-semibold tracking-tight text-charcoal mb-4">
-          Evaluation Methodology
+          Evaluation Methodology — v1.1
         </h1>
         <div className="prose max-w-3xl">
           <p>
             The ARA Standard defines a structured, repeatable evaluation process
             for certifying autonomous systems. Every system undergoes the same
             10-phase certification lifecycle, adapted in rigor and scope to the
-            requested certification level. The methodology is designed to be
-            technology-neutral, evidence-based, and independently verifiable.
+            requested certification level and determined Assurance Class. The
+            methodology is technology-neutral, evidence-based, and independently
+            verifiable.
           </p>
           <p>
             Evaluations are conducted by Authorized Validation Bodies (AVBs) —
             independent organizations accredited by ARAF to perform certification
-            assessments. AVBs must maintain structural independence from the
-            organizations whose systems they evaluate.
+            assessments. v1.1 introduces mandatory risk classification,
+            expanded evidence categories, two new evaluation methods, and
+            system-profile-based scoping.
           </p>
         </div>
       </header>
 
-      {/* Certification Lifecycle */}
+      {/* Certification Lifecycle Visualization */}
+      <section id="lifecycle-visual" className="mb-16 scroll-mt-24">
+        <CertificationLifecycle className="max-w-4xl" />
+      </section>
+
+      {/* 10-Phase Certification Lifecycle */}
       <section id="lifecycle" className="mb-20 scroll-mt-24">
         <h2 className="text-2xl font-semibold text-charcoal mb-2">
           <a href="#lifecycle" className="hover:text-navy transition-colors">
@@ -250,11 +299,9 @@ export default function EvaluationPage() {
           Every ARA certification follows this sequential lifecycle. Phases are
           completed in order; earlier phases must be finalized before subsequent
           phases begin. The total evaluation timeline depends on the
-          certification level, system complexity, and the availability of
-          evidence and test environments.
+          certification level, Assurance Class, system complexity, and the
+          availability of evidence and test environments.
         </p>
-
-        <LifecycleDiagram />
 
         <div className="space-y-6">
           {phases.map((phase) => (
@@ -275,6 +322,11 @@ export default function EvaluationPage() {
                     >
                       Phase {phase.number}: {phase.name}
                     </a>
+                    {'isNew' in phase && phase.isNew && (
+                      <span className="ml-2 text-xs font-bold text-white bg-navy px-2 py-0.5 rounded-full align-middle">
+                        NEW IN v1.1
+                      </span>
+                    )}
                   </h3>
                   {phase.duration && (
                     <p className="text-xs text-muted mt-1">
@@ -322,7 +374,9 @@ export default function EvaluationPage() {
           Each ACR specifies one or more permitted evaluation methods. The AVB
           selects the appropriate method based on the ACR definition, the
           system&apos;s architecture, and the available evidence. Multiple
-          methods may be applied to a single ACR for corroboration.
+          methods may be applied to a single ACR for corroboration. v1.1
+          introduces two new methods: Third-Party Attestation (TP) and
+          Operational Proof (OP).
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -338,6 +392,11 @@ export default function EvaluationPage() {
                 <h3 className="text-base font-semibold text-charcoal">
                   {method.name}
                 </h3>
+                {'isNew' in method && method.isNew && (
+                  <span className="text-xs font-bold text-white bg-navy px-2 py-0.5 rounded-full">
+                    NEW
+                  </span>
+                )}
               </div>
               <p className="text-sm text-steel leading-relaxed mb-3">
                 {method.description}
@@ -348,6 +407,118 @@ export default function EvaluationPage() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Evidence Sufficiency Matrix */}
+      <section id="evidence-sufficiency" className="mb-20 scroll-mt-24">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          <a
+            href="#evidence-sufficiency"
+            className="hover:text-navy transition-colors"
+          >
+            Evidence Sufficiency Matrix
+          </a>
+        </h2>
+        <div className="prose max-w-3xl">
+          <p>
+            The Evidence Sufficiency Matrix defines the minimum evidence
+            categories required at each certification level. Higher levels
+            require broader evidence coverage and more independent validation.
+          </p>
+        </div>
+
+        <div className="mt-6 space-y-6">
+          {evidenceSufficiency.map((level) => (
+            <div
+              key={level.level}
+              className="border border-border rounded-lg overflow-hidden"
+            >
+              <div className="bg-slate-50 border-b border-border px-6 py-3">
+                <h3 className="text-base font-semibold text-charcoal">
+                  {level.label}
+                </h3>
+              </div>
+              <div className="px-6 py-5">
+                <ul className="space-y-2">
+                  {level.requirements.map((req) => (
+                    <li
+                      key={req}
+                      className="flex items-start gap-2.5 text-sm text-steel"
+                    >
+                      <span className="text-slate-400 mt-0.5 shrink-0">
+                        &bull;
+                      </span>
+                      {req}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 border border-border rounded-lg overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-slate-50 border-b border-border">
+                <th className="text-left font-semibold px-5 py-3 text-charcoal">
+                  Evidence Category
+                </th>
+                <th className="text-center font-semibold px-5 py-3 text-charcoal">
+                  <span className="level-badge level-badge-l1">L1</span>
+                </th>
+                <th className="text-center font-semibold px-5 py-3 text-charcoal">
+                  <span className="level-badge level-badge-l2">L2</span>
+                </th>
+                <th className="text-center font-semibold px-5 py-3 text-charcoal">
+                  <span className="level-badge level-badge-l3">L3</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  LP — Log/Platform
+                </td>
+                <td className="px-5 py-3 text-center text-steel">Required</td>
+                <td className="px-5 py-3 text-center text-steel">Required</td>
+                <td className="px-5 py-3 text-center text-steel">Required</td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  TI — Technical Inspection
+                </td>
+                <td className="px-5 py-3 text-center text-steel">Required</td>
+                <td className="px-5 py-3 text-center text-steel">Required</td>
+                <td className="px-5 py-3 text-center text-steel">Required</td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  OP — Operational Proof
+                </td>
+                <td className="px-5 py-3 text-center text-muted">
+                  Supplementary
+                </td>
+                <td className="px-5 py-3 text-center text-steel">Required</td>
+                <td className="px-5 py-3 text-center text-steel">Required</td>
+              </tr>
+              <tr>
+                <td className="px-5 py-3 font-medium text-charcoal">
+                  TP — Third-Party Attestation
+                </td>
+                <td className="px-5 py-3 text-center text-muted">
+                  Optional
+                </td>
+                <td className="px-5 py-3 text-center text-steel">
+                  Select domains
+                </td>
+                <td className="px-5 py-3 text-center text-steel">
+                  Mandatory (independent)
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -447,10 +618,11 @@ export default function EvaluationPage() {
         </h2>
         <div className="prose max-w-3xl">
           <p>
-            The ARA scoring model produces per-domain compliance scores that are
-            aggregated into an overall certification determination. The model is
-            designed to be transparent, deterministic, and reproducible across
-            different AVBs evaluating the same system.
+            The ARA scoring model produces per-domain compliance scores across
+            all 15 evaluation domains that are aggregated into an overall
+            certification determination. The model is designed to be transparent,
+            deterministic, and reproducible across different AVBs evaluating
+            the same system.
           </p>
         </div>
 
@@ -777,11 +949,11 @@ export default function EvaluationPage() {
         <div className="prose max-w-3xl">
           <p>
             Each certification level prescribes minimum passing scores for each
-            applicable evaluation domain. These thresholds represent the floor
-            of acceptable compliance — systems must meet or exceed every
-            threshold to qualify. Thresholds are intentionally set to ensure
-            that higher-stakes certifications demand proportionally higher
-            reliability across all dimensions.
+            of the 15 applicable evaluation domains. These thresholds represent
+            the floor of acceptable compliance — systems must meet or exceed
+            every threshold to qualify. Thresholds are intentionally set to
+            ensure that higher-stakes certifications demand proportionally
+            higher reliability across all dimensions.
           </p>
           <p>
             For detailed domain threshold values by level, see the{' '}
@@ -802,7 +974,7 @@ export default function EvaluationPage() {
               'Domain scores are not averaged or aggregated. Each domain is independently gated.',
               'A system that fails a single domain may apply for Conditional Certification if the gap is minor and remediable within 90 days.',
               'Domain thresholds increase with certification level: L1 thresholds range from 55\u201375%, L2 from 70\u201385%, and L3 from 85\u201395%.',
-              'Domain 13 (Physical Actuation Safety) thresholds apply only to L3 systems with physical actuation capabilities.',
+              'Domain 14 (Data Privacy) and Domain 15 (Physical Safety) thresholds apply based on system profile and physical actuation capabilities respectively.',
             ].map((rule) => (
               <li
                 key={rule}
@@ -813,6 +985,121 @@ export default function EvaluationPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* Special Evaluation Guidance */}
+      <section id="special-guidance" className="mb-20 scroll-mt-24">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          <a
+            href="#special-guidance"
+            className="hover:text-navy transition-colors"
+          >
+            Special Evaluation Guidance
+          </a>
+        </h2>
+        <p className="text-sm text-muted mb-6 max-w-3xl">
+          Certain system categories require additional evaluation considerations
+          beyond the standard 10-phase lifecycle. The following guidance applies
+          to systems with specialized characteristics.
+        </p>
+
+        <div className="space-y-4">
+          {specialGuidance.map((item) => (
+            <div
+              key={item.type}
+              className="border border-border rounded-lg p-6"
+            >
+              <h3 className="text-base font-semibold text-charcoal mb-2">
+                {item.type}
+              </h3>
+              <p className="text-sm text-steel leading-relaxed">
+                {item.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Express Pathway */}
+      <section id="express-pathway" className="mb-20 scroll-mt-24">
+        <h2 className="text-2xl font-semibold text-charcoal mb-2">
+          <a
+            href="#express-pathway"
+            className="hover:text-navy transition-colors"
+          >
+            Express Pathway — L1 Foundation
+          </a>
+        </h2>
+        <div className="prose max-w-3xl">
+          <p>
+            The Express Pathway provides a streamlined 3-4 week evaluation for
+            low-risk systems seeking L1 Foundation certification. This pathway
+            reduces evaluation overhead while maintaining certification rigor
+            for systems that present minimal risk.
+          </p>
+        </div>
+
+        <div className="mt-6 grid md:grid-cols-2 gap-6">
+          <div className="border border-border rounded-lg p-6">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-charcoal mb-3">
+              Eligibility Requirements
+            </h3>
+            <ul className="space-y-2">
+              {[
+                'Foundational (F) or Standard (S) system profile only',
+                'Assurance Class A only (determined in Phase 2)',
+                'No Domain 15 (Physical Safety) ACRs applicable',
+                'System does not process sensitive personal data at scale',
+                'No multi-agent orchestration capabilities',
+              ].map((req) => (
+                <li
+                  key={req}
+                  className="flex items-start gap-2.5 text-sm text-steel"
+                >
+                  <span className="text-slate-400 mt-0.5 shrink-0">
+                    &bull;
+                  </span>
+                  {req}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="border border-border rounded-lg p-6">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-charcoal mb-3">
+              Streamlined Process
+            </h3>
+            <ul className="space-y-2">
+              {[
+                'Combined Intake, Risk Classification, and Evidence Collection (1 week)',
+                'Focused ACR evaluation against profile-specific subset (1\u20132 weeks)',
+                'Automated adversarial testing only (3\u20135 days)',
+                'Expedited scoring and issuance (2\u20133 days)',
+                'Total timeline: 3\u20134 weeks end-to-end',
+              ].map((step) => (
+                <li
+                  key={step}
+                  className="flex items-start gap-2.5 text-sm text-steel"
+                >
+                  <span className="text-slate-400 mt-0.5 shrink-0">
+                    &bull;
+                  </span>
+                  {step}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-6 border border-border rounded-lg p-6 bg-slate-50">
+          <p className="text-sm text-steel leading-relaxed">
+            <span className="font-semibold text-charcoal">Note:</span> Express
+            Pathway certifications carry the same validity and registry status
+            as standard L1 certifications. The pathway notation is recorded in
+            the certification metadata but does not affect the certification
+            designation or badge.
+          </p>
         </div>
       </section>
 
@@ -834,14 +1121,14 @@ export default function EvaluationPage() {
             </p>
           </Link>
           <Link
-            href="/avb"
+            href="/certification/risk-classification"
             className="group block border border-border rounded-lg p-5 hover:border-border-dark hover:bg-slate-50 transition-colors"
           >
             <h3 className="text-sm font-semibold text-charcoal group-hover:text-navy transition-colors mb-1">
-              AVB Program
+              Risk Classification
             </h3>
             <p className="text-xs text-muted">
-              How to become an Authorized Validation Body and AVB authorization levels.
+              7-factor risk assessment methodology and Assurance Class determination.
             </p>
           </Link>
           <Link
@@ -852,7 +1139,7 @@ export default function EvaluationPage() {
               Continuous Assurance Platform
             </h3>
             <p className="text-xs text-muted">
-              Post-certification monitoring, telemetry SDK, and drift detection.
+              Post-certification monitoring, CAPO oversight, and drift detection by Assurance Class.
             </p>
           </Link>
         </div>

@@ -6,13 +6,34 @@ import { CertificationBadge } from '@/components/badges/CertificationBadge';
 
 type BadgeLevel = 1 | 2 | 3;
 type BadgeVariant = 'dark-on-light' | 'light-on-dark' | 'mono-black' | 'mono-white';
+type CertType = 'deployment' | 'platform';
+type AssuranceClass = 'A' | 'B' | 'C';
+type OperationalState = 'active' | 'monitoring-active' | 'monitoring-delayed' | 'revalidation' | 'suspended' | 'expired';
+
+const operationalStates: { value: OperationalState; label: string; color: string }[] = [
+  { value: 'active', label: 'Active', color: 'bg-green-500' },
+  { value: 'monitoring-active', label: 'Monitoring Active', color: 'bg-green-500' },
+  { value: 'monitoring-delayed', label: 'Monitoring Delayed', color: 'bg-amber-500' },
+  { value: 'revalidation', label: 'Revalidation Required', color: 'bg-amber-500' },
+  { value: 'suspended', label: 'Suspended', color: 'bg-red-500' },
+  { value: 'expired', label: 'Expired', color: 'bg-gray-400' },
+];
 
 export default function BadgeGeneratorPage() {
   const [level, setLevel] = useState<BadgeLevel>(2);
   const [certId, setCertId] = useState('ARA-2026-00000');
   const [variant, setVariant] = useState<BadgeVariant>('dark-on-light');
   const [size, setSize] = useState(240);
+  const [certType, setCertType] = useState<CertType>('deployment');
+  const [assuranceClass, setAssuranceClass] = useState<AssuranceClass>('B');
+  const [operationalState, setOperationalState] = useState<OperationalState>('active');
+  const [embedOpen, setEmbedOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const svgRef = useRef<HTMLDivElement>(null);
+
+  const downloadFilename = certType === 'platform'
+    ? `ara-badge-platform-L${level}-${certId}`
+    : `ara-badge-L${level}-${assuranceClass}-${certId}`;
 
   const downloadSVG = () => {
     if (!svgRef.current) return;
@@ -23,7 +44,7 @@ export default function BadgeGeneratorPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ara-certification-badge-L${level}-${certId}.svg`;
+    a.download = `${downloadFilename}.svg`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -49,15 +70,38 @@ export default function BadgeGeneratorPage() {
       const pngUrl = canvas.toDataURL('image/png');
       const a = document.createElement('a');
       a.href = pngUrl;
-      a.download = `ara-certification-badge-L${level}-${certId}.png`;
+      a.download = `${downloadFilename}.png`;
       a.click();
     };
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   };
 
+  const embedCode = `<img src="https://arastandard.org/api/v1/badge/${certId}" alt="ARA Certified" width="${size}" height="${size}" />`;
+
+  const copyEmbedCode = async () => {
+    try {
+      await navigator.clipboard.writeText(embedCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = embedCode;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const variantBg = variant === 'light-on-dark' || variant === 'mono-white'
     ? 'bg-navy'
     : 'bg-white';
+
+  const btnActive = 'bg-charcoal text-white border-charcoal';
+  const btnInactive = 'bg-white text-steel border-border hover:border-border-dark';
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-10">
@@ -86,6 +130,29 @@ export default function BadgeGeneratorPage() {
         <div className="grid md:grid-cols-2 gap-10">
           {/* Controls */}
           <div className="space-y-6">
+            {/* Certification Type */}
+            <div>
+              <label className="block text-sm font-semibold text-charcoal mb-2">
+                Certification Type
+              </label>
+              <div className="flex gap-2">
+                {([
+                  { value: 'deployment' as CertType, label: 'Deployment' },
+                  { value: 'platform' as CertType, label: 'Platform' },
+                ]).map((t) => (
+                  <button
+                    key={t.value}
+                    onClick={() => setCertType(t.value)}
+                    className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors ${
+                      certType === t.value ? btnActive : btnInactive
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Level */}
             <div>
               <label className="block text-sm font-semibold text-charcoal mb-2">
@@ -97,12 +164,57 @@ export default function BadgeGeneratorPage() {
                     key={l}
                     onClick={() => setLevel(l)}
                     className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors ${
-                      level === l
-                        ? 'bg-charcoal text-white border-charcoal'
-                        : 'bg-white text-steel border-border hover:border-border-dark'
+                      level === l ? btnActive : btnInactive
                     }`}
                   >
                     Level {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Assurance Class — deployment only */}
+            {certType === 'deployment' && (
+              <div>
+                <label className="block text-sm font-semibold text-charcoal mb-2">
+                  Assurance Class
+                </label>
+                <div className="flex gap-2">
+                  {([
+                    { value: 'A' as AssuranceClass, label: 'Class A (Periodic)' },
+                    { value: 'B' as AssuranceClass, label: 'Class B (Monitored)' },
+                    { value: 'C' as AssuranceClass, label: 'Class C (Continuous)' },
+                  ]).map((cls) => (
+                    <button
+                      key={cls.value}
+                      onClick={() => setAssuranceClass(cls.value)}
+                      className={`px-3 py-2 text-xs font-medium rounded-md border transition-colors ${
+                        assuranceClass === cls.value ? btnActive : btnInactive
+                      }`}
+                    >
+                      {cls.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Operational State */}
+            <div>
+              <label className="block text-sm font-semibold text-charcoal mb-2">
+                Operational State
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {operationalStates.map((s) => (
+                  <button
+                    key={s.value}
+                    onClick={() => setOperationalState(s.value)}
+                    className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md border transition-colors text-left ${
+                      operationalState === s.value ? btnActive : btnInactive
+                    }`}
+                  >
+                    <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${s.color}`} />
+                    {s.label}
                   </button>
                 ))}
               </div>
@@ -138,9 +250,7 @@ export default function BadgeGeneratorPage() {
                     key={v.value}
                     onClick={() => setVariant(v.value)}
                     className={`px-3 py-2 text-xs font-medium rounded-md border transition-colors text-left ${
-                      variant === v.value
-                        ? 'bg-charcoal text-white border-charcoal'
-                        : 'bg-white text-steel border-border hover:border-border-dark'
+                      variant === v.value ? btnActive : btnInactive
                     }`}
                   >
                     {v.label}
@@ -184,6 +294,46 @@ export default function BadgeGeneratorPage() {
                 Download PNG (4x)
               </button>
             </div>
+
+            {/* Embed Code */}
+            <div className="border border-border rounded-lg">
+              <button
+                onClick={() => setEmbedOpen(!embedOpen)}
+                className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-charcoal hover:bg-slate-50 transition-colors rounded-lg"
+              >
+                <span>Embed Code</span>
+                <svg
+                  className={`w-4 h-4 text-muted transition-transform ${embedOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {embedOpen && (
+                <div className="px-4 pb-4 space-y-3">
+                  <div className="relative">
+                    <pre className="bg-slate-50 border border-border rounded-md p-3 text-xs font-mono text-steel overflow-x-auto whitespace-pre-wrap break-all">
+                      {embedCode}
+                    </pre>
+                    <button
+                      onClick={copyEmbedCode}
+                      className="absolute top-2 right-2 px-2 py-1 text-xs font-medium bg-white border border-border rounded text-steel hover:border-border-dark transition-colors"
+                    >
+                      {copied ? 'Copied!' : 'Copy Code'}
+                    </button>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted mb-2">Preview:</p>
+                    <div className="bg-slate-50 border border-border rounded-md p-3 text-xs font-mono text-steel break-all">
+                      <code>&lt;img src=&quot;https://arastandard.org/api/v1/badge/{certId}&quot; ... /&gt;</code>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Preview */}
@@ -200,6 +350,9 @@ export default function BadgeGeneratorPage() {
                 certificationId={certId}
                 size={size}
                 variant={variant}
+                assuranceClass={certType === 'deployment' ? assuranceClass : undefined}
+                certType={certType}
+                operationalState={operationalState}
               />
             </div>
             <p className="text-xs text-muted mt-3">
@@ -221,6 +374,9 @@ export default function BadgeGeneratorPage() {
             <li>The Certification ID embedded in the mark must match the actual certification.</li>
             <li>The mark may not be used as a favicon, profile image, or avatar.</li>
             <li>Level 1 organizations may display the mark on certification documentation and company website only.</li>
+            <li>Living badges must accurately reflect the current operational state of the certification.</li>
+            <li>Platform certification badges may only be displayed by vendors with active platform certifications.</li>
+            <li>The assurance class indicator must match the certified assurance class designation.</li>
           </ul>
           <p className="text-xs text-muted mt-4">
             Full usage requirements are defined in the{' '}
