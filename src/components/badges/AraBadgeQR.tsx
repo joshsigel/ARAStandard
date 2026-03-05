@@ -2,22 +2,19 @@
 
 import React, { useId } from 'react';
 import type { AraBadgeQRProps } from './types';
-import { BADGE_STATUS_MAP } from './types';
+import { BADGE_STATUS_MAP, SIGNAL_CONFIG } from './types';
 
 /**
- * ARA Badge — QR Variant
+ * ARA Certification Mark — QR Variant
  *
  * Badge with integrated QR code for physical/print verification.
- * Designed for:
- * - Physical labels on hardware
- * - Compliance documents
- * - Enterprise dashboards
- *
+ * Designed for physical labels, compliance documents, enterprise dashboards.
  * QR code is a styled placeholder — Part 2 will generate real QR.
  */
 export function AraBadgeQR({ data, size = 200, className }: AraBadgeQRProps) {
   const uid = useId().replace(/:/g, '');
   const status = BADGE_STATUS_MAP[data.status];
+  const signal = SIGNAL_CONFIG[data.status];
 
   const verifyUrl = data.verificationUrl || `https://ara-standard.vercel.app/registry/verify/${data.certId}`;
 
@@ -26,8 +23,12 @@ export function AraBadgeQR({ data, size = 200, className }: AraBadgeQRProps) {
       {/* Mini seal header */}
       <div className="ara-qr-header">
         <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
-          <circle cx="24" cy="24" r="22" stroke="#334155" strokeWidth="1.5" fill="none" />
-          <circle cx="24" cy="24" r="18" stroke="#1E293B" strokeWidth="2.5" fill="none" />
+          {/* Mini four-layer seal */}
+          <circle cx="24" cy="24" r="22" stroke="#0F172A" strokeWidth="2" fill="none" />
+          <circle cx="24" cy="24" r="19" stroke="#94A3B8" strokeWidth="0.5" fill="none" opacity="0.5" />
+          <circle cx="24" cy="24" r="17" stroke={signal.color} strokeWidth="1.5" fill="none"
+            opacity={signal.opacityRange[1]} />
+          <circle cx="24" cy="24" r="14.5" fill="#F1F5F9" />
           <text x="24" y="22" textAnchor="middle" dominantBaseline="central"
             fill="#0F172A" fontSize="10" fontFamily="Inter, system-ui, sans-serif" fontWeight="900" letterSpacing="0.05em">
             ARA
@@ -45,7 +46,6 @@ export function AraBadgeQR({ data, size = 200, className }: AraBadgeQRProps) {
 
       {/* QR Code placeholder */}
       <div className="ara-qr-code">
-        {/* Stylized QR pattern — Part 2 will use real QR generation */}
         <svg viewBox="0 0 120 120" fill="none" width="100%" height="100%">
           {/* QR frame */}
           <rect x="4" y="4" width="112" height="112" rx="4" stroke="#E2E8F0" strokeWidth="1" fill="white" />
@@ -62,11 +62,9 @@ export function AraBadgeQR({ data, size = 200, className }: AraBadgeQRProps) {
           {/* Stylized data pattern */}
           {Array.from({ length: 12 }).map((_, row) =>
             Array.from({ length: 12 }).map((_, col) => {
-              // Skip corner marker areas
               if (row < 4 && col < 4) return null;
               if (row < 4 && col > 7) return null;
               if (row > 7 && col < 4) return null;
-              // Deterministic pattern from cert ID
               const hash = (data.certId.charCodeAt((row * 12 + col) % data.certId.length) * 31 + row * 7 + col * 13) % 100;
               if (hash > 45) return null;
               return (

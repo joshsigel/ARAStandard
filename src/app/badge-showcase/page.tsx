@@ -8,7 +8,7 @@ import { AraBadgePrint } from '@/components/badges/AraBadgePrint';
 import { AraBadgeHero } from '@/components/badges/AraBadgeHero';
 import { AraBadgeQR } from '@/components/badges/AraBadgeQR';
 import type { BadgeData, BadgeStatus, BadgeAssuranceClass } from '@/components/badges/types';
-import { BADGE_STATUS_MAP, LEVEL_CONFIG, CLASS_CONFIG } from '@/components/badges/types';
+import { BADGE_STATUS_MAP, SIGNAL_CONFIG, LEVEL_CONFIG, CLASS_CONFIG } from '@/components/badges/types';
 
 // ─── Sample Badge Data ─────────────────────────────────────────────────────
 
@@ -55,12 +55,12 @@ export default function BadgeShowcasePage() {
       <div className="mb-12">
         <div className="version-badge mb-3">BADGE SYSTEM v2</div>
         <h1 className="text-3xl font-semibold tracking-tight text-charcoal">
-          ARA Living Certification Badge
+          ARA Trust Signal
         </h1>
         <p className="text-muted mt-2 max-w-2xl">
-          A holographic, animated badge system that communicates certification identity,
-          operational monitoring state, and verification capability. Each badge is a
-          living trust signal.
+          A formal certification mark with continuous assurance dynamics. Each badge is a
+          four-layer radial trust seal that communicates certification identity, operational
+          monitoring state, and verification capability.
         </p>
       </div>
 
@@ -138,6 +138,7 @@ export default function BadgeShowcasePage() {
               <div className="space-y-1.5">
                 {ALL_STATUSES.map((s) => {
                   const state = BADGE_STATUS_MAP[s];
+                  const signal = SIGNAL_CONFIG[s];
                   return (
                     <button
                       key={s}
@@ -150,10 +151,10 @@ export default function BadgeShowcasePage() {
                     >
                       <span
                         className="w-2 h-2 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: state.muted ? '#94A3B8' : state.glowColor.replace(/[^#\w]/g, '').length > 0 ? undefined : '#16A34A' }}
+                        style={{ backgroundColor: signal.color }}
                       />
                       <span className="flex-1">{state.label}</span>
-                      <span className="text-xs text-slate-400">{state.indicator}</span>
+                      <span className="text-xs text-slate-400">{signal.breathing ? 'breathing' : 'static'}</span>
                     </button>
                   );
                 })}
@@ -167,11 +168,12 @@ export default function BadgeShowcasePage() {
       <section className="mb-16">
         <h2 className="text-xl font-semibold text-charcoal mb-2">Status States</h2>
         <p className="text-sm text-muted mb-6">
-          Each operational status has a distinct animation and visual indicator.
+          Each operational status drives the signal ring — the only animated layer in the trust seal.
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {ALL_STATUSES.map((s) => {
             const state = BADGE_STATUS_MAP[s];
+            const signal = SIGNAL_CONFIG[s];
             return (
               <div key={s} className="flex flex-col items-center text-center">
                 <AraBadge
@@ -181,7 +183,9 @@ export default function BadgeShowcasePage() {
                 />
                 <div className="mt-3">
                   <div className="text-xs font-semibold text-charcoal">{state.label}</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">{state.indicator}</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">
+                    {signal.breathing ? `${signal.cycleDuration}s cycle` : 'static'}
+                  </div>
                 </div>
               </div>
             );
@@ -247,7 +251,7 @@ export default function BadgeShowcasePage() {
           {/* Primary Badge */}
           <div>
             <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
-              &lt;AraBadge /&gt; — Primary Living Badge
+              &lt;AraBadge /&gt; — Primary Trust Seal
             </h3>
             <div className="flex items-center justify-center p-8 bg-slate-50 rounded-xl border border-border">
               <AraBadge

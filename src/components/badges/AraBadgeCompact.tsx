@@ -2,26 +2,18 @@
 
 import React from 'react';
 import type { AraBadgeCompactProps } from './types';
-import { BADGE_STATUS_MAP } from './types';
+import { BADGE_STATUS_MAP, SIGNAL_CONFIG } from './types';
 
 /**
- * ARA Badge — Compact Variant
+ * ARA Certification Mark — Compact Variant
  *
  * Inline badge for tables, lists, and tight UI contexts.
- * Shows: Level pill + Class indicator + Status dot
+ * Shows: ARA mark + Level/Class pill + Status dot
  * Recognizable at 24–36px height.
  */
 export function AraBadgeCompact({ data, className, onClick }: AraBadgeCompactProps) {
   const status = BADGE_STATUS_MAP[data.status];
-
-  const dotColors: Record<typeof data.status, string> = {
-    active: '#16A34A',
-    monitoring_connected: '#3B82F6',
-    monitoring_delayed: '#D97706',
-    revalidation_required: '#D97706',
-    suspended: '#DC2626',
-    expired: '#94A3B8',
-  };
+  const signal = SIGNAL_CONFIG[data.status];
 
   return (
     <button
@@ -39,12 +31,12 @@ export function AraBadgeCompact({ data, className, onClick }: AraBadgeCompactPro
         L{data.level}/{data.assuranceClass}
       </span>
 
-      {/* Status dot */}
+      {/* Status dot — color from signal config, subtle 6–8s pulse */}
       <span
-        className={`ara-compact-dot ${status.pulseSpeed > 0 ? 'ara-compact-dot-pulse' : ''}`}
+        className={`ara-compact-dot ${signal.breathing ? 'ara-compact-dot-pulse' : ''}`}
         style={{
-          backgroundColor: dotColors[data.status],
-          '--pulse-speed': `${status.pulseSpeed}s`,
+          backgroundColor: signal.color,
+          '--pulse-speed': `${signal.cycleDuration || 6}s`,
         } as React.CSSProperties}
       />
     </button>

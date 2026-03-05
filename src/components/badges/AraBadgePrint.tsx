@@ -2,29 +2,63 @@
 
 import React, { useId } from 'react';
 import type { AraBadgePrintProps } from './types';
+import {
+  ARA_WORDMARK_PATH,
+  ARA_WORDMARK_ORIGIN,
+  describeArc,
+} from './types';
 
 /**
- * ARA Badge — Print / Static Variant
+ * ARA Certification Mark — Print / Static Variant
  *
- * No animations, no interactivity. Designed for:
- * - PDF documents
- * - Compliance reports
- * - Physical certificates
+ * Same four-layer trust seal geometry as AraBadge, but:
+ * - No animations (no SMIL <animate> elements)
+ * - No gradients (solid fills only)
+ * - No filters (no glow, blur, or saturation)
+ * - Clean strokes for high-DPI print rendering
  *
- * Includes QR code placeholder area and cert ID.
- * Renders at high fidelity in print contexts.
+ * Designed for PDF documents, compliance reports, and physical certificates.
  */
 export function AraBadgePrint({ data, size = 240, className }: AraBadgePrintProps) {
   const uid = useId().replace(/:/g, '');
+
   const vb = 600;
   const cx = 300;
   const cy = 300;
 
-  const outerR = 280;
-  const midR = 258;
-  const innerR = 226;
+  // Layer 1 — Authority Ring
+  const outerDecorR = 290;
+  const authorityR = 280;
+  const authorityStroke = 16;
+  const innerAuthorityR = 268;
+  const upperTextR = 246;
+  const lowerTextR = 253;
+  const certIdR = 286;
+  const tickCount = 12;
+  const tickLength = 4;
 
-  const upperTextR = 244;
+  // Layer 2 — Identity Separator
+  const separatorR = 248;
+
+  // Layer 3 — Signal Ring (static for print — just a solid ring)
+  const signalR = 228;
+  const signalStroke = 5;
+
+  // Layer 4 — Core Seal
+  const sealBorderR = 208;
+  const sealSurfaceR = 206;
+
+  // Authority ring gap
+  const authorityCirc = 2 * Math.PI * authorityR;
+  const gapDeg = 90;
+  const gapLen = (gapDeg / 360) * authorityCirc;
+  const visLen = authorityCirc - gapLen;
+  const dashOffset = ((360 - (90 + gapDeg / 2)) / 360) * authorityCirc;
+
+  // ARA wordmark transform
+  const araScale = 0.185;
+  const araTargetCX = cx;
+  const araTargetCY = cy - 26;
 
   return (
     <svg
@@ -38,86 +72,113 @@ export function AraBadgePrint({ data, size = 240, className }: AraBadgePrintProp
       className={`ara-badge-print ${className || ''}`}
     >
       <defs>
-        {/* Text arcs */}
+        {/* Upper text arc */}
         <path
           id={`print-upper-${uid}`}
-          d={`M ${cx - upperTextR * Math.cos(25 * Math.PI / 180)},${cy + upperTextR * Math.sin(25 * Math.PI / 180)} A ${upperTextR},${upperTextR} 0 1,1 ${cx + upperTextR * Math.cos(25 * Math.PI / 180)},${cy + upperTextR * Math.sin(25 * Math.PI / 180)}`}
+          d={describeArc(cx, cy, upperTextR, -210, 30)}
         />
+        {/* Lower text arc */}
         <path
           id={`print-lower-${uid}`}
-          d={`M ${cx - upperTextR},${cy + 10} A ${upperTextR},${upperTextR} 0 0,0 ${cx + upperTextR},${cy + 10}`}
+          d={`M ${cx - lowerTextR},${cy} A ${lowerTextR},${lowerTextR} 0 0,0 ${cx + lowerTextR},${cy}`}
         />
+        {/* Cert ID arc */}
         <path
           id={`print-certid-${uid}`}
-          d={`M ${cx - 284},${cy + 10} A 284,284 0 0,0 ${cx + 284},${cy + 10}`}
+          d={`M ${cx - certIdR},${cy + 10} A ${certIdR},${certIdR} 0 0,0 ${cx + certIdR},${cy + 10}`}
         />
-        <circle id={`print-micro-${uid}`} cx={cx} cy={cy} r={218} />
       </defs>
 
-      {/* Outer ring — solid for print */}
-      <circle cx={cx} cy={cy} r={outerR} stroke="#1E293B" strokeWidth={2.5} fill="none" />
+      {/* ═══ Layer 1 — Authority Ring (solid strokes for print) ═══ */}
 
-      {/* Mid ring with gap */}
-      <circle
-        cx={cx} cy={cy} r={midR}
-        stroke="#0F172A"
-        strokeWidth={10}
-        fill="none"
-        strokeDasharray={`${(300 / 360) * 2 * Math.PI * midR} ${(60 / 360) * 2 * Math.PI * midR}`}
-        strokeDashoffset={((360 - 120) / 360) * 2 * Math.PI * midR}
-        strokeLinecap="round"
-      />
+      <circle cx={cx} cy={cy} r={outerDecorR}
+        stroke="#94A3B8" strokeWidth={1} fill="none" opacity={0.5} />
 
-      {/* Inner seal */}
-      <circle cx={cx} cy={cy} r={innerR} stroke="#475569" strokeWidth={1} fill="white" />
+      <circle cx={cx} cy={cy} r={authorityR}
+        stroke="#0F172A" strokeWidth={authorityStroke} fill="none"
+        strokeDasharray={`${visLen.toFixed(1)} ${gapLen.toFixed(1)}`}
+        strokeDashoffset={dashOffset.toFixed(1)} />
 
-      {/* Microprint ring */}
-      <text fill="#CBD5E1" fontSize="5" fontFamily="'IBM Plex Mono', monospace" fontWeight="400" letterSpacing="0.06em">
-        <textPath href={`#print-micro-${uid}`} startOffset="0%">
-          ARA·STANDARD·v{data.standardVersion}·CERTIFIED·{data.certId}·LEVEL·{data.level}·CLASS·{data.assuranceClass}·ARA·STANDARD·v{data.standardVersion}·CERTIFIED·{data.certId}·LEVEL·{data.level}·CLASS·{data.assuranceClass}·
-        </textPath>
-      </text>
+      <circle cx={cx} cy={cy} r={innerAuthorityR}
+        stroke="#475569" strokeWidth={0.75} fill="none" opacity={0.6} />
+
+      {/* Tick marks */}
+      {Array.from({ length: tickCount }).map((_, i) => {
+        const angle = (i * 360) / tickCount - 90;
+        const rad = (angle * Math.PI) / 180;
+        const innerTick = authorityR + authorityStroke / 2 - tickLength;
+        const outerTick = authorityR + authorityStroke / 2;
+        return (
+          <line key={i}
+            x1={cx + innerTick * Math.cos(rad)} y1={cy + innerTick * Math.sin(rad)}
+            x2={cx + outerTick * Math.cos(rad)} y2={cy + outerTick * Math.sin(rad)}
+            stroke="#94A3B8" strokeWidth={1} opacity={0.45} />
+        );
+      })}
 
       {/* Upper ring text */}
-      <text fill="#1E293B" fontSize="26" fontFamily="Inter, system-ui, sans-serif" fontWeight="700" letterSpacing="0.06em">
+      <text fill="#E2E8F0" fontSize="24" fontFamily="Inter, system-ui, sans-serif"
+        fontWeight="700" letterSpacing="0.06em">
         <textPath href={`#print-upper-${uid}`} startOffset="50%" textAnchor="middle">
           AUTONOMOUS RELIABILITY ASSURANCE
         </textPath>
       </text>
 
       {/* Lower ring text */}
-      <text fill="#1E293B" fontSize="26" fontFamily="Inter, system-ui, sans-serif" fontWeight="700" letterSpacing="0.45em">
+      <text fill="#E2E8F0" fontSize="24" fontFamily="Inter, system-ui, sans-serif"
+        fontWeight="700" letterSpacing="0.40em">
         <textPath href={`#print-lower-${uid}`} startOffset="50%" textAnchor="middle">
           CERTIFIED
         </textPath>
       </text>
 
-      {/* ARA Wordmark */}
-      <text x={cx} y={cy - 20} textAnchor="middle" dominantBaseline="central"
-        fill="#0F172A" fontSize="68" fontFamily="Inter, system-ui, sans-serif" fontWeight="900" letterSpacing="0.08em">
-        ARA
-      </text>
-
-      {/* Divider */}
-      <line x1={cx - 60} y1={cy + 18} x2={cx + 60} y2={cy + 18} stroke="#CBD5E1" strokeWidth={0.75} />
-
-      {/* Level */}
-      <text x={cx} y={cy + 48} textAnchor="middle"
-        fill="#1E293B" fontSize="28" fontFamily="Inter, system-ui, sans-serif" fontWeight="800" letterSpacing="0.12em">
-        LEVEL {data.level}
-      </text>
-
-      {/* Class + Version */}
-      <text x={cx} y={cy + 76} textAnchor="middle"
-        fill="#64748B" fontSize="14" fontFamily="Inter, system-ui, sans-serif" fontWeight="600" letterSpacing="0.18em">
-        CLASS {data.assuranceClass} · v{data.standardVersion}
-      </text>
-
       {/* Cert ID */}
-      <text fill="#64748B" fontSize="12" fontFamily="'IBM Plex Mono', monospace" fontWeight="500" letterSpacing="0.04em">
+      <text fill="#64748B" fontSize="12" fontFamily="'IBM Plex Mono', monospace"
+        fontWeight="500" letterSpacing="0.04em">
         <textPath href={`#print-certid-${uid}`} startOffset="50%" textAnchor="middle">
           {data.certId}
         </textPath>
+      </text>
+
+      {/* ═══ Layer 2 — Identity Separator ═══ */}
+
+      <circle cx={cx} cy={cy} r={separatorR}
+        stroke="#94A3B8" strokeWidth={1.5} fill="none" opacity={0.4} />
+
+      {/* ═══ Layer 3 — Signal Ring (static for print) ═══ */}
+
+      <circle cx={cx} cy={cy} r={signalR}
+        stroke="#94A3B8" strokeWidth={signalStroke} fill="none" opacity={0.3} />
+
+      {/* ═══ Layer 4 — Core Seal ═══ */}
+
+      <circle cx={cx} cy={cy} r={sealBorderR}
+        stroke="#475569" strokeWidth={1} fill="none" opacity={0.5} />
+
+      {/* White fill for clean print */}
+      <circle cx={cx} cy={cy} r={sealSurfaceR} fill="white" />
+
+      {/* ARA traced wordmark */}
+      <g transform={`translate(${araTargetCX}, ${araTargetCY}) scale(${araScale}) translate(${-ARA_WORDMARK_ORIGIN.cx}, ${-ARA_WORDMARK_ORIGIN.cy})`}>
+        <path d={ARA_WORDMARK_PATH} fill="#0F172A" />
+      </g>
+
+      {/* Divider */}
+      <line x1={cx - 55} y1={cy + 10} x2={cx + 55} y2={cy + 10}
+        stroke="#CBD5E1" strokeWidth={0.75} />
+
+      {/* LEVEL */}
+      <text x={cx} y={cy + 38} textAnchor="middle"
+        fill="#0F172A" fontSize="26" fontFamily="Inter, system-ui, sans-serif"
+        fontWeight="800" letterSpacing="0.15em">
+        LEVEL {data.level}
+      </text>
+
+      {/* CLASS + version */}
+      <text x={cx} y={cy + 58} textAnchor="middle"
+        fill="#64748B" fontSize="13" fontFamily="Inter, system-ui, sans-serif"
+        fontWeight="600" letterSpacing="0.12em">
+        CLASS {data.assuranceClass} · v{data.standardVersion}
       </text>
     </svg>
   );

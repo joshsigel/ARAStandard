@@ -98,7 +98,7 @@ const phases = [
     outputs: [
       'Two-axis designation (e.g., L2-B)',
       'Platform cert variant (level only, no class)',
-      'Living certification badge',
+      'ARA Trust Signal',
       'Public registry entry',
       'Certification ID (e.g., ARA-2026-XXXXX)',
     ],

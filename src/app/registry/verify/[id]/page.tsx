@@ -328,7 +328,7 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
         {/* Sidebar — Badge, QR Code, and verification */}
         <aside>
           <div className="border border-border rounded-lg p-6 sticky top-24">
-            {/* Living Certification Badge */}
+            {/* ARA Trust Signal */}
             <div className="flex justify-center mb-6 pb-6 border-b border-border">
               <AraBadge
                 data={registryEntryToBadgeData(entry)}

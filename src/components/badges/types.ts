@@ -1,8 +1,13 @@
 /**
- * ARA Living Certification Badge — Type Definitions
+ * ARA Certification Mark — Type Definitions
  *
  * This file defines the canonical badge data model used by all badge variants.
  * The same BadgeData object will later be embedded into tokenized badges (Part 2).
+ *
+ * Naming convention:
+ *   Code:    "Badge"  (AraBadge, BadgeData, .ara-badge-*)
+ *   Public:  "ARA Trust Signal"
+ *   Formal:  "ARA Certification Mark"
  */
 
 // ─── Badge Status (operational state) ──────────────────────────────────────
@@ -32,87 +37,133 @@ export interface BadgeData {
   verificationUrl?: string;   // placeholder for Part 2
 }
 
+// ─── ARA Traced Wordmark Path ─────────────────────────────────────────────
+
+/**
+ * 155-point traced SVG path of the ARA wordmark, extracted from the
+ * Adobe Illustrator reference file (ARAbadge.svg).
+ *
+ * Source origin: (1132.76, 495.52) — use ARA_WORDMARK_ORIGIN for transforms.
+ */
+export const ARA_WORDMARK_PATH =
+  'M1198.36,525.92l-8.33,31.14-25.09-.14-36.38-58.37-4.92-6.96,3.17-1.73c7.03-.32,12.09-.94,17.86-2.32,7.69-3.84,12.16-10.22,11.62-18.78-.74-7.9-6.93-13.51-15.7-16.11l-27.38-.07-.25,32.26.22,69.35-1.82,2.73-36.18.09-12.69-45.87-7.49-26.33-2.38-11.27-1.62-2.56-2.23,1.66-10.3,20.87-8.26,15.74-5.85,12.49-14.27,28.02-5.34,7.48-18.93-.28.53-4.77,9.66-18.35,25.33-50.45c4.93-9.23,9.06-17.76,13.02-26.84l11.44-22.49,15.79-.37,2.77,2.74,18.8,73.4,8.36,24.8.27-100.72,46.19-.05c12.21-.6,23.56,3.83,31.48,12.9,9.28,11.72,9.88,26.98,3.69,41.08-4.22,7.21-10.18,11.6-18.01,14.71l.47,3.19,15.79,24.54c1.69,1.83,3.85,2.68,3.39.54l2.53-7.09,20.92-75.9,3.07-11.08,2.5-2.79,15.11-.07,6.38,11.11,7.69,16.9,12.26,24.86,30.16,60.69,4.28,9.22-19.22.68-4.49-3.94-26.05-52.69-13.77-27.75-1.96-1.82-1.29,2.43-4.93,18.56-9.67,33.75Z';
+
+/** Source-space center of the traced ARA wordmark path. */
+export const ARA_WORDMARK_ORIGIN = { cx: 1132.76, cy: 495.52 };
+
+// ─── Signal Ring Configuration ────────────────────────────────────────────
+
+/**
+ * Configuration for Layer 3 — the assurance signal ring.
+ * This is the ONLY animated layer in the four-layer trust seal.
+ */
+export interface SignalRingConfig {
+  /** Signal ring color */
+  color: string;
+  /** SVG stroke-dasharray (e.g. "none" for continuous, or dash pattern) */
+  dashPattern: string;
+  /** Whether the ring breathes (opacity animation) */
+  breathing: boolean;
+  /** Breathing cycle duration in seconds (0 = no animation) */
+  cycleDuration: number;
+  /** Opacity range: [min, max] */
+  opacityRange: [number, number];
+}
+
+export const SIGNAL_CONFIG: Record<BadgeStatus, SignalRingConfig> = {
+  active: {
+    color: '#3B82F6',
+    dashPattern: 'none',
+    breathing: true,
+    cycleDuration: 8,
+    opacityRange: [0.35, 0.75],
+  },
+  monitoring_connected: {
+    color: '#3B82F6',
+    dashPattern: 'none',
+    breathing: true,
+    cycleDuration: 6,
+    opacityRange: [0.4, 0.85],
+  },
+  monitoring_delayed: {
+    color: '#D97706',
+    dashPattern: '12 6',
+    breathing: true,
+    cycleDuration: 4,
+    opacityRange: [0.3, 0.7],
+  },
+  revalidation_required: {
+    color: '#D97706',
+    dashPattern: '40 100',
+    breathing: true,
+    cycleDuration: 6,
+    opacityRange: [0.35, 0.65],
+  },
+  suspended: {
+    color: '#DC2626',
+    dashPattern: '8 20',
+    breathing: false,
+    cycleDuration: 0,
+    opacityRange: [0.35, 0.35],
+  },
+  expired: {
+    color: '#94A3B8',
+    dashPattern: 'none',
+    breathing: false,
+    cycleDuration: 0,
+    opacityRange: [0.15, 0.15],
+  },
+};
+
 // ─── Visual State Mapping ──────────────────────────────────────────────────
 
 export interface BadgeVisualState {
-  /** CSS animation class name */
-  animation: string;
-  /** Outer ring color token */
-  ringColor: string;
-  /** Pulse/glow color token */
-  glowColor: string;
-  /** Pulse speed in seconds (0 = no pulse) */
-  pulseSpeed: number;
   /** Human-readable status label */
   label: string;
   /** Short description for accessibility */
   description: string;
   /** Whether the badge should appear muted/desaturated */
   muted: boolean;
-  /** Status indicator icon key */
-  indicator: 'pulse' | 'heartbeat' | 'intermittent' | 'alert' | 'static' | 'off';
+  /** Status dot color (for compact/embed/hero info) */
+  dotColor: string;
 }
 
 export const BADGE_STATUS_MAP: Record<BadgeStatus, BadgeVisualState> = {
   active: {
-    animation: 'ara-badge-active',
-    ringColor: 'var(--badge-ring-active)',
-    glowColor: 'rgba(22, 163, 74, 0.2)',
-    pulseSpeed: 4,
     label: 'Active',
     description: 'Certification is active and in good standing',
     muted: false,
-    indicator: 'pulse',
+    dotColor: '#3B82F6',
   },
   monitoring_connected: {
-    animation: 'ara-badge-heartbeat',
-    ringColor: 'var(--badge-ring-monitoring)',
-    glowColor: 'rgba(59, 130, 246, 0.15)',
-    pulseSpeed: 3,
     label: 'Monitoring Connected',
     description: 'Continuous monitoring telemetry is connected and reporting',
     muted: false,
-    indicator: 'heartbeat',
+    dotColor: '#3B82F6',
   },
   monitoring_delayed: {
-    animation: 'ara-badge-intermittent',
-    ringColor: 'var(--badge-ring-delayed)',
-    glowColor: 'rgba(217, 119, 6, 0.2)',
-    pulseSpeed: 2,
     label: 'Monitoring Delayed',
     description: 'Monitoring telemetry is delayed — check-in overdue',
     muted: false,
-    indicator: 'intermittent',
+    dotColor: '#D97706',
   },
   revalidation_required: {
-    animation: 'ara-badge-alert',
-    ringColor: 'var(--badge-ring-revalidation)',
-    glowColor: 'rgba(217, 119, 6, 0.25)',
-    pulseSpeed: 1.5,
     label: 'Revalidation Required',
     description: 'Certification requires revalidation assessment',
     muted: false,
-    indicator: 'alert',
+    dotColor: '#D97706',
   },
   suspended: {
-    animation: 'ara-badge-static',
-    ringColor: 'var(--badge-ring-suspended)',
-    glowColor: 'rgba(220, 38, 38, 0.15)',
-    pulseSpeed: 0,
     label: 'Suspended',
     description: 'Certification has been suspended pending review',
     muted: true,
-    indicator: 'static',
+    dotColor: '#DC2626',
   },
   expired: {
-    animation: 'ara-badge-off',
-    ringColor: 'var(--badge-ring-expired)',
-    glowColor: 'transparent',
-    pulseSpeed: 0,
     label: 'Expired',
     description: 'Certification has expired and is no longer valid',
     muted: true,
-    indicator: 'off',
+    dotColor: '#94A3B8',
   },
 };
 
@@ -180,6 +231,30 @@ export const CLASS_CONFIG: Record<BadgeAssuranceClass, ClassVisualConfig> = {
     cadence: 'Continuous',
   },
 };
+
+// ─── SVG Helpers ──────────────────────────────────────────────────────────
+
+/**
+ * Generate an SVG arc path from startAngle to endAngle (degrees, 0=right, CW).
+ * Used for text arcs, ring segments, etc.
+ */
+export function describeArc(
+  cx: number,
+  cy: number,
+  r: number,
+  startAngle: number,
+  endAngle: number,
+): string {
+  const startRad = (startAngle * Math.PI) / 180;
+  const endRad = (endAngle * Math.PI) / 180;
+  const x1 = cx + r * Math.cos(startRad);
+  const y1 = cy + r * Math.sin(startRad);
+  const x2 = cx + r * Math.cos(endRad);
+  const y2 = cy + r * Math.sin(endRad);
+  const sweep = endAngle - startAngle;
+  const largeArc = (sweep > 0 ? sweep : sweep + 360) > 180 ? 1 : 0;
+  return `M ${x1},${y1} A ${r},${r} 0 ${largeArc},1 ${x2},${y2}`;
+}
 
 // ─── Badge Token (Part 2 Stub) ─────────────────────────────────────────────
 

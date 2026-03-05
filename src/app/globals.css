@@ -550,25 +550,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ========================================
-   ARA Living Certification Badge System v2
+   ARA Certification Mark — Badge System v2
+   Four-Layer Radial Trust Seal
    ======================================== */
-
-/* ─── Badge CSS Custom Properties ───────────────────────────────────────── */
-
-:root {
-  --badge-ring-active: #16A34A;
-  --badge-ring-monitoring: #3B82F6;
-  --badge-ring-delayed: #D97706;
-  --badge-ring-revalidation: #D97706;
-  --badge-ring-suspended: #DC2626;
-  --badge-ring-expired: #94A3B8;
-}
 
 /* ─── Primary Badge Wrapper ─────────────────────────────────────────────── */
 
 .ara-badge-wrapper {
-  transition: transform 0.3s ease, filter 0.3s ease;
-  will-change: transform;
+  transition: transform 0.3s ease;
 }
 
 .ara-badge-interactive {
@@ -583,71 +572,6 @@ h1, h2, h3, h4, h5, h6 {
   outline: 2px solid var(--color-navy);
   outline-offset: 4px;
   border-radius: 50%;
-}
-
-/* ─── Living Badge Animations ───────────────────────────────────────────── */
-
-/* Active: slow subtle green glow pulse */
-@keyframes ara-pulse-active {
-  0%, 100% { filter: drop-shadow(0 0 0px rgba(22, 163, 74, 0)); }
-  50% { filter: drop-shadow(0 0 8px rgba(22, 163, 74, 0.15)); }
-}
-
-.ara-badge-active {
-  animation: ara-pulse-active 4s ease-in-out infinite;
-}
-
-/* Monitoring Connected: blue heartbeat pulse */
-@keyframes ara-heartbeat {
-  0%, 100% { filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); }
-  15% { filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.12)); }
-  30% { filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); }
-  45% { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.18)); }
-  60% { filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); }
-}
-
-.ara-badge-heartbeat {
-  animation: ara-heartbeat 3s ease-in-out infinite;
-}
-
-/* Monitoring Delayed: intermittent amber tick */
-@keyframes ara-intermittent {
-  0%, 100% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
-  10% { filter: drop-shadow(0 0 6px rgba(217, 119, 6, 0.2)); }
-  20% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
-  60% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
-  70% { filter: drop-shadow(0 0 8px rgba(217, 119, 6, 0.25)); }
-  80% { filter: drop-shadow(0 0 0px rgba(217, 119, 6, 0)); }
-}
-
-.ara-badge-intermittent {
-  animation: ara-intermittent 2s ease-in-out infinite;
-}
-
-/* Revalidation Required: steady amber glow */
-@keyframes ara-alert {
-  0%, 100% { filter: drop-shadow(0 0 3px rgba(217, 119, 6, 0.15)); }
-  50% { filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.3)); }
-}
-
-.ara-badge-alert {
-  animation: ara-alert 1.5s ease-in-out infinite;
-}
-
-/* Suspended: static red tint */
-.ara-badge-static {
-  filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.12));
-}
-
-/* Expired: muted and desaturated */
-.ara-badge-off {
-  filter: grayscale(0.7) opacity(0.55);
-}
-
-/* ─── Holographic Shimmer ───────────────────────────────────────────────── */
-
-.ara-badge-shimmer {
-  pointer-events: none;
 }
 
 /* ─── Verification Tooltip ──────────────────────────────────────────────── */
@@ -703,13 +627,6 @@ h1, h2, h3, h4, h5, h6 {
   height: 6px;
   border-radius: 50%;
 }
-
-.ara-badge-dot-active { background: #16A34A; }
-.ara-badge-dot-monitoring_connected { background: #3B82F6; }
-.ara-badge-dot-monitoring_delayed { background: #D97706; }
-.ara-badge-dot-revalidation_required { background: #D97706; }
-.ara-badge-dot-suspended { background: #DC2626; }
-.ara-badge-dot-expired { background: #94A3B8; }
 
 .ara-badge-tooltip-id {
   font-family: 'IBM Plex Mono', monospace;
@@ -795,7 +712,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .ara-compact-dot-pulse {
-  animation: ara-compact-pulse var(--pulse-speed, 3s) ease-in-out infinite;
+  animation: ara-compact-pulse var(--pulse-speed, 6s) ease-in-out infinite;
 }
 
 @keyframes ara-compact-pulse {
@@ -1022,16 +939,13 @@ h1, h2, h3, h4, h5, h6 {
 /* ─── Print Badge ───────────────────────────────────────────────────────── */
 
 .ara-badge-print {
-  /* No animations, clean rendering */
+  /* No animations, clean rendering for PDF/print */
 }
 
+/* ─── Print Media ───────────────────────────────────────────────────────── */
+
 @media print {
-  .ara-badge-wrapper,
-  .ara-badge-active,
-  .ara-badge-heartbeat,
-  .ara-badge-intermittent,
-  .ara-badge-alert {
-    animation: none !important;
+  .ara-badge-wrapper {
     filter: none !important;
   }
 
@@ -1042,15 +956,16 @@ h1, h2, h3, h4, h5, h6 {
   .ara-hero-glow {
     display: none !important;
   }
+
+  /* Disable all SMIL animations in print */
+  .ara-badge-svg animate {
+    display: none;
+  }
 }
 
 /* ─── Reduced Motion ────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .ara-badge-active,
-  .ara-badge-heartbeat,
-  .ara-badge-intermittent,
-  .ara-badge-alert,
   .ara-compact-dot-pulse {
     animation: none !important;
   }
@@ -1059,7 +974,7 @@ h1, h2, h3, h4, h5, h6 {
     transition: none !important;
   }
 
-  .ara-badge-shimmer animate,
+  /* Disable all SMIL <animate> elements when user prefers reduced motion */
   .ara-badge-svg animate {
     display: none;
   }

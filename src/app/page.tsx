@@ -353,16 +353,17 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-3">
-                  ARA Dynamic Assurance Mark
+                  ARA Trust Signal
                 </p>
                 <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2">
-                  Living certification badges
+                  ARA Trust Signal
                 </h2>
                 <p className="text-sm text-white/60 mb-4 max-w-lg">
-                  Every ARA certification carries a living badge — a cryptographic trust
-                  seal that reflects the system&apos;s real-time operational state. Level,
-                  assurance class, monitoring status, and certification validity are
-                  encoded directly into the badge&apos;s visual grammar.
+                  Every ARA certification carries an ARA Trust Signal — a formal
+                  certification mark with continuous assurance dynamics that reflects
+                  the system&apos;s real-time operational state. Level, assurance class,
+                  monitoring status, and certification validity are encoded directly
+                  into the mark&apos;s visual grammar.
                 </p>
                 <div className="flex items-center gap-3 mb-6 flex-wrap">
                   <span className="level-badge level-badge-l2">L2</span>

@@ -1,10 +1,8 @@
 /**
- * ARA Living Certification Badge System
- *
- * Component library for the ARA Dynamic Assurance Mark.
+ * ARA Certification Mark — Badge Component Library
  *
  * Components:
- *   AraBadge         — Primary living badge (digital, interactive)
+ *   AraBadge         — Primary trust seal (digital, interactive)
  *   AraBadgeCompact  — Inline badge for tables/lists
  *   AraBadgeEmbed    — Horizontal card for third-party embedding
  *   AraBadgePrint    — Static badge for print/PDF
@@ -15,7 +13,7 @@
  *   CertificationBadge — v1.0 badge (retained for backward compatibility)
  */
 
-// New v2 badge system
+// v2 badge system
 export { AraBadge } from './AraBadge';
 export { AraBadgeCompact } from './AraBadgeCompact';
 export { AraBadgeEmbed } from './AraBadgeEmbed';
@@ -30,6 +28,7 @@ export type {
   BadgeAssuranceClass,
   BadgeToken,
   BadgeVisualState,
+  SignalRingConfig,
   LevelVisualConfig,
   ClassVisualConfig,
   AraBadgeProps,
@@ -42,8 +41,12 @@ export type {
 
 export {
   BADGE_STATUS_MAP,
+  SIGNAL_CONFIG,
   LEVEL_CONFIG,
   CLASS_CONFIG,
+  ARA_WORDMARK_PATH,
+  ARA_WORDMARK_ORIGIN,
+  describeArc,
   decodeBadgeToken,
   encodeBadgeToken,
   registryEntryToBadgeData,
