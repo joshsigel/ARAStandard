@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
 interface EcosystemNode {
   id: string;
@@ -27,15 +28,14 @@ const nodes: EcosystemNode[] = [
   { id: 'consortium', label: 'Consortium', description: 'Industry consortium members contributing to standard evolution through working groups and public comment.', type: 'participant', href: '/ecosystem/consortium' },
 ];
 
-const typeColors: Record<string, { bg: string; border: string; text: string }> = {
-  governance: { bg: '#1A2333', border: '#0D1219', text: '#FFFFFF' },
-  evaluator: { bg: '#3A3A3A', border: '#111111', text: '#FFFFFF' },
-  operator: { bg: '#4A5160', border: '#3A3A3A', text: '#FFFFFF' },
-  participant: { bg: '#F0F1F3', border: '#C8CCD2', text: '#111111' },
-  market: { bg: '#E2E4E8', border: '#8E95A0', text: '#111111' },
+const typeColors: Record<string, { bg: string; border: string; text: string; label: string }> = {
+  governance: { bg: '#1A2333', border: '#0D1219', text: '#FFFFFF', label: 'Governance' },
+  evaluator: { bg: '#3A3A3A', border: '#111111', text: '#FFFFFF', label: 'Evaluation' },
+  operator: { bg: '#4A5160', border: '#3A3A3A', text: '#FFFFFF', label: 'Operations' },
+  participant: { bg: '#F0F1F3', border: '#C8CCD2', text: '#111111', label: 'Ecosystem' },
+  market: { bg: '#E2E4E8', border: '#8E95A0', text: '#111111', label: 'Market' },
 };
 
-// Layout positions (in a 800x500 coordinate space)
 const nodePositions: Record<string, { x: number; y: number }> = {
   araf: { x: 400, y: 50 },
   tsb: { x: 240, y: 140 },
@@ -62,153 +62,280 @@ const edges: { from: string; to: string; label?: string }[] = [
   { from: 'consortium', to: 'araf', label: 'Contributes' },
 ];
 
+// Which nodes connect to a given node
+function getConnections(nodeId: string) {
+  const connected = new Set<string>();
+  for (const edge of edges) {
+    if (edge.from === nodeId) connected.add(edge.to);
+    if (edge.to === nodeId) connected.add(edge.from);
+  }
+  return connected;
+}
+
 export function EcosystemArchitecture({
   onNodeClick,
   className,
 }: EcosystemArchitectureProps) {
+  const [selected, setSelected] = useState<string | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
 
-  const hoveredNode = hovered ? nodes.find((n) => n.id === hovered) : null;
+  const activeId = selected || hovered;
+  const activeNode = activeId ? nodes.find((n) => n.id === activeId) : null;
+  const connections = activeId ? getConnections(activeId) : new Set<string>();
+
+  // Get connected edges and their labels for the detail panel
+  const connectedEdges = activeId
+    ? edges.filter((e) => e.from === activeId || e.to === activeId)
+    : [];
 
   const nodeW = 100;
   const nodeH = 36;
 
+  const handleNodeClick = (nodeId: string) => {
+    setSelected(selected === nodeId ? null : nodeId);
+    onNodeClick?.(nodeId);
+  };
+
+  // Scroll detail into view on mobile when selected
+  useEffect(() => {
+    if (selected && detailRef.current && window.innerWidth < 768) {
+      detailRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selected]);
+
   return (
     <div className={className}>
-      <svg
-        viewBox="0 0 800 480"
-        width="100%"
-        role="img"
-        aria-label="ARA Ecosystem Architecture Diagram"
-      >
-        {/* Edges */}
-        {edges.map((edge, i) => {
-          const from = nodePositions[edge.from];
-          const to = nodePositions[edge.to];
-          if (!from || !to) return null;
-
-          const isHighlighted = hovered === edge.from || hovered === edge.to;
-
-          return (
-            <g key={i}>
-              <line
-                x1={from.x}
-                y1={from.y + nodeH / 2}
-                x2={to.x}
-                y2={to.y - nodeH / 2}
-                stroke={isHighlighted ? '#111111' : '#C8CCD2'}
-                strokeWidth={isHighlighted ? 1.5 : 1}
-                strokeDasharray={edge.label === 'Advises' || edge.label === 'Contributes' ? '4 3' : 'none'}
-                markerEnd="url(#arrow)"
-              />
-              {isHighlighted && edge.label && (
-                <text
-                  x={(from.x + to.x) / 2 + 8}
-                  y={(from.y + nodeH / 2 + to.y - nodeH / 2) / 2}
-                  fontSize={10}
-                  fill="#636B78"
-                  fontWeight={500}
-                >
-                  {edge.label}
-                </text>
-              )}
-            </g>
-          );
-        })}
-
-        {/* Arrow marker */}
-        <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX={9} refY={5} markerWidth={6} markerHeight={6} orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#C8CCD2" />
-          </marker>
-        </defs>
-
-        {/* Nodes */}
-        {nodes.map((node) => {
-          const pos = nodePositions[node.id];
-          if (!pos) return null;
-          const color = typeColors[node.type];
-          const isHovered = hovered === node.id;
-
-          return (
-            <g
-              key={node.id}
-              onMouseEnter={() => setHovered(node.id)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={() => onNodeClick?.(node.id)}
-              className="cursor-pointer"
-              role="button"
-              tabIndex={0}
-              aria-label={`${node.label}: ${node.description}`}
-              onKeyDown={(e) => { if (e.key === 'Enter') onNodeClick?.(node.id); }}
-            >
-              <rect
-                x={pos.x - nodeW / 2}
-                y={pos.y - nodeH / 2}
-                width={nodeW}
-                height={nodeH}
-                rx={6}
-                fill={color.bg}
-                stroke={isHovered ? color.border : 'transparent'}
-                strokeWidth={isHovered ? 2 : 0}
-                className="transition-all duration-150"
-              />
-              {isHovered && (
-                <rect
-                  x={pos.x - nodeW / 2 - 2}
-                  y={pos.y - nodeH / 2 - 2}
-                  width={nodeW + 4}
-                  height={nodeH + 4}
-                  rx={8}
-                  fill="none"
-                  stroke={color.border}
-                  strokeWidth={1}
-                  opacity={0.3}
-                />
-              )}
-              <text
-                x={pos.x}
-                y={pos.y + 1}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize={12}
-                fontWeight={700}
-                fill={color.text}
-                className="pointer-events-none select-none"
-              >
-                {node.label}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* Layer labels */}
-        <text x={40} y={50} fontSize={10} fill="#8E95A0" fontWeight={600} textAnchor="start">GOVERNANCE</text>
-        <text x={40} y={260} fontSize={10} fill="#8E95A0" fontWeight={600} textAnchor="start">OPERATIONS</text>
-        <text x={40} y={400} fontSize={10} fill="#8E95A0" fontWeight={600} textAnchor="start">ECOSYSTEM</text>
-      </svg>
-
-      {/* Hover detail */}
-      {hoveredNode && (
-        <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-border text-sm animate-fade-in-up"
-             style={{ animationDuration: '0.15s' }}>
-          <div className="flex items-center gap-2 mb-1">
-            <span
-              className="text-xs font-bold px-2 py-0.5 rounded"
-              style={{
-                backgroundColor: typeColors[hoveredNode.type].bg,
-                color: typeColors[hoveredNode.type].text,
-              }}
-            >
-              {hoveredNode.label}
-            </span>
-            <span className="text-[10px] uppercase tracking-wider text-slate-400">
-              {hoveredNode.type}
-            </span>
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Diagram */}
+        <div className="flex-1 min-w-0">
+          <div className="text-xs text-muted mb-3 flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+            </svg>
+            Click any node to explore its role
           </div>
-          <p className="text-slate-500 text-xs leading-relaxed">{hoveredNode.description}</p>
+          <svg
+            viewBox="0 0 800 480"
+            width="100%"
+            role="img"
+            aria-label="ARA Ecosystem Architecture Diagram"
+          >
+            {/* Edges */}
+            {edges.map((edge, i) => {
+              const from = nodePositions[edge.from];
+              const to = nodePositions[edge.to];
+              if (!from || !to) return null;
+
+              const isActive = activeId === edge.from || activeId === edge.to;
+              const isDimmed = activeId && !isActive;
+
+              return (
+                <g key={i}>
+                  <line
+                    x1={from.x}
+                    y1={from.y + nodeH / 2}
+                    x2={to.x}
+                    y2={to.y - nodeH / 2}
+                    stroke={isActive ? '#111111' : '#C8CCD2'}
+                    strokeWidth={isActive ? 1.5 : 1}
+                    strokeDasharray={edge.label === 'Advises' || edge.label === 'Contributes' ? '4 3' : 'none'}
+                    opacity={isDimmed ? 0.2 : 1}
+                    markerEnd="url(#arrow)"
+                    className="transition-all duration-200"
+                  />
+                  {isActive && edge.label && (
+                    <text
+                      x={(from.x + to.x) / 2 + 8}
+                      y={(from.y + nodeH / 2 + to.y - nodeH / 2) / 2}
+                      fontSize={10}
+                      fill="#636B78"
+                      fontWeight={500}
+                    >
+                      {edge.label}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+
+            {/* Arrow marker */}
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX={9} refY={5} markerWidth={6} markerHeight={6} orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#C8CCD2" />
+              </marker>
+            </defs>
+
+            {/* Nodes */}
+            {nodes.map((node) => {
+              const pos = nodePositions[node.id];
+              if (!pos) return null;
+              const color = typeColors[node.type];
+              const isActive = activeId === node.id;
+              const isConnected = connections.has(node.id);
+              const isDimmed = activeId && !isActive && !isConnected;
+
+              return (
+                <g
+                  key={node.id}
+                  onMouseEnter={() => setHovered(node.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => handleNodeClick(node.id)}
+                  className="cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${node.label}: ${node.description}`}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleNodeClick(node.id); }}
+                >
+                  {/* Selection ring */}
+                  {isActive && (
+                    <rect
+                      x={pos.x - nodeW / 2 - 4}
+                      y={pos.y - nodeH / 2 - 4}
+                      width={nodeW + 8}
+                      height={nodeH + 8}
+                      rx={10}
+                      fill="none"
+                      stroke={color.border}
+                      strokeWidth={2}
+                      opacity={0.4}
+                      className="animate-pulse"
+                    />
+                  )}
+                  <rect
+                    x={pos.x - nodeW / 2}
+                    y={pos.y - nodeH / 2}
+                    width={nodeW}
+                    height={nodeH}
+                    rx={6}
+                    fill={color.bg}
+                    stroke={isActive ? color.border : 'transparent'}
+                    strokeWidth={isActive ? 2 : 0}
+                    opacity={isDimmed ? 0.3 : 1}
+                    className="transition-all duration-200"
+                  />
+                  <text
+                    x={pos.x}
+                    y={pos.y + 1}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize={12}
+                    fontWeight={700}
+                    fill={color.text}
+                    opacity={isDimmed ? 0.3 : 1}
+                    className="pointer-events-none select-none transition-opacity duration-200"
+                  >
+                    {node.label}
+                  </text>
+                </g>
+              );
+            })}
+
+            {/* Layer labels */}
+            <text x={40} y={50} fontSize={10} fill="#8E95A0" fontWeight={600} textAnchor="start">GOVERNANCE</text>
+            <text x={40} y={260} fontSize={10} fill="#8E95A0" fontWeight={600} textAnchor="start">OPERATIONS</text>
+            <text x={40} y={400} fontSize={10} fill="#8E95A0" fontWeight={600} textAnchor="start">ECOSYSTEM</text>
+          </svg>
         </div>
-      )}
+
+        {/* Detail Panel (side on desktop, below on mobile) */}
+        <div
+          ref={detailRef}
+          className="lg:w-80 lg:flex-shrink-0"
+        >
+          {activeNode ? (
+            <div className="border border-border rounded-lg bg-white overflow-hidden transition-all duration-200">
+              {/* Header bar with type color */}
+              <div
+                className="px-4 py-3 flex items-center gap-2"
+                style={{ backgroundColor: typeColors[activeNode.type].bg }}
+              >
+                <span className="text-sm font-bold" style={{ color: typeColors[activeNode.type].text }}>
+                  {activeNode.label}
+                </span>
+                <span
+                  className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded"
+                  style={{
+                    backgroundColor: 'rgba(255,255,255,0.15)',
+                    color: typeColors[activeNode.type].text,
+                  }}
+                >
+                  {typeColors[activeNode.type].label}
+                </span>
+              </div>
+
+              <div className="p-4">
+                <p className="text-sm text-steel leading-relaxed mb-4">
+                  {activeNode.description}
+                </p>
+
+                {/* Connections */}
+                {connectedEdges.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">
+                      Connections
+                    </h4>
+                    <div className="space-y-1.5">
+                      {connectedEdges.map((edge, i) => {
+                        const otherId = edge.from === activeId ? edge.to : edge.from;
+                        const otherNode = nodes.find((n) => n.id === otherId);
+                        const direction = edge.from === activeId ? 'outgoing' : 'incoming';
+                        return (
+                          <div
+                            key={i}
+                            className="flex items-center gap-2 text-xs text-steel"
+                          >
+                            <span className={`text-[10px] ${direction === 'outgoing' ? 'text-navy' : 'text-slate-400'}`}>
+                              {direction === 'outgoing' ? '\u2192' : '\u2190'}
+                            </span>
+                            <span className="font-medium text-charcoal">
+                              {edge.label}
+                            </span>
+                            <span className="text-slate-400">{otherNode?.label}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Explore link */}
+                {activeNode.href && (
+                  <Link
+                    href={activeNode.href}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-navy hover:underline"
+                  >
+                    Learn more
+                    <span aria-hidden="true">&rarr;</span>
+                  </Link>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center text-center min-h-[200px]">
+              <svg className="w-8 h-8 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+              </svg>
+              <p className="text-sm text-muted">
+                Click any node in the diagram to see details about its role in the ecosystem.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="mt-6 flex flex-wrap gap-3 text-xs text-muted">
+        {Object.entries(typeColors).map(([type, colors]) => (
+          <div key={type} className="flex items-center gap-1.5">
+            <span
+              className="w-3 h-3 rounded-sm border"
+              style={{ backgroundColor: colors.bg, borderColor: colors.border }}
+            />
+            <span>{colors.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

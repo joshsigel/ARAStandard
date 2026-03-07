@@ -101,7 +101,7 @@ export default function EcosystemPage() {
 
       {/* Architecture Visualization */}
       <section className="mb-16">
-        <EcosystemArchitecture className="max-w-3xl" />
+        <EcosystemArchitecture />
       </section>
 
       {/* Participant Cards */}
