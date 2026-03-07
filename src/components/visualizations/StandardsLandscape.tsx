@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 interface FrameworkNode {
   id: string;
@@ -51,6 +51,7 @@ export function StandardsLandscape({
   const [selected, setSelected] = useState<string | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
+  const [barAnimKey, setBarAnimKey] = useState(0);
 
   const activeId = selected || hovered;
   const activeFw = activeId ? frameworks.find((f) => f.id === activeId) : null;
@@ -60,15 +61,18 @@ export function StandardsLandscape({
   const nodeW = 90;
   const nodeH = 32;
 
-  const getNodePosition = (fw: FrameworkNode, index: number, layerNodes: FrameworkNode[]) => {
-    const layer = layerConfig[fw.layer];
-    const totalWidth = layerNodes.length * (nodeW + 20) - 20;
-    const startX = (width - totalWidth) / 2;
-    return {
-      x: startX + index * (nodeW + 20) + nodeW / 2,
-      y: layer.y,
-    };
-  };
+  const getNodePosition = useCallback(
+    (fw: FrameworkNode, index: number, layerNodes: FrameworkNode[]) => {
+      const layer = layerConfig[fw.layer];
+      const totalWidth = layerNodes.length * (nodeW + 20) - 20;
+      const startX = (width - totalWidth) / 2;
+      return {
+        x: startX + index * (nodeW + 20) + nodeW / 2,
+        y: layer.y,
+      };
+    },
+    []
+  );
 
   const layers = Object.keys(layerConfig);
   const groupedNodes = layers.map((layer) => ({
@@ -78,6 +82,7 @@ export function StandardsLandscape({
 
   const handleNodeClick = (fwId: string) => {
     setSelected(selected === fwId ? null : fwId);
+    setBarAnimKey((k) => k + 1);
     onFrameworkClick?.(fwId);
   };
 
@@ -91,6 +96,21 @@ export function StandardsLandscape({
   const relatedFrameworks = activeFw
     ? frameworks.filter((f) => f.layer === activeFw.layer && f.id !== activeFw.id)
     : [];
+
+  // Coverage ranking (excluding ARA)
+  const rankedFrameworks = frameworks
+    .filter((f) => f.id !== 'ara' && f.coveragePct != null)
+    .sort((a, b) => (b.coveragePct ?? 0) - (a.coveragePct ?? 0));
+
+  const activeRank =
+    activeFw && activeFw.id !== 'ara'
+      ? rankedFrameworks.findIndex((f) => f.id === activeFw.id) + 1
+      : null;
+
+  // Compute ARA position for connection lines
+  const araFw = frameworks.find((f) => f.id === 'ara');
+  const araLayerNodes = frameworks.filter((f) => f.layer === 'operational');
+  const araPos = araFw ? getNodePosition(araFw, araLayerNodes.indexOf(araFw), araLayerNodes) : null;
 
   return (
     <div className={className}>
@@ -109,6 +129,16 @@ export function StandardsLandscape({
             role="img"
             aria-label="AI Standards Landscape — Four-layer framework positioning"
           >
+            <defs>
+              <filter id="fw-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
             {/* Layer backgrounds */}
             {layers.map((layer) => {
               const config = layerConfig[layer];
@@ -119,13 +149,13 @@ export function StandardsLandscape({
                     x={30}
                     y={config.y - 25}
                     width={width - 60}
-                    height={70}
+                    height={74}
                     rx={8}
                     fill={isLayerActive ? config.color : '#F8F9FA'}
-                    fillOpacity={isLayerActive ? 0.06 : 1}
+                    fillOpacity={isLayerActive ? 0.07 : 1}
                     stroke={isLayerActive ? config.color : '#E2E4E8'}
                     strokeWidth={isLayerActive ? 1.5 : 0.5}
-                    className="transition-all duration-200"
+                    className="transition-all duration-300"
                   />
                   <text
                     x={50}
@@ -134,7 +164,8 @@ export function StandardsLandscape({
                     fontWeight={600}
                     fill={config.color}
                     letterSpacing={1}
-                    className="pointer-events-none select-none"
+                    opacity={isLayerActive ? 1 : 0.7}
+                    className="pointer-events-none select-none transition-opacity duration-200"
                   >
                     {config.label.toUpperCase()}
                   </text>
@@ -142,14 +173,44 @@ export function StandardsLandscape({
               );
             })}
 
+            {/* Connection lines from active framework to ARA */}
+            {activeFw && activeFw.id !== 'ara' && araPos && (() => {
+              const activeLayerNodes = frameworks.filter((f) => f.layer === activeFw.layer);
+              const activeIdx = activeLayerNodes.indexOf(activeFw);
+              const activePos = getNodePosition(activeFw, activeIdx, activeLayerNodes);
+              const coverage = activeFw.coveragePct ?? 0;
+
+              // Bezier control points for a flowing curve
+              const startY = activePos.y + nodeH / 2 + 8;
+              const endY = araPos.y - nodeH / 2 - 6;
+              const midY = (startY + endY) / 2;
+
+              return (
+                <path
+                  d={`M ${activePos.x} ${startY} C ${activePos.x} ${midY}, ${araPos.x} ${midY}, ${araPos.x} ${endY}`}
+                  fill="none"
+                  stroke={layerConfig[activeFw.layer].color}
+                  strokeWidth={Math.max(1, coverage / 40)}
+                  strokeDasharray="6 4"
+                  opacity={Math.max(0.15, coverage / 100 * 0.5)}
+                  className="transition-all duration-500"
+                />
+              );
+            })()}
+
             {/* Framework nodes */}
             {groupedNodes.map(({ layer, nodes: layerNodes }) =>
               layerNodes.map((fw, i) => {
                 const pos = getNodePosition(fw, i, layerNodes);
                 const isActive = activeId === fw.id;
+                const isHovered = hovered === fw.id;
                 const isARA = fw.id === 'ara';
                 const layerColor = layerConfig[layer].color;
-                const isDimmed = activeId && !isActive && activeFw?.layer !== fw.layer;
+                const isSameLayer = activeFw?.layer === fw.layer;
+                const isDimmed = activeId && !isActive && !isSameLayer;
+                const coverage = fw.coveragePct ?? 0;
+                const barMaxW = nodeW - 8;
+                const barW = barMaxW * (coverage / 100);
 
                 return (
                   <g
@@ -161,23 +222,49 @@ export function StandardsLandscape({
                     role="button"
                     tabIndex={0}
                     aria-label={`${fw.name}: ${fw.description}`}
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleNodeClick(fw.id); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleNodeClick(fw.id);
+                    }}
+                    style={{
+                      transform: isActive
+                        ? 'translateY(-2px)'
+                        : isHovered
+                          ? 'translateY(-1px)'
+                          : 'translateY(0)',
+                      transition: 'transform 0.2s ease',
+                    }}
                   >
-                    {/* Selection ring */}
+                    {/* Selection glow ring */}
                     {isActive && (
                       <rect
-                        x={pos.x - nodeW / 2 - 3}
-                        y={pos.y - nodeH / 2 - 3}
-                        width={nodeW + 6}
-                        height={nodeH + 6}
-                        rx={6}
+                        x={pos.x - nodeW / 2 - 5}
+                        y={pos.y - nodeH / 2 - 5}
+                        width={nodeW + 10}
+                        height={nodeH + 10}
+                        rx={7}
                         fill="none"
                         stroke={isARA ? '#1A2333' : layerColor}
                         strokeWidth={2}
-                        opacity={0.4}
-                        className="animate-pulse"
+                        opacity={0.35}
+                        filter="url(#fw-glow)"
                       />
                     )}
+                    {/* Hover ring */}
+                    {isHovered && !isActive && (
+                      <rect
+                        x={pos.x - nodeW / 2 - 2}
+                        y={pos.y - nodeH / 2 - 2}
+                        width={nodeW + 4}
+                        height={nodeH + 4}
+                        rx={5}
+                        fill="none"
+                        stroke={layerColor}
+                        strokeWidth={1}
+                        opacity={0.25}
+                        className="transition-opacity duration-200"
+                      />
+                    )}
+                    {/* Node background */}
                     <rect
                       x={pos.x - nodeW / 2}
                       y={pos.y - nodeH / 2}
@@ -185,24 +272,61 @@ export function StandardsLandscape({
                       height={nodeH}
                       rx={4}
                       fill={isARA ? '#1A2333' : isActive ? layerColor : 'white'}
-                      stroke={isARA ? '#1A2333' : isActive ? layerColor : '#C8CCD2'}
+                      stroke={isARA ? '#1A2333' : isActive ? layerColor : isHovered ? layerColor : '#C8CCD2'}
                       strokeWidth={isARA ? 2 : isActive ? 1.5 : 1}
-                      opacity={isDimmed ? 0.35 : 1}
+                      opacity={isDimmed ? 0.3 : 1}
                       className="transition-all duration-200"
                     />
+                    {/* Node label */}
                     <text
                       x={pos.x}
                       y={pos.y + 1}
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fontSize={10}
-                      fontWeight={isARA ? 800 : isActive ? 700 : 500}
+                      fontWeight={isARA ? 800 : isActive ? 700 : isHovered ? 600 : 500}
                       fill={isARA || isActive ? '#FFFFFF' : '#4A5160'}
-                      opacity={isDimmed ? 0.35 : 1}
+                      opacity={isDimmed ? 0.3 : 1}
                       className="pointer-events-none select-none transition-opacity duration-200"
                     >
                       {fw.shortName}
                     </text>
+                    {/* Mini coverage bar below node */}
+                    {!isDimmed && (
+                      <g opacity={isActive || isHovered ? 1 : 0.45} className="transition-opacity duration-200" style={{ transition: 'opacity 0.2s' }}>
+                        <rect
+                          x={pos.x - barMaxW / 2}
+                          y={pos.y + nodeH / 2 + 4}
+                          width={barMaxW}
+                          height={3}
+                          rx={1.5}
+                          fill="#E2E4E8"
+                        />
+                        <rect
+                          x={pos.x - barMaxW / 2}
+                          y={pos.y + nodeH / 2 + 4}
+                          width={barW}
+                          height={3}
+                          rx={1.5}
+                          fill={isARA ? '#1A2333' : layerColor}
+                          className="transition-all duration-300"
+                        />
+                        {/* Coverage % label (shown on hover/active) */}
+                        {(isActive || isHovered) && (
+                          <text
+                            x={pos.x + barMaxW / 2 + 6}
+                            y={pos.y + nodeH / 2 + 7}
+                            fontSize={8}
+                            fontWeight={600}
+                            fill={layerColor}
+                            dominantBaseline="central"
+                            className="pointer-events-none select-none"
+                          >
+                            {coverage}%
+                          </text>
+                        )}
+                      </g>
+                    )}
                   </g>
                 );
               })
@@ -213,15 +337,22 @@ export function StandardsLandscape({
         {/* Detail Panel */}
         <div ref={detailRef} className="lg:w-80 lg:flex-shrink-0">
           {activeFw ? (
-            <div className="border border-border rounded-lg bg-white overflow-hidden transition-all duration-200">
+            <div
+              key={activeFw.id}
+              className="border border-border rounded-lg bg-white overflow-hidden"
+              style={{ animation: 'fadeSlideIn 0.25s ease-out' }}
+            >
               {/* Header bar */}
               <div
-                className="px-4 py-3 flex items-center gap-2"
+                className="px-4 py-3 flex items-center justify-between"
                 style={{ backgroundColor: layerConfig[activeFw.layer].color }}
               >
-                <span className="text-sm font-bold text-white">
-                  {activeFw.name}
-                </span>
+                <span className="text-sm font-bold text-white">{activeFw.name}</span>
+                {activeFw.id === 'ara' && (
+                  <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/20 text-white font-semibold">
+                    Current
+                  </span>
+                )}
               </div>
 
               <div className="p-4">
@@ -243,11 +374,11 @@ export function StandardsLandscape({
 
                 {/* Coverage stats */}
                 {activeFw.acrsMapped != null && (
-                  <div className="mb-4 p-3 bg-slate-50 rounded-md">
+                  <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-100">
                     <h4 className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">
                       ARA Coverage
                     </h4>
-                    <div className="flex items-baseline gap-3 mb-2">
+                    <div className="flex items-baseline gap-3 mb-2.5">
                       <span className="text-2xl font-bold text-charcoal tabular-nums">
                         {activeFw.coveragePct}%
                       </span>
@@ -255,15 +386,41 @@ export function StandardsLandscape({
                         {activeFw.acrsMapped} of 410 ACRs
                       </span>
                     </div>
-                    <div className="w-full bg-slate-200 rounded-full h-1.5">
+                    <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                       <div
-                        className="rounded-full h-1.5 transition-all duration-500"
+                        key={`bar-${barAnimKey}`}
+                        className="rounded-full h-2"
                         style={{
                           width: `${activeFw.coveragePct}%`,
                           backgroundColor: layerConfig[activeFw.layer].color,
+                          animation: 'barGrow 0.6s ease-out forwards',
+                          transformOrigin: 'left',
                         }}
                       />
                     </div>
+                    {/* Ranking context */}
+                    {activeRank != null && (
+                      <p className="text-[11px] text-muted mt-2 leading-snug">
+                        Ranked <span className="font-semibold text-charcoal">#{activeRank}</span> of{' '}
+                        {rankedFrameworks.length} frameworks by ARA alignment
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Cross-layer connections summary */}
+                {activeFw.id !== 'ara' && activeFw.coveragePct != null && (
+                  <div className="mb-4 flex items-center gap-2 text-xs text-steel">
+                    <svg className="w-3.5 h-3.5 text-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                    </svg>
+                    <span>
+                      {activeFw.coveragePct >= 60
+                        ? 'Strong alignment with ARA operational controls'
+                        : activeFw.coveragePct >= 40
+                          ? 'Moderate overlap with ARA requirements'
+                          : 'Complementary to ARA — covers different ground'}
+                    </span>
                   </div>
                 )}
 
@@ -278,7 +435,7 @@ export function StandardsLandscape({
                         <button
                           key={fw.id}
                           onClick={() => handleNodeClick(fw.id)}
-                          className="text-xs px-2 py-1 rounded border border-border text-steel hover:bg-slate-50 hover:border-border-dark transition-colors"
+                          className="text-xs px-2.5 py-1 rounded-md border border-border text-steel hover:bg-slate-50 hover:border-border-dark hover:text-charcoal transition-all duration-150"
                         >
                           {fw.shortName}
                         </button>
@@ -300,6 +457,18 @@ export function StandardsLandscape({
           )}
         </div>
       </div>
+
+      {/* Inline keyframe animation */}
+      <style>{`
+        @keyframes barGrow {
+          from { transform: scaleX(0); }
+          to { transform: scaleX(1); }
+        }
+        @keyframes fadeSlideIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }

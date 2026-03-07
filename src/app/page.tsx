@@ -6,8 +6,18 @@ import { TwoAxisMatrix } from '@/components/visualizations/TwoAxisMatrix';
 import { SystemProfileChart } from '@/components/visualizations/SystemProfileChart';
 import { CertificationLifecycle } from '@/components/visualizations/CertificationLifecycle';
 import { EcosystemArchitecture } from '@/components/visualizations/EcosystemArchitecture';
+import { LayerRingDiagram } from '@/components/visualizations/LayerRingDiagram';
+import { getDomains } from '@/lib/data';
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetch domains for the ring diagram — graceful fallback if unavailable
+  let domains: Awaited<ReturnType<typeof getDomains>> = [];
+  try {
+    domains = await getDomains();
+  } catch {
+    // Ring diagram still works without domains, just won't show domain cards
+  }
+
   return (
     <>
       {/* ─── Hero ─────────────────────────────────────────────────────── */}
@@ -158,6 +168,26 @@ export default function HomePage() {
               </ScrollReveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ─── Five Layers of Autonomous Reliability ─────────────────────── */}
+      <section className="border-b border-border">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12 md:py-16">
+          <ScrollReveal>
+            <div className="section-divider mb-6" />
+            <h2 className="text-xl sm:text-2xl font-semibold text-charcoal mb-3">
+              Five Layers of Autonomous Reliability
+            </h2>
+            <p className="text-sm text-steel leading-relaxed mb-8 max-w-[72ch]">
+              The ARA Standard organizes 410 compliance requirements into 15 reliability domains
+              across five layers. Each layer builds upon the ones it contains — from core decision
+              integrity outward to overarching governance.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <LayerRingDiagram variant="compact" domains={domains} />
+          </ScrollReveal>
         </div>
       </section>
 

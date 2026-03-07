@@ -28,7 +28,7 @@ function MethodBadge({ method }: { method: string }) {
 
 export default function APIReferencePage() {
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-12">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-12">
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
@@ -60,13 +60,9 @@ export default function APIReferencePage() {
 
       {/* Authentication */}
       <section id="authentication" className="mb-16 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-4">
-          <a
-            href="#authentication"
-            className="hover:text-navy transition-colors"
-          >
+        <div className="section-divider mb-6" />
+        <h2 id="authentication" className="text-2xl font-semibold text-charcoal mb-4">
             Authentication
-          </a>
         </h2>
         <p className="text-sm text-steel leading-relaxed max-w-3xl mb-6">
           Authenticated requests require an API key passed via the{' '}
@@ -90,13 +86,9 @@ export default function APIReferencePage() {
 
       {/* Response Format */}
       <section id="response-format" className="mb-16 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-4">
-          <a
-            href="#response-format"
-            className="hover:text-navy transition-colors"
-          >
+        <div className="section-divider mb-6" />
+        <h2 id="response-format" className="text-2xl font-semibold text-charcoal mb-4">
             Response Format
-          </a>
         </h2>
         <p className="text-sm text-steel leading-relaxed max-w-3xl mb-6">
           All endpoints return JSON with a consistent envelope containing a{' '}
@@ -131,10 +123,9 @@ export default function APIReferencePage() {
 
       {/* Endpoints heading */}
       <section id="endpoints" className="mb-10 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a href="#endpoints" className="hover:text-navy transition-colors">
+        <div className="section-divider mb-6" />
+        <h2 id="endpoints" className="text-2xl font-semibold text-charcoal mb-2">
             Endpoints
-          </a>
         </h2>
       </section>
 
@@ -738,13 +729,9 @@ export default function APIReferencePage() {
 
       {/* Rate Limiting */}
       <section id="rate-limiting" className="mb-16 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-4">
-          <a
-            href="#rate-limiting"
-            className="hover:text-navy transition-colors"
-          >
+        <div className="section-divider mb-6" />
+        <h2 id="rate-limiting" className="text-2xl font-semibold text-charcoal mb-4">
             Rate Limiting
-          </a>
         </h2>
         <p className="text-sm text-steel leading-relaxed max-w-3xl mb-6">
           API requests are rate-limited per API key. Unauthenticated requests
@@ -807,10 +794,9 @@ Retry-After: 32`}</code>
 
       {/* Error Codes */}
       <section id="errors" className="mb-16 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-4">
-          <a href="#errors" className="hover:text-navy transition-colors">
+        <div className="section-divider mb-6" />
+        <h2 id="errors" className="text-2xl font-semibold text-charcoal mb-4">
             Error Codes
-          </a>
         </h2>
         <p className="text-sm text-steel leading-relaxed max-w-3xl mb-6">
           All error responses use a consistent JSON structure with an error
@@ -872,6 +858,7 @@ Retry-After: 32`}</code>
 
       {/* Related links */}
       <section className="border-t border-border pt-10">
+        <div className="section-divider mb-6" />
         <h2 className="text-lg font-semibold text-charcoal mb-4">
           Related Documentation
         </h2>

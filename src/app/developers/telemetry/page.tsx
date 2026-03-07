@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function TelemetrySchemaPage() {
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-12">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-12">
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
@@ -35,6 +35,7 @@ export default function TelemetrySchemaPage() {
 
       {/* Base Event Schema */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-4">
           Base Event Schema
         </h2>
@@ -116,6 +117,7 @@ export default function TelemetrySchemaPage() {
 
       {/* Event Type Schemas */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-6">
           Event Type Schemas
         </h2>
@@ -375,6 +377,7 @@ export default function TelemetrySchemaPage() {
 
       {/* Transport Requirements */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-4">
           Transport Requirements by Class
         </h2>
@@ -473,6 +476,7 @@ export default function TelemetrySchemaPage() {
 
       {/* Data Retention */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-4">
           Data Retention
         </h2>
@@ -514,6 +518,7 @@ export default function TelemetrySchemaPage() {
 
       {/* Related links */}
       <section className="border-t border-border pt-10">
+        <div className="section-divider mb-6" />
         <h2 className="text-lg font-semibold text-charcoal mb-4">
           Related Documentation
         </h2>

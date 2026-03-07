@@ -346,7 +346,7 @@ function mapACR(row: any): ACR {
     platformCertEligible: row.platform_cert_eligible || false,
     versionIntroduced: row.version_introduced || '1.0',
     // Legacy
-    title: row.requirement_statement?.substring(0, 100) || '',
+    title: row.requirement_statement || '',
     description: row.requirement_statement || '',
   };
 }

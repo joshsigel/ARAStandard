@@ -42,10 +42,10 @@ function ACRCard({ acr, domains, isExpanded, onToggle }: { acr: ACR; domains: Do
         aria-expanded={isExpanded}
       >
         <div className="flex items-start justify-between gap-4 mb-2">
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="acr-id shrink-0">{acr.id}</span>
-            <h3 className="text-sm font-semibold text-charcoal truncate">
-              {acr.title ?? acr.requirementStatement?.slice(0, 80)}
+          <div className="flex items-start gap-3 min-w-0">
+            <span className="acr-id shrink-0 mt-0.5">{acr.id}</span>
+            <h3 className="text-sm font-semibold text-charcoal leading-snug">
+              {acr.title ?? acr.requirementStatement}
             </h3>
           </div>
           <div className="flex items-center gap-2 shrink-0">

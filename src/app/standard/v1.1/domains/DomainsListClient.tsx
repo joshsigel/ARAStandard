@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import type { Domain } from '@/types';
@@ -9,50 +9,48 @@ interface DomainsListClientProps {
   domains: Domain[];
 }
 
-// Domain categories - grouping the 15 domains into 5 logical pillars
+// Domain categories - grouping the 15 domains into 5 layers
 interface DomainCategory {
   id: string;
   name: string;
+  shortName: string;
   description: string;
   icon: React.ReactNode;
   color: string;
-  borderColor: string;
-  bgColor: string;
   domainIds: number[];
 }
 
 const categories: DomainCategory[] = [
   {
-    id: 'boundaries',
-    name: 'Boundaries & Access',
-    description: 'Defining operational scope, controlling identity and permissions, and protecting data privacy.',
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-      </svg>
-    ),
-    color: '#1A2333',
-    borderColor: '#1A2333',
-    bgColor: '#1A233308',
-    domainIds: [1, 4, 5],
-  },
-  {
     id: 'integrity',
     name: 'Decision & Action Integrity',
+    shortName: 'Integrity',
     description: 'Ensuring decisions are traceable and tool interactions are governed and constrained.',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z" />
       </svg>
     ),
-    color: '#3A3A3A',
-    borderColor: '#3A3A3A',
-    bgColor: '#3A3A3A08',
+    color: '#1A2333',
     domainIds: [2, 3],
+  },
+  {
+    id: 'boundaries',
+    name: 'Boundaries & Access',
+    shortName: 'Boundaries',
+    description: 'Defining operational scope, controlling identity and permissions, and protecting data privacy.',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+      </svg>
+    ),
+    color: '#3A3A3A',
+    domainIds: [1, 4, 5],
   },
   {
     id: 'resilience',
     name: 'Resilience & Security',
+    shortName: 'Resilience',
     description: 'Containing failures, maintaining reliability under stress, and resisting adversarial attacks.',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -60,13 +58,12 @@ const categories: DomainCategory[] = [
       </svg>
     ),
     color: '#4A5160',
-    borderColor: '#4A5160',
-    bgColor: '#4A516008',
     domainIds: [6, 7, 8],
   },
   {
     id: 'observability',
     name: 'Observability & Oversight',
+    shortName: 'Observability',
     description: 'Detecting drift, monitoring operations, and ensuring human escalation paths.',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -75,13 +72,12 @@ const categories: DomainCategory[] = [
       </svg>
     ),
     color: '#636B78',
-    borderColor: '#636B78',
-    bgColor: '#636B7808',
     domainIds: [9, 10, 11],
   },
   {
     id: 'governance',
     name: 'Governance & Accountability',
+    shortName: 'Governance',
     description: 'Audit trails, societal impact assessment, operational governance, and physical safety controls.',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -89,8 +85,6 @@ const categories: DomainCategory[] = [
       </svg>
     ),
     color: '#8E95A0',
-    borderColor: '#8E95A0',
-    bgColor: '#8E95A008',
     domainIds: [12, 13, 14, 15],
   },
 ];
@@ -112,15 +106,37 @@ function LevelBadge({ level, active }: { level: string; active: boolean }) {
 }
 
 export function DomainsListClient({ domains }: DomainsListClientProps) {
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'categories' | 'grid'>('categories');
+  const [selectedLayer, setSelectedLayer] = useState<string | null>(null);
+  const domainGridRef = useRef<HTMLDivElement>(null);
 
   const totalACRs = domains.reduce((sum, d) => sum + d.acrCount, 0);
   const newDomains = domains.filter((d) => d.versionIntroduced === '1.1');
 
-  const toggleCategory = (id: string) => {
-    setExpandedCategory(expandedCategory === id ? null : id);
-  };
+  // Resolve category domains helper
+  const getCategoryDomains = (category: DomainCategory) =>
+    category.domainIds
+      .map((id) => domains.find((d) => d.id === id))
+      .filter(Boolean) as Domain[];
+
+  const getCategoryACRs = (category: DomainCategory) =>
+    getCategoryDomains(category).reduce((sum, d) => sum + d.acrCount, 0);
+
+  // Filtered domains for the grid
+  const filteredDomains = selectedLayer
+    ? (() => {
+        const cat = categories.find((c) => c.id === selectedLayer);
+        return cat ? getCategoryDomains(cat) : domains;
+      })()
+    : domains;
+
+  const selectedCategory = selectedLayer ? categories.find((c) => c.id === selectedLayer) : null;
+
+  // Scroll to domain grid when a layer is selected
+  useEffect(() => {
+    if (selectedLayer && domainGridRef.current) {
+      domainGridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [selectedLayer]);
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-12">
@@ -141,12 +157,17 @@ export function DomainsListClient({ domains }: DomainsListClientProps) {
         </h1>
         <p className="text-steel leading-relaxed max-w-[72ch] mb-6">
           The ARA Standard v1.1 organizes its {totalACRs} Autonomous Compliance Requirements into 15
-          reliability domains across five pillars. Each pillar represents a fundamental aspect of
-          autonomous system reliability.
+          reliability domains across five layers. Each layer builds upon the ones it contains, from
+          core decision integrity outward to overarching governance.
         </p>
 
         {/* Stats bar */}
         <div className="flex flex-wrap items-center gap-6 pb-6 border-b border-border">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-2xl font-bold text-charcoal tabular-nums">{categories.length}</span>
+            <span className="text-sm text-muted">Layers</span>
+          </div>
+          <div className="w-px h-6 bg-border" />
           <div className="flex items-baseline gap-1.5">
             <span className="text-2xl font-bold text-charcoal tabular-nums">{domains.length}</span>
             <span className="text-sm text-muted">Domains</span>
@@ -154,12 +175,7 @@ export function DomainsListClient({ domains }: DomainsListClientProps) {
           <div className="w-px h-6 bg-border" />
           <div className="flex items-baseline gap-1.5">
             <span className="text-2xl font-bold text-charcoal tabular-nums">{totalACRs}</span>
-            <span className="text-sm text-muted">Total ACRs</span>
-          </div>
-          <div className="w-px h-6 bg-border" />
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-bold text-charcoal tabular-nums">{categories.length}</span>
-            <span className="text-sm text-muted">Pillars</span>
+            <span className="text-sm text-muted">ACRs</span>
           </div>
           <div className="w-px h-6 bg-border" />
           <div className="flex items-center gap-1.5">
@@ -168,283 +184,194 @@ export function DomainsListClient({ domains }: DomainsListClientProps) {
             </span>
             <span className="text-sm text-muted">in v1.1</span>
           </div>
-
-          {/* View mode toggle */}
-          <div className="ml-auto flex items-center gap-1 bg-slate-100 rounded-md p-0.5">
-            <button
-              onClick={() => setViewMode('categories')}
-              className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
-                viewMode === 'categories'
-                  ? 'bg-white text-charcoal shadow-sm'
-                  : 'text-muted hover:text-charcoal'
-              }`}
-            >
-              By Pillar
-            </button>
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-white text-charcoal shadow-sm'
-                  : 'text-muted hover:text-charcoal'
-              }`}
-            >
-              Grid
-            </button>
-          </div>
         </div>
       </div>
 
-      {viewMode === 'categories' ? (
-        /* Category-based view */
-        <div className="space-y-6">
+      {/* ─── Layer Cards Dashboard ─────────────────────────────────────── */}
+      <div className="mb-10">
+        <h2 className="text-lg font-semibold text-charcoal mb-5">
+          Five Layers of Autonomous Reliability
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {categories.map((category) => {
-            const categoryDomains = category.domainIds
-              .map((id) => domains.find((d) => d.id === id))
-              .filter(Boolean) as Domain[];
-            const categoryACRs = categoryDomains.reduce((sum, d) => sum + d.acrCount, 0);
-            const isExpanded = expandedCategory === category.id;
-            const hasNew = categoryDomains.some((d) => d.versionIntroduced === '1.1');
+            const catDomains = getCategoryDomains(category);
+            const catACRs = getCategoryACRs(category);
+            const pct = Math.round((catACRs / totalACRs) * 100);
+            const isSelected = selectedLayer === category.id;
+            const hasNew = catDomains.some((d) => d.versionIntroduced === '1.1');
 
             return (
-              <div
+              <button
                 key={category.id}
-                className="border rounded-lg overflow-hidden transition-all duration-200"
-                style={{ borderColor: isExpanded ? category.borderColor : undefined }}
+                onClick={() => setSelectedLayer(isSelected ? null : category.id)}
+                className={`group relative text-left rounded-xl border-2 p-4 transition-all duration-200 ${
+                  isSelected
+                    ? 'shadow-md scale-[1.02]'
+                    : 'border-border hover:border-slate-300 hover:shadow-sm'
+                }`}
+                style={{
+                  borderColor: isSelected ? category.color : undefined,
+                  backgroundColor: isSelected ? `${category.color}06` : undefined,
+                }}
               >
-                {/* Category header */}
-                <button
-                  onClick={() => toggleCategory(category.id)}
-                  className="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50/50 transition-colors"
-                >
+                {/* Layer number indicator */}
+                <div className="flex items-center justify-between mb-3">
                   <div
-                    className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-white"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-white transition-transform duration-200 group-hover:scale-110"
                     style={{ backgroundColor: category.color }}
                   >
                     {category.icon}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <h2 className="text-base font-semibold text-charcoal">
-                        {category.name}
-                      </h2>
-                      {hasNew && (
-                        <span className="inline-flex items-center text-[9px] font-semibold px-1 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          NEW
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted">
-                      {category.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4 flex-shrink-0">
-                    <div className="text-right hidden sm:block">
-                      <span className="text-sm font-semibold text-charcoal tabular-nums">{categoryDomains.length}</span>
-                      <span className="text-xs text-muted ml-1">domains</span>
-                      <span className="text-slate-300 mx-2">|</span>
-                      <span className="text-sm font-semibold text-charcoal tabular-nums">{categoryACRs}</span>
-                      <span className="text-xs text-muted ml-1">ACRs</span>
-                    </div>
-                    <svg
-                      className={`w-5 h-5 text-muted transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                  </div>
-                </button>
+                  {hasNew && (
+                    <span className="text-[8px] font-semibold px-1 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      NEW
+                    </span>
+                  )}
+                </div>
 
-                {/* Expanded domain cards */}
-                {isExpanded && (
-                  <div className="border-t border-border">
-                    <div className="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" style={{ backgroundColor: category.bgColor }}>
-                      {categoryDomains.map((domain) => (
-                        <Link
-                          key={domain.id}
-                          href={`/standard/v1.1/domains/${domain.slug}`}
-                          className="group block bg-white border border-border rounded-lg p-4 hover:border-border-dark hover:shadow-sm transition-all"
-                        >
-                          <div className="flex items-start gap-3 mb-3">
-                            <span
-                              className="font-mono text-xs font-bold px-2 py-1 rounded shrink-0 text-white"
-                              style={{ backgroundColor: category.color }}
-                            >
-                              {String(domain.id).padStart(2, '0')}
-                            </span>
-                            <div className="flex items-center gap-2 min-w-0">
-                              <h3 className="text-sm font-semibold text-charcoal leading-tight group-hover:text-navy transition-colors">
-                                {domain.title}
-                              </h3>
-                              {domain.versionIntroduced === '1.1' && (
-                                <span className="inline-flex items-center text-[9px] font-semibold px-1 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
-                                  NEW
-                                </span>
-                              )}
-                            </div>
-                          </div>
+                {/* Name + description */}
+                <h3 className="text-sm font-semibold text-charcoal leading-tight mb-1">
+                  {category.name}
+                </h3>
+                <p className="text-[11px] text-muted leading-snug mb-4 line-clamp-2">
+                  {category.description}
+                </p>
 
-                          <p className="text-xs text-steel leading-relaxed mb-3 line-clamp-2">
-                            {domain.summary}
-                          </p>
-
-                          <div className="flex items-center justify-between pt-3 border-t border-border">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-muted tabular-nums">
-                                {domain.acrCount} ACRs
-                              </span>
-                              <div className="flex items-center gap-0.5">
-                                <LevelBadge level="L1" active={domain.applicability.L1} />
-                                <LevelBadge level="L2" active={domain.applicability.L2} />
-                                <LevelBadge level="L3" active={domain.applicability.L3} />
-                              </div>
-                            </div>
-                            <span className="text-xs font-medium text-navy opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                              View
-                              <span aria-hidden="true">&rarr;</span>
-                            </span>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
+                {/* Stats */}
+                <div className="flex items-baseline gap-3 mb-2">
+                  <div>
+                    <span className="text-xl font-bold text-charcoal tabular-nums">{catACRs}</span>
+                    <span className="text-[10px] text-muted ml-1">ACRs</span>
                   </div>
+                  <div className="text-[10px] text-muted">
+                    {catDomains.length} domains
+                  </div>
+                </div>
+
+                {/* Proportion bar */}
+                <div className="relative h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${pct}%`,
+                      backgroundColor: category.color,
+                      opacity: isSelected ? 1 : 0.5,
+                    }}
+                  />
+                </div>
+                <div className="text-[10px] text-muted mt-1 tabular-nums">
+                  {pct}% of total
+                </div>
+
+                {/* Selection indicator */}
+                {isSelected && (
+                  <div
+                    className="absolute -bottom-px left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 border-b-2 border-r-2 bg-white"
+                    style={{ borderColor: category.color }}
+                  />
                 )}
-
-                {/* Collapsed preview: domain name chips */}
-                {!isExpanded && (
-                  <div className="px-5 pb-4 flex flex-wrap gap-2">
-                    {categoryDomains.map((domain) => (
-                      <Link
-                        key={domain.id}
-                        href={`/standard/v1.1/domains/${domain.slug}`}
-                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-border text-steel hover:bg-slate-50 hover:border-border-dark transition-colors"
-                      >
-                        <span className="font-mono font-bold text-[10px]" style={{ color: category.color }}>
-                          {String(domain.id).padStart(2, '0')}
-                        </span>
-                        {domain.shortTitle}
-                        {domain.versionIntroduced === '1.1' && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        )}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+              </button>
             );
           })}
         </div>
-      ) : (
-        /* Grid view */
+      </div>
+
+      {/* ─── Domain Grid ───────────────────────────────────────────────── */}
+      <div ref={domainGridRef} className="scroll-mt-24">
+        {/* Header with filter status */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-charcoal">
+              {selectedCategory ? selectedCategory.name : 'All Domains'}
+            </h2>
+            {selectedCategory && (
+              <span className="text-xs text-muted bg-slate-100 px-2 py-0.5 rounded-full tabular-nums">
+                {filteredDomains.length} domain{filteredDomains.length !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+          {selectedLayer && (
+            <button
+              onClick={() => setSelectedLayer(null)}
+              className="text-xs text-navy font-medium hover:underline flex items-center gap-1"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Show all domains
+            </button>
+          )}
+        </div>
+
+        {/* Domain cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {domains.map((domain) => {
+          {filteredDomains.map((domain) => {
             const category = categories.find((c) => c.domainIds.includes(domain.id));
             return (
               <Link
                 key={domain.id}
                 href={`/standard/v1.1/domains/${domain.slug}`}
-                className="group block border border-border rounded-lg p-5 hover:border-border-dark hover:shadow-sm transition-all bg-white"
+                className="group block border border-border rounded-xl p-5 hover:border-border-dark hover:shadow-md transition-all duration-200 bg-white relative overflow-hidden"
               >
-                <div className="flex items-start gap-3 mb-3">
-                  <span
-                    className="font-mono text-xs font-bold px-2 py-1 rounded shrink-0 text-white"
-                    style={{ backgroundColor: category?.color || '#3A3A3A' }}
-                  >
-                    {String(domain.id).padStart(2, '0')}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h2 className="text-sm font-semibold text-charcoal leading-tight group-hover:text-navy transition-colors">
-                        {domain.title}
-                      </h2>
-                      {domain.versionIntroduced === '1.1' && (
-                        <span className="inline-flex items-center text-[9px] font-semibold px-1 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
-                          NEW
-                        </span>
+                {/* Subtle layer color accent */}
+                <div
+                  className="absolute top-0 left-0 w-1 h-full rounded-l-xl"
+                  style={{ backgroundColor: category?.color || '#3A3A3A' }}
+                />
+
+                <div className="pl-3">
+                  {/* Header: domain number + title */}
+                  <div className="flex items-start gap-3 mb-3">
+                    <span
+                      className="font-mono text-xs font-bold px-2 py-1 rounded shrink-0 text-white"
+                      style={{ backgroundColor: category?.color || '#3A3A3A' }}
+                    >
+                      {String(domain.id).padStart(2, '0')}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-sm font-semibold text-charcoal leading-tight group-hover:text-navy transition-colors">
+                          {domain.title}
+                        </h3>
+                        {domain.versionIntroduced === '1.1' && (
+                          <span className="inline-flex items-center text-[9px] font-semibold px-1 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+                            NEW
+                          </span>
+                        )}
+                      </div>
+                      {category && (
+                        <span className="text-[10px] text-muted">{category.shortName} layer</span>
                       )}
                     </div>
-                    {category && (
-                      <span className="text-[10px] text-muted">{category.name}</span>
-                    )}
                   </div>
-                </div>
 
-                <p className="text-xs text-steel leading-relaxed mb-3 line-clamp-3">
-                  {domain.summary}
-                </p>
+                  {/* Summary */}
+                  <p className="text-xs text-steel leading-relaxed mb-4 line-clamp-3">
+                    {domain.summary}
+                  </p>
 
-                <div className="flex items-center justify-between pt-3 border-t border-border">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted tabular-nums">
-                      {domain.acrCount} ACRs
-                    </span>
-                    <div className="flex items-center gap-0.5">
-                      <LevelBadge level="L1" active={domain.applicability.L1} />
-                      <LevelBadge level="L2" active={domain.applicability.L2} />
-                      <LevelBadge level="L3" active={domain.applicability.L3} />
+                  {/* Footer: ACRs + levels + arrow */}
+                  <div className="flex items-center justify-between pt-3 border-t border-border">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-semibold text-charcoal tabular-nums">
+                        {domain.acrCount} ACRs
+                      </span>
+                      <div className="flex items-center gap-0.5">
+                        <LevelBadge level="L1" active={domain.applicability.L1} />
+                        <LevelBadge level="L2" active={domain.applicability.L2} />
+                        <LevelBadge level="L3" active={domain.applicability.L3} />
+                      </div>
                     </div>
+                    <span className="text-xs font-medium text-navy opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                      Explore
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      </svg>
+                    </span>
                   </div>
-                  <span className="text-xs font-medium text-navy opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                    View
-                    <span aria-hidden="true">&rarr;</span>
-                  </span>
                 </div>
               </Link>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Pillar overview visualization */}
-      <div className="mt-16 border-t border-border pt-8">
-        <h2 className="text-lg font-semibold text-charcoal mb-6">
-          Five Pillars of Autonomous Reliability
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {categories.map((category) => {
-            const categoryDomains = category.domainIds
-              .map((id) => domains.find((d) => d.id === id))
-              .filter(Boolean) as Domain[];
-            const categoryACRs = categoryDomains.reduce((sum, d) => sum + d.acrCount, 0);
-            const pct = Math.round((categoryACRs / totalACRs) * 100);
-
-            return (
-              <button
-                key={category.id}
-                onClick={() => {
-                  setViewMode('categories');
-                  setExpandedCategory(category.id);
-                  window.scrollTo({ top: 400, behavior: 'smooth' });
-                }}
-                className="text-left p-4 rounded-lg border border-border hover:border-border-dark transition-colors group"
-              >
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-white mb-3"
-                  style={{ backgroundColor: category.color }}
-                >
-                  {category.icon}
-                </div>
-                <h3 className="text-sm font-semibold text-charcoal mb-1 group-hover:text-navy transition-colors">
-                  {category.name}
-                </h3>
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-lg font-bold text-charcoal tabular-nums">{categoryACRs}</span>
-                  <span className="text-xs text-muted">ACRs</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-1.5">
-                  <div
-                    className="rounded-full h-1.5 transition-all"
-                    style={{
-                      width: `${pct}%`,
-                      backgroundColor: category.color,
-                    }}
-                  />
-                </div>
-                <span className="text-[10px] text-muted mt-1 block">{pct}% of total</span>
-              </button>
             );
           })}
         </div>

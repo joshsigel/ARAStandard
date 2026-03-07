@@ -69,7 +69,7 @@ const authorizationLevels = [
 
 export default function AVBPage() {
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-10">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10">
       {/* Breadcrumbs */}
       <Breadcrumb
         items={[{ label: 'Home', href: '/' }, { label: 'AVB Program' }]}
@@ -81,8 +81,7 @@ export default function AVBPage() {
         <h1 className="text-3xl font-semibold tracking-tight text-charcoal mb-4">
           Authorized Validation Bodies — v1.1
         </h1>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-base text-steel leading-relaxed max-w-[72ch] mb-3">
             Authorized Validation Bodies (AVBs) are independent organizations
             accredited by ARAF to conduct ARA certification evaluations. AVBs
             are the operational layer of the certification system — they
@@ -90,32 +89,28 @@ export default function AVBPage() {
             scoring methodology, render certification decisions, and oversee
             post-certification monitoring.
           </p>
-          <p>
+          <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             ARAF does not conduct evaluations directly. All certification
             assessments are performed by AVBs operating under ARAF governance,
             quality standards, and oversight. v1.1 expands AVB responsibilities
             to include mandatory risk classification, platform certification
             evaluation, and insurance-relevant reporting.
           </p>
-        </div>
       </header>
 
       {/* Overview */}
-      <section id="overview" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a href="#overview" className="hover:text-navy transition-colors">
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="overview" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Program Overview
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             The AVB program establishes a structured framework for authorizing,
             monitoring, and governing the organizations that perform ARA
             certification evaluations. The program is designed to ensure
             consistent evaluation quality across all AVBs worldwide while
             allowing for geographic and domain specialization.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 grid md:grid-cols-3 gap-6">
           <div className="border border-border rounded-lg p-6">
@@ -162,11 +157,10 @@ export default function AVBPage() {
       </section>
 
       {/* Authorization Levels */}
-      <section id="levels" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a href="#levels" className="hover:text-navy transition-colors">
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="levels" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Levels of Authorization
-          </a>
         </h2>
         <p className="text-sm text-muted mb-6 max-w-3xl">
           AVB authorization is tiered to match the certification levels they
@@ -235,24 +229,18 @@ export default function AVBPage() {
       </section>
 
       {/* Risk Classification Responsibility */}
-      <section id="risk-classification" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a
-            href="#risk-classification"
-            className="hover:text-navy transition-colors"
-          >
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="risk-classification" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Risk Classification Responsibility
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             Under v1.1, AVBs are responsible for conducting the mandatory
             7-factor risk assessment during Phase 2 of the certification
             lifecycle. The risk classification determines the system&apos;s
             Assurance Class (A, B, or C), which in turn governs monitoring
             requirements, certification designation, and insurance relevance.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 border border-border rounded-lg overflow-hidden">
           <table className="w-full text-sm">
@@ -324,24 +312,18 @@ export default function AVBPage() {
       </section>
 
       {/* Platform Certification Evaluation */}
-      <section id="platform-certification" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a
-            href="#platform-certification"
-            className="hover:text-navy transition-colors"
-          >
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="platform-certification" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Platform Certification Evaluation
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             v1.1 introduces platform certification as a distinct certification
             variant. Platform certifications allow infrastructure and framework
             providers to certify their platforms, enabling downstream systems
             built on those platforms to inherit qualifying domain scores. AVB
             authority for platform evaluations varies by tier.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 border border-border rounded-lg overflow-hidden">
           <table className="w-full text-sm">
@@ -385,24 +367,18 @@ export default function AVBPage() {
       </section>
 
       {/* Domain 5 & 13 Competency */}
-      <section id="domain-competency" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a
-            href="#domain-competency"
-            className="hover:text-navy transition-colors"
-          >
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="domain-competency" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Domain 5 &amp; 13 Competency
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             v1.1 expands the evaluation framework to 15 domains, with Domain 5
             (Data Privacy) and Domain 13 (Societal Impact) receiving particular
             emphasis due to their cross-cutting nature and regulatory
             significance. All AVB tiers must demonstrate competency in these
             two domains.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 grid md:grid-cols-2 gap-6">
           <div className="border border-border rounded-lg p-6">
@@ -458,23 +434,17 @@ export default function AVBPage() {
       </section>
 
       {/* Insurance-Relevant Reporting */}
-      <section id="insurance-reporting" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a
-            href="#insurance-reporting"
-            className="hover:text-navy transition-colors"
-          >
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="insurance-reporting" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Insurance-Relevant Reporting
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             Full-tier AVBs must produce certification reports that are
             compatible with the ARA Risk-Informed Pricing (RIP) assessment
             framework. Insurance-relevant reports provide structured risk data
             that insurance carriers can use to price autonomous system coverage.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 border border-border rounded-lg p-6">
           <h3 className="text-base font-semibold text-charcoal mb-3">
@@ -511,24 +481,18 @@ export default function AVBPage() {
       </section>
 
       {/* Independence Requirements */}
-      <section id="independence" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a
-            href="#independence"
-            className="hover:text-navy transition-colors"
-          >
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="independence" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Independence Requirements
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             Structural independence is a foundational requirement of the AVB
             program. An AVB must not have any financial, organizational, or
             personnel relationships with the organizations whose systems it
             evaluates that could compromise — or reasonably appear to
             compromise — the objectivity of the certification assessment.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 border border-border rounded-lg overflow-hidden">
           <table className="w-full text-sm">
@@ -603,21 +567,18 @@ export default function AVBPage() {
       </section>
 
       {/* Insurance Requirements */}
-      <section id="insurance" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a href="#insurance" className="hover:text-navy transition-colors">
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="insurance" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Insurance Requirements
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             All AVBs must maintain insurance coverage proportional to their
             authorization level and the scope of evaluations they conduct.
             Insurance requirements are designed to protect both the
             organizations seeking certification and the broader ecosystem
             from the consequences of evaluation errors.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 border border-border rounded-lg overflow-hidden">
           <table className="w-full text-sm">
@@ -705,23 +666,17 @@ export default function AVBPage() {
       </section>
 
       {/* Revalidation Triggers */}
-      <section id="revalidation-triggers" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a
-            href="#revalidation-triggers"
-            className="hover:text-navy transition-colors"
-          >
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="revalidation-triggers" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Revalidation Triggers
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             v1.1 updates the conditions that trigger revalidation of AVB
             authorization outside of the standard renewal cycle. AVBs must
             initiate a revalidation review when any of the following conditions
             occur.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 border border-border rounded-lg p-6">
           <ul className="space-y-2">
@@ -749,19 +704,16 @@ export default function AVBPage() {
       </section>
 
       {/* Renewal Requirements */}
-      <section id="renewal" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a href="#renewal" className="hover:text-navy transition-colors">
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="renewal" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Renewal Requirements
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             AVB authorization is not permanent. All authorization levels are
             subject to periodic renewal to ensure ongoing competence, quality,
             and compliance with program requirements.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 border border-border rounded-lg overflow-hidden">
           <table className="w-full text-sm">
@@ -851,20 +803,17 @@ export default function AVBPage() {
       </section>
 
       {/* Revocation Process */}
-      <section id="revocation" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a href="#revocation" className="hover:text-navy transition-colors">
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="revocation" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             Revocation Process
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             ARAF may suspend or revoke an AVB&apos;s authorization if the AVB
             fails to meet program requirements, exhibits quality deficiencies,
             or engages in conduct that undermines the integrity of the
             certification system.
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 space-y-6">
           <div className="border border-border rounded-lg p-6">
@@ -949,20 +898,17 @@ export default function AVBPage() {
       </section>
 
       {/* How to Apply */}
-      <section id="apply" className="mb-20 scroll-mt-24">
-        <h2 className="text-2xl font-semibold text-charcoal mb-2">
-          <a href="#apply" className="hover:text-navy transition-colors">
+      <section className="mb-20 scroll-mt-24">
+        <div className="section-divider mb-6" />
+        <h2 id="apply" className="text-2xl font-semibold text-charcoal mb-3 scroll-mt-24">
             How to Apply
-          </a>
         </h2>
-        <div className="prose max-w-3xl">
-          <p>
+        <p className="text-sm text-steel leading-relaxed max-w-[72ch]">
             Organizations interested in becoming an Authorized Validation Body
             should review the full program requirements and submit an
             expression of interest through the ARAF governance process. The
             application process is structured as follows:
-          </p>
-        </div>
+        </p>
 
         <div className="mt-6 space-y-4">
           {[

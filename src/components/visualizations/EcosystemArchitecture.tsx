@@ -42,10 +42,10 @@ const nodePositions: Record<string, { x: number; y: number }> = {
   dpsic: { x: 560, y: 140 },
   avb: { x: 160, y: 260 },
   capo: { x: 400, y: 260 },
-  rip: { x: 640, y: 260 },
-  'cert-org': { x: 240, y: 400 },
+  rip: { x: 650, y: 260 },
+  'cert-org': { x: 210, y: 400 },
   platform: { x: 400, y: 400 },
-  consortium: { x: 560, y: 400 },
+  consortium: { x: 590, y: 400 },
 };
 
 const edges: { from: string; to: string; label?: string }[] = [
@@ -89,8 +89,19 @@ export function EcosystemArchitecture({
     ? edges.filter((e) => e.from === activeId || e.to === activeId)
     : [];
 
-  const nodeW = 100;
   const nodeH = 36;
+  const nodeWidths: Record<string, number> = {
+    araf: 90,
+    tsb: 80,
+    dpsic: 90,
+    avb: 80,
+    capo: 90,
+    rip: 150,
+    'cert-org': 125,
+    platform: 140,
+    consortium: 110,
+  };
+  const getNodeW = (id: string) => nodeWidths[id] || 100;
 
   const handleNodeClick = (nodeId: string) => {
     setSelected(selected === nodeId ? null : nodeId);
@@ -130,13 +141,49 @@ export function EcosystemArchitecture({
               const isActive = activeId === edge.from || activeId === edge.to;
               const isDimmed = activeId && !isActive;
 
+              // Same-row edges connect sides; cross-row edges connect top/bottom
+              const sameRow = from.y === to.y;
+              let x1: number, y1: number, x2: number, y2: number;
+
+              if (sameRow) {
+                const fromW = getNodeW(edge.from);
+                const toW = getNodeW(edge.to);
+                if (from.x > to.x) {
+                  x1 = from.x - fromW / 2;
+                  x2 = to.x + toW / 2;
+                } else {
+                  x1 = from.x + fromW / 2;
+                  x2 = to.x - toW / 2;
+                }
+                y1 = from.y;
+                y2 = to.y;
+              } else {
+                x1 = from.x;
+                y1 = from.y + nodeH / 2;
+                x2 = to.x;
+                y2 = to.y - nodeH / 2;
+              }
+
+              // Label position
+              const mx = (x1 + x2) / 2;
+              const my = (y1 + y2) / 2;
+              let lx: number, ly: number;
+              if (sameRow) {
+                lx = mx;
+                ly = my - nodeH / 2 - 12;
+              } else {
+                lx = mx + 12;
+                ly = my - 2;
+              }
+              const textW = edge.label ? edge.label.length * 6.2 + 8 : 0;
+
               return (
                 <g key={i}>
                   <line
-                    x1={from.x}
-                    y1={from.y + nodeH / 2}
-                    x2={to.x}
-                    y2={to.y - nodeH / 2}
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
                     stroke={isActive ? '#111111' : '#C8CCD2'}
                     strokeWidth={isActive ? 1.5 : 1}
                     strokeDasharray={edge.label === 'Advises' || edge.label === 'Contributes' ? '4 3' : 'none'}
@@ -145,15 +192,30 @@ export function EcosystemArchitecture({
                     className="transition-all duration-200"
                   />
                   {isActive && edge.label && (
-                    <text
-                      x={(from.x + to.x) / 2 + 8}
-                      y={(from.y + nodeH / 2 + to.y - nodeH / 2) / 2}
-                      fontSize={10}
-                      fill="#636B78"
-                      fontWeight={500}
-                    >
-                      {edge.label}
-                    </text>
+                    <>
+                      <rect
+                        x={sameRow ? lx - textW / 2 : lx - 4}
+                        y={ly - 8}
+                        width={textW}
+                        height={16}
+                        rx={3}
+                        fill="white"
+                        fillOpacity={0.95}
+                        stroke="#E2E4E8"
+                        strokeWidth={0.5}
+                      />
+                      <text
+                        x={lx}
+                        y={ly}
+                        textAnchor={sameRow ? 'middle' : 'start'}
+                        dominantBaseline="central"
+                        fontSize={10}
+                        fill="#4A5160"
+                        fontWeight={600}
+                      >
+                        {edge.label}
+                      </text>
+                    </>
                   )}
                 </g>
               );
@@ -190,9 +252,9 @@ export function EcosystemArchitecture({
                   {/* Selection ring */}
                   {isActive && (
                     <rect
-                      x={pos.x - nodeW / 2 - 4}
+                      x={pos.x - getNodeW(node.id) / 2 - 4}
                       y={pos.y - nodeH / 2 - 4}
-                      width={nodeW + 8}
+                      width={getNodeW(node.id) + 8}
                       height={nodeH + 8}
                       rx={10}
                       fill="none"
@@ -203,9 +265,9 @@ export function EcosystemArchitecture({
                     />
                   )}
                   <rect
-                    x={pos.x - nodeW / 2}
+                    x={pos.x - getNodeW(node.id) / 2}
                     y={pos.y - nodeH / 2}
-                    width={nodeW}
+                    width={getNodeW(node.id)}
                     height={nodeH}
                     rx={6}
                     fill={color.bg}
@@ -219,7 +281,7 @@ export function EcosystemArchitecture({
                     y={pos.y + 1}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fontSize={12}
+                    fontSize={node.label.length > 14 ? 11 : 12}
                     fontWeight={700}
                     fill={color.text}
                     opacity={isDimmed ? 0.3 : 1}

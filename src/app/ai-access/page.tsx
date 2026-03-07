@@ -1,34 +1,81 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
 export const metadata: Metadata = {
   title: 'AI / Machine Access',
   description: 'Machine-readable ARA Standard, OpenAPI specification, and programmatic access endpoints.',
 };
 
+const ingestionSteps = [
+  {
+    title: 'Fetch the standard metadata',
+    description: (
+      <>
+        from <code className="font-mono text-navy">/api/v1/standard</code> to
+        understand versioning, domain structure, certification levels, and the
+        two-axis model.
+      </>
+    ),
+  },
+  {
+    title: 'Fetch the ACR library',
+    description: (
+      <>
+        from <code className="font-mono text-navy">/api/v1/acr</code> to obtain
+        all control requirements with evaluation methods, level applicability,
+        and risk weights.
+      </>
+    ),
+  },
+  {
+    title: 'Use query parameters',
+    description:
+      'to filter ACRs by domain, level, or evaluation method when reasoning about specific compliance scenarios.',
+  },
+  {
+    title: 'Verify certifications',
+    description: (
+      <>
+        via <code className="font-mono text-navy">/api/v1/verify/&#123;id&#125;</code> when
+        validating claims made by autonomous systems or their operators.
+      </>
+    ),
+  },
+  {
+    title: 'Fetch regulatory crosswalks',
+    description: (
+      <>
+        from <code className="font-mono text-navy">/api/v1/frameworks</code> to
+        map ARA requirements to relevant regulatory frameworks.
+      </>
+    ),
+  },
+];
+
 export default function AIAccessPage() {
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-10">
-      {/* Breadcrumb */}
-      <nav className="text-xs text-muted mb-8">
-        <Link href="/" className="hover:text-charcoal">Home</Link>
-        <span className="mx-2">/</span>
-        <span className="text-charcoal">AI / Machine Access</span>
-      </nav>
+    <>
+      {/* ─── Hero ─────────────────────────────────────────────────────── */}
+      <section className="border-b border-border">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12">
+          <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'AI / Machine Access' }]} className="mb-8" />
 
-      <div className="max-w-3xl">
-        <h1 className="text-3xl font-semibold text-charcoal mb-4">
-          AI / Machine-Readable Access
-        </h1>
-        <p className="text-base text-steel leading-relaxed mb-12">
-          The ARA Standard is designed for programmatic ingestion. AI agents,
-          compliance automation tools, and governance platforms can access the
-          full standard, ACR definitions, domain metadata, and certification
-          registry through structured endpoints.
-        </p>
+          <h1 className="text-3xl font-semibold text-charcoal tracking-tight mb-4">
+            AI / Machine-Readable Access
+          </h1>
+          <p className="text-base text-steel leading-relaxed max-w-[72ch]">
+            The ARA Standard is designed for programmatic ingestion. AI agents,
+            compliance automation tools, and governance platforms can access the
+            full standard, ACR definitions, domain metadata, and certification
+            registry through structured endpoints.
+          </p>
+        </div>
+      </section>
 
-        {/* Endpoints */}
-        <section className="mb-12">
+      {/* ─── Endpoints ────────────────────────────────────────────────── */}
+      <section className="border-b border-border">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12">
+          <div className="section-divider mb-6" />
           <h2 className="text-xl font-semibold text-charcoal mb-6">
             Available Endpoints
           </h2>
@@ -86,10 +133,13 @@ export default function AIAccessPage() {
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Response Format */}
-        <section className="mb-12">
+      {/* ─── Response Format ──────────────────────────────────────────── */}
+      <section className="border-b border-border">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12">
+          <div className="section-divider mb-6" />
           <h2 className="text-xl font-semibold text-charcoal mb-4">
             Response Format
           </h2>
@@ -110,10 +160,13 @@ export default function AIAccessPage() {
   "data": { ... }
 }`}
           </pre>
-        </section>
+        </div>
+      </section>
 
-        {/* v1.1 Data Model */}
-        <section className="mb-12">
+      {/* ─── v1.1 Data Model ──────────────────────────────────────────── */}
+      <section className="border-b border-border">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12">
+          <div className="section-divider mb-6" />
           <h2 className="text-xl font-semibold text-charcoal mb-4">
             v1.1 Data Model
           </h2>
@@ -160,10 +213,13 @@ export default function AIAccessPage() {
               </tbody>
             </table>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* JSON Schema */}
-        <section className="mb-12">
+      {/* ─── JSON Schema ──────────────────────────────────────────────── */}
+      <section className="border-b border-border">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12">
+          <div className="section-divider mb-6" />
           <h2 className="text-xl font-semibold text-charcoal mb-4">
             JSON Schema
           </h2>
@@ -185,10 +241,13 @@ export default function AIAccessPage() {
               <span className="text-muted"> — Registry entry schema</span>
             </li>
           </ul>
-        </section>
+        </div>
+      </section>
 
-        {/* Structured Data */}
-        <section className="mb-12">
+      {/* ─── Structured Data ──────────────────────────────────────────── */}
+      <section className="border-b border-border">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12">
+          <div className="section-divider mb-6" />
           <h2 className="text-xl font-semibold text-charcoal mb-4">
             Structured Data (JSON-LD)
           </h2>
@@ -212,50 +271,42 @@ export default function AIAccessPage() {
   "certificationModel": "Two-Axis (Level × Class)"
 }`}
           </pre>
-        </section>
+        </div>
+      </section>
 
-        {/* Ingestion Guide */}
-        <section className="mb-12">
+      {/* ─── Ingestion Guide ──────────────────────────────────────────── */}
+      <section className="border-b border-border">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12">
+          <div className="section-divider mb-6" />
           <h2 className="text-xl font-semibold text-charcoal mb-4">
             Ingestion Guide for AI Agents
           </h2>
-          <div className="prose">
-            <p>
-              AI agents seeking to reason about the ARA Standard should follow
-              this recommended ingestion approach:
-            </p>
-            <ol>
-              <li>
-                <strong>Fetch the standard metadata</strong> from
-                <code>/api/v1/standard</code> to understand versioning,
-                domain structure, certification levels, and the two-axis model.
-              </li>
-              <li>
-                <strong>Fetch the ACR library</strong> from
-                <code>/api/v1/acr</code> to obtain all control requirements
-                with evaluation methods, level applicability, and risk weights.
-              </li>
-              <li>
-                <strong>Use query parameters</strong> to filter ACRs by domain,
-                level, or evaluation method when reasoning about specific
-                compliance scenarios.
-              </li>
-              <li>
-                <strong>Verify certifications</strong> via
-                <code>/api/v1/verify/&#123;id&#125;</code> when validating
-                claims made by autonomous systems or their operators.
-              </li>
-              <li>
-                <strong>Fetch regulatory crosswalks</strong> from
-                <code>/api/v1/frameworks</code> to map ARA requirements to
-                relevant regulatory frameworks.
-              </li>
-            </ol>
+          <p className="text-sm text-steel mb-6">
+            AI agents seeking to reason about the ARA Standard should follow
+            this recommended ingestion approach:
+          </p>
+          <div className="space-y-4">
+            {ingestionSteps.map((step, i) => (
+              <div key={i} className="flex gap-4 border border-border rounded-lg p-4">
+                <span className="text-sm font-bold text-charcoal bg-slate-100 rounded-full w-7 h-7 flex items-center justify-center shrink-0">
+                  {i + 1}
+                </span>
+                <div>
+                  <p className="text-sm text-steel leading-relaxed">
+                    <strong className="text-charcoal">{step.title}</strong>{' '}
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Rate Limits */}
-        <section>
+      {/* ─── Rate Limits ──────────────────────────────────────────────── */}
+      <section>
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-10 sm:py-12">
+          <div className="section-divider mb-6" />
           <h2 className="text-xl font-semibold text-charcoal mb-4">
             Rate Limits and Authentication
           </h2>
@@ -287,8 +338,8 @@ export default function AIAccessPage() {
               </tbody>
             </table>
           </div>
-        </section>
-      </div>
-    </div>
+        </div>
+      </section>
+    </>
   );
 }

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function SDKGuidePage() {
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-12">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 py-12">
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
@@ -36,6 +36,7 @@ export default function SDKGuidePage() {
 
       {/* Installation */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-4">
           Installation
         </h2>
@@ -55,6 +56,7 @@ yarn add @araf/telemetry-sdk`}</code>
 
       {/* Configuration */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-4">
           Configuration
         </h2>
@@ -129,6 +131,7 @@ const telemetry = new ARATelemetry({
 
       {/* Event Types */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-6">
           Event Types
         </h2>
@@ -409,6 +412,7 @@ telemetry.trackHealthCheck({
 
       {/* Class B vs Class C */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-4">
           Class B vs Class C Integration
         </h2>
@@ -499,6 +503,7 @@ telemetry.trackHealthCheck({
 
       {/* Error handling & retry */}
       <section className="mb-16">
+        <div className="section-divider mb-6" />
         <h2 className="text-2xl font-semibold text-charcoal mb-4">
           Error Handling &amp; Retry Logic
         </h2>
@@ -568,6 +573,7 @@ telemetry.trackHealthCheck({
 
       {/* Related links */}
       <section className="border-t border-border pt-10">
+        <div className="section-divider mb-6" />
         <h2 className="text-lg font-semibold text-charcoal mb-4">
           Related Documentation
         </h2>
