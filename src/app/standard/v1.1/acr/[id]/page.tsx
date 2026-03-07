@@ -9,10 +9,12 @@ interface ACRPageProps {
 }
 
 export async function generateStaticParams() {
-  const { data: allAcrs } = await getACRs();
-  return allAcrs.map((a) => ({
-    id: a.id,
-  }));
+  try {
+    const { data: allAcrs } = await getACRs();
+    return allAcrs.map((a) => ({ id: a.id }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: ACRPageProps): Promise<Metadata> {

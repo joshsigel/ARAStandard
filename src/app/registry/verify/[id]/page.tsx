@@ -19,10 +19,12 @@ interface VerifyPageProps {
 }
 
 export async function generateStaticParams() {
-  const entries = await getRegistryEntries();
-  return entries.map((e) => ({
-    id: e.certificationId,
-  }));
+  try {
+    const entries = await getRegistryEntries();
+    return entries.map((e) => ({ id: e.certificationId }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({

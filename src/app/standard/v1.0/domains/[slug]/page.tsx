@@ -8,10 +8,12 @@ interface DomainPageProps {
 }
 
 export async function generateStaticParams() {
-  const allDomains = await getDomains();
-  return allDomains.map((d) => ({
-    slug: d.slug,
-  }));
+  try {
+    const allDomains = await getDomains();
+    return allDomains.map((d) => ({ slug: d.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: DomainPageProps): Promise<Metadata> {
