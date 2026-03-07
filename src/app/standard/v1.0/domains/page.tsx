@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { getDomains, getACRs } from '@/lib/data';
 import { DomainsListClient } from './DomainsListClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Reliability Domains — ARA Standard v1.0',
   description:

@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { getDomains, getDomain, getACRsByDomain } from '@/lib/data';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
+export const dynamic = 'force-dynamic';
+
 interface DomainPageProps {
   params: Promise<{ slug: string }>;
 }

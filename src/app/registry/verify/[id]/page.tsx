@@ -14,6 +14,8 @@ import type {
   MonitoringStatus,
 } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 interface VerifyPageProps {
   params: Promise<{ id: string }>;
 }

@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { getSupabase } from './supabase';
 import type {
   Domain,
   ACR,
@@ -18,10 +18,16 @@ import type {
   CAPOSla,
 } from '@/types';
 
+function requireSupabase() {
+  const client = getSupabase();
+  if (!client) throw new Error('Supabase not configured');
+  return client;
+}
+
 // ─── Domains ────────────────────────────────────────────────────────────────
 
 export async function getDomains(): Promise<Domain[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('domains')
     .select('*')
     .order('sort_order', { ascending: true });
@@ -30,7 +36,7 @@ export async function getDomains(): Promise<Domain[]> {
 }
 
 export async function getDomain(slug: string): Promise<Domain | null> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('domains')
     .select('*')
     .eq('slug', slug)
@@ -53,7 +59,7 @@ export interface ACRFilters {
 }
 
 export async function getACRs(filters?: ACRFilters): Promise<{ data: ACR[]; count: number }> {
-  let query = supabase.from('acrs').select('*', { count: 'exact' });
+  let query = requireSupabase().from('acrs').select('*', { count: 'exact' });
 
   if (filters?.domainId) query = query.eq('domain_id', filters.domainId);
   if (filters?.minCertLevel) query = query.lte('min_cert_level', filters.minCertLevel);
@@ -73,7 +79,7 @@ export async function getACRs(filters?: ACRFilters): Promise<{ data: ACR[]; coun
 }
 
 export async function getACR(id: string): Promise<ACR | null> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('acrs')
     .select('*')
     .eq('id', id)
@@ -83,7 +89,7 @@ export async function getACR(id: string): Promise<ACR | null> {
 }
 
 export async function getACRsByDomain(domainId: number): Promise<ACR[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('acrs')
     .select('*')
     .eq('domain_id', domainId)
@@ -105,7 +111,7 @@ export interface RegistryFilters {
 }
 
 export async function getRegistryEntries(filters?: RegistryFilters): Promise<RegistryEntry[]> {
-  let query = supabase.from('registry_entries').select('*');
+  let query = requireSupabase().from('registry_entries').select('*');
 
   if (filters?.certificationLevel) query = query.eq('certification_level', filters.certificationLevel);
   if (filters?.assuranceClass) query = query.eq('assurance_class', filters.assuranceClass);
@@ -125,7 +131,7 @@ export async function getRegistryEntries(filters?: RegistryFilters): Promise<Reg
 }
 
 export async function getRegistryEntry(certId: string): Promise<RegistryEntry | null> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('registry_entries')
     .select('*')
     .eq('certification_id', certId)
@@ -137,7 +143,7 @@ export async function getRegistryEntry(certId: string): Promise<RegistryEntry | 
 // ─── Platform Certifications ────────────────────────────────────────────────
 
 export async function getPlatformCertifications(): Promise<PlatformCertEntry[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('platform_certifications')
     .select('*')
     .order('issue_date', { ascending: false });
@@ -148,7 +154,7 @@ export async function getPlatformCertifications(): Promise<PlatformCertEntry[]> 
 // ─── Certification Levels ───────────────────────────────────────────────────
 
 export async function getCertificationLevels(): Promise<CertificationLevelDetail[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('certification_levels')
     .select('*')
     .order('level', { ascending: true });
@@ -159,7 +165,7 @@ export async function getCertificationLevels(): Promise<CertificationLevelDetail
 // ─── Assurance Classes ──────────────────────────────────────────────────────
 
 export async function getAssuranceClasses(): Promise<AssuranceClassDetail[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('assurance_classes')
     .select('*')
     .order('class', { ascending: true });
@@ -170,7 +176,7 @@ export async function getAssuranceClasses(): Promise<AssuranceClassDetail[]> {
 // ─── System Profiles ────────────────────────────────────────────────────────
 
 export async function getSystemProfiles(): Promise<SystemProfile[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('system_profiles')
     .select('*')
     .order('acr_count', { ascending: true });
@@ -181,7 +187,7 @@ export async function getSystemProfiles(): Promise<SystemProfile[]> {
 // ─── Regulatory Frameworks ──────────────────────────────────────────────────
 
 export async function getRegulatoryFrameworks(): Promise<RegulatoryFramework[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('regulatory_frameworks')
     .select('*')
     .order('acrs_mapped', { ascending: false });
@@ -190,7 +196,7 @@ export async function getRegulatoryFrameworks(): Promise<RegulatoryFramework[]> 
 }
 
 export async function getMappingsForACR(acrId: string): Promise<RegulatoryMapping[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('regulatory_mappings')
     .select('*')
     .eq('acr_id', acrId);
@@ -199,7 +205,7 @@ export async function getMappingsForACR(acrId: string): Promise<RegulatoryMappin
 }
 
 export async function getMappingsForFramework(frameworkId: string): Promise<RegulatoryMapping[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('regulatory_mappings')
     .select('*')
     .eq('framework_id', frameworkId);
@@ -210,7 +216,7 @@ export async function getMappingsForFramework(frameworkId: string): Promise<Regu
 // ─── Glossary ───────────────────────────────────────────────────────────────
 
 export async function getGlossary(): Promise<GlossaryTerm[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('glossary')
     .select('*')
     .order('term', { ascending: true });
@@ -219,7 +225,7 @@ export async function getGlossary(): Promise<GlossaryTerm[]> {
 }
 
 export async function getGlossaryTerm(term: string): Promise<GlossaryTerm | null> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('glossary')
     .select('*')
     .eq('term', term)
@@ -231,7 +237,7 @@ export async function getGlossaryTerm(term: string): Promise<GlossaryTerm | null
 // ─── Ecosystem Directories ──────────────────────────────────────────────────
 
 export async function getAVBDirectory(): Promise<AVBEntry[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('avb_directory')
     .select('*')
     .order('name', { ascending: true });
@@ -240,7 +246,7 @@ export async function getAVBDirectory(): Promise<AVBEntry[]> {
 }
 
 export async function getCAPODirectory(): Promise<CAPOEntry[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('capo_directory')
     .select('*')
     .order('name', { ascending: true });
@@ -249,7 +255,7 @@ export async function getCAPODirectory(): Promise<CAPOEntry[]> {
 }
 
 export async function getInsurerDirectory(): Promise<InsurerEntry[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('insurer_directory')
     .select('*')
     .order('name', { ascending: true });
@@ -258,7 +264,7 @@ export async function getInsurerDirectory(): Promise<InsurerEntry[]> {
 }
 
 export async function getConsortiumMembers(): Promise<ConsortiumMember[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('consortium_members')
     .select('*')
     .order('name', { ascending: true });
@@ -269,7 +275,7 @@ export async function getConsortiumMembers(): Promise<ConsortiumMember[]> {
 // ─── Risk Factors ───────────────────────────────────────────────────────────
 
 export async function getRiskFactors(): Promise<RiskFactor[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('risk_factors')
     .select('*')
     .order('id', { ascending: true });
@@ -280,7 +286,7 @@ export async function getRiskFactors(): Promise<RiskFactor[]> {
 // ─── CAPO SLAs ──────────────────────────────────────────────────────────────
 
 export async function getCAPOSlas(): Promise<CAPOSla[]> {
-  const { data, error } = await supabase
+  const { data, error } = await requireSupabase()
     .from('capo_slas')
     .select('*');
   if (error) throw error;

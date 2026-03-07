@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getDomains, getDomain, getACRsByDomain } from '@/lib/data';
 
+export const dynamic = 'force-dynamic';
+
 interface DomainPageProps {
   params: Promise<{ slug: string }>;
 }

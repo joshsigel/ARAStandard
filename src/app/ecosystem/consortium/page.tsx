@@ -3,6 +3,8 @@ import { getConsortiumMembers } from '@/lib/data';
 import { ConsortiumClient } from './ConsortiumClient';
 import type { ConsortiumMember } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'ARA Consortium',
   description:

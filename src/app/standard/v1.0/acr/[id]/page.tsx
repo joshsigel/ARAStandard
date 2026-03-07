@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getACR, getACRs, getACRsByDomain, getDomains } from '@/lib/data';
 
+export const dynamic = 'force-dynamic';
+
 interface ACRPageProps {
   params: Promise<{ id: string }>;
 }

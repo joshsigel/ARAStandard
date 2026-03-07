@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { getCAPODirectory } from '@/lib/data';
 import { CAPODirectoryClient } from './CAPODirectoryClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'CAPO Directory',
   description:

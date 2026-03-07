@@ -2,6 +2,8 @@ import { getRegistryEntries } from '@/lib/data';
 import { RegistryClient } from './RegistryClient';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'ARA Public Certification Registry',
   description: 'Search and verify ARA-certified autonomous systems.',

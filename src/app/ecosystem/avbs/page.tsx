@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { getAVBDirectory } from '@/lib/data';
 import { AVBDirectoryClient } from './AVBDirectoryClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'AVB Directory',
   description:

@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { getACR, getACRs, getACRsByDomain, getDomains } from '@/lib/data';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
+export const dynamic = 'force-dynamic';
+
 interface ACRPageProps {
   params: Promise<{ id: string }>;
 }

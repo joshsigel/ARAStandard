@@ -8,6 +8,8 @@ import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
 import type { BadgeData } from '@/components/badges/types';
 import { getCertificationLevels } from '@/lib/data';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Certification — ARA Standard',
   description: 'ARA two-axis certification model.',

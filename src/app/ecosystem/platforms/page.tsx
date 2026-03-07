@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { getPlatformCertifications } from '@/lib/data';
 import { PlatformDirectoryClient } from './PlatformDirectoryClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Certified Platforms',
   description:

@@ -1,6 +1,8 @@
 import { getDomains, getACRs } from '@/lib/data';
 import { ACRLibraryClient } from './ACRLibraryClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ACRLibraryPage() {
   const [domains, { data: acrs }] = await Promise.all([
     getDomains(),
