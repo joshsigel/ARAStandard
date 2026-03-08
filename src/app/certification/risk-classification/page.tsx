@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { RiskSpider } from '@/components/visualizations/RiskSpider';
+import { RiskProfileDemo } from '@/components/visualizations/RiskProfileDemo';
 import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
 
 export const metadata: Metadata = {
@@ -9,62 +9,6 @@ export const metadata: Metadata = {
   description:
     'Mandatory 7-factor risk assessment determining Assurance Class (A/B/C) for ARA v1.1 certification.',
 };
-
-/* ---------------------------------------------------------------------------
- * Sample data for the RiskSpider visualization
- * --------------------------------------------------------------------------- */
-
-const sampleFactors = [
-  {
-    id: 1,
-    name: 'Autonomy Scope',
-    score: 3,
-    description:
-      'Breadth of autonomous decision-making. Narrow task automation (1) vs. open-ended autonomous agents (5).',
-  },
-  {
-    id: 2,
-    name: 'Consequence Severity',
-    score: 4,
-    description:
-      'Potential impact of system failure. Minor inconvenience (1) vs. loss of life or critical infrastructure (5).',
-  },
-  {
-    id: 3,
-    name: 'Decision Reversibility',
-    score: 2,
-    description:
-      'Whether autonomous actions can be undone. Easily reversible suggestions (1) vs. irreversible physical actions (5).',
-  },
-  {
-    id: 4,
-    name: 'Operational Environment',
-    score: 3,
-    description:
-      'Complexity and unpredictability of deployment context. Controlled lab (1) vs. open-world with adversarial actors (5).',
-  },
-  {
-    id: 5,
-    name: 'Data Sensitivity',
-    score: 4,
-    description:
-      'Classification of data accessed and processed. Public data only (1) vs. classified/PII/financial data (5).',
-  },
-  {
-    id: 6,
-    name: 'Scale of Impact',
-    score: 3,
-    description:
-      'Number of people or systems affected. Single user (1) vs. population-scale (5).',
-  },
-  {
-    id: 7,
-    name: 'Regulatory Exposure',
-    score: 4,
-    description:
-      'Degree of regulatory oversight applicable. Unregulated domain (1) vs. heavily regulated (5).',
-  },
-];
 
 /* ---------------------------------------------------------------------------
  * Risk factor card data
@@ -168,32 +112,11 @@ export default function RiskClassificationPage() {
           Risk Profile Visualization
         </h2>
         <p className="text-sm text-muted mb-6 max-w-2xl">
-          Hover over any data point to see the factor name, score, and
-          description. The example below shows a sample assessment resulting in
-          Class B.
+          Select an Assurance Class to see a representative risk profile. Hover
+          over any data point on the chart to see the factor name, score, and
+          description.
         </p>
-        <div className="grid lg:grid-cols-[1fr_1fr] gap-10 items-start">
-          <RiskSpider
-            factors={sampleFactors}
-            determinedClass="B"
-            className="max-w-md"
-          />
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-steel">
-                Determined Class:
-              </span>
-              <AssuranceClassBadge assuranceClass="B" />
-            </div>
-            <p className="text-sm text-steel leading-relaxed max-w-md">
-              This sample profile scores 4 on Consequence Severity, Data
-              Sensitivity, and Regulatory Exposure, triggering the &ldquo;3+
-              factors at 4+&rdquo; rule for minimum Class B. The average score of
-              3.29 alone would not mandate Class B, but the factor concentration
-              rule applies.
-            </p>
-          </div>
-        </div>
+        <RiskProfileDemo />
       </section>
 
       {/* ---- The 7 Risk Factors ---- */}
