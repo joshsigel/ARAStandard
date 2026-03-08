@@ -29,6 +29,8 @@ export function RiskSpider({
   const cx = size / 2;
   const cy = size / 2;
   const radius = size * 0.35;
+  const padX = size * 0.28; // horizontal padding for axis labels
+  const padY = size * 0.06; // vertical padding
   const count = factors.length;
   const angleStep = (2 * Math.PI) / count;
   const rings = maxScore;
@@ -60,9 +62,8 @@ export function RiskSpider({
   return (
     <div className={className}>
       <svg
-        viewBox={`0 0 ${size} ${size}`}
+        viewBox={`${-padX} ${-padY} ${size + 2 * padX} ${size + 2 * padY}`}
         width="100%"
-        style={{ maxWidth: size }}
         role="img"
         aria-label={`Risk Classification Spider Chart${determinedClass ? ` — Class ${determinedClass}` : ''}`}
       >
@@ -127,7 +128,7 @@ export function RiskSpider({
 
         {/* Factor labels */}
         {factors.map((factor, i) => {
-          const labelR = radius + size * 0.07;
+          const labelR = radius + size * 0.09;
           const p = polar(labelR, i);
           const angle = i * angleStep - Math.PI / 2;
           // Determine text anchor based on position
@@ -142,9 +143,9 @@ export function RiskSpider({
               y={p.y}
               textAnchor={anchor}
               dominantBaseline="middle"
-              fontSize={size * 0.026}
+              fontSize={size * 0.034}
               fontWeight={hovered === factor.id ? 700 : 500}
-              fill={hovered === factor.id ? '#111111' : '#636B78'}
+              fill={hovered === factor.id ? '#111111' : '#4A5160'}
               className="pointer-events-none select-none"
             >
               {factor.name}
@@ -162,7 +163,7 @@ export function RiskSpider({
               x={p.x}
               y={p.y - 12}
               textAnchor="middle"
-              fontSize={size * 0.028}
+              fontSize={size * 0.034}
               fontWeight={700}
               fill="#111111"
               className="pointer-events-none"
