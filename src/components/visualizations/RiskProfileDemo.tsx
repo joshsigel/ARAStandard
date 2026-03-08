@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import type { AssuranceClass } from '@/types';
 import { RiskSpider } from './RiskSpider';
 import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
@@ -20,33 +20,69 @@ const factorMeta = [
 ];
 
 /* ---------------------------------------------------------------------------
- * Sample scores per class (trigger each class's determination rules)
+ * Preset scores per class (trigger each class's determination rules)
  * --------------------------------------------------------------------------- */
 
-const classProfiles: Record<AssuranceClass, {
-  scores: number[];
-  explanation: string;
-  ruleTriggered: string;
-}> = {
-  A: {
-    scores: [2, 2, 1, 2, 2, 2, 3],
-    explanation:
-      'This low-risk profile has no factor scoring above 3 and an average of 2.0. No escalation rules are triggered, making the system eligible for Class A with periodic reassessment.',
-    ruleTriggered: 'No escalation rules triggered — eligible for Class A',
-  },
-  B: {
-    scores: [3, 4, 2, 3, 4, 3, 4],
-    explanation:
-      'This moderate-risk profile scores 4 on Consequence Severity, Data Sensitivity, and Regulatory Exposure, triggering the "3+ factors at 4+" rule for minimum Class B. The average score of 3.29 alone would not mandate Class B, but the factor concentration rule applies.',
-    ruleTriggered: '3+ factors score 4+ → minimum Class B',
-  },
-  C: {
-    scores: [4, 5, 3, 4, 4, 4, 5],
-    explanation:
-      'This high-risk profile scores 5 on both Consequence Severity and Regulatory Exposure. Any single factor at 5 automatically escalates to minimum Class C, requiring continuous 24/7 CAPO oversight with real-time alerting.',
-    ruleTriggered: 'Factor(s) at score 5 → minimum Class C',
-  },
+const classPresets: Record<AssuranceClass, number[]> = {
+  A: [2, 2, 1, 2, 2, 2, 3],
+  B: [3, 4, 2, 3, 4, 3, 4],
+  C: [4, 5, 3, 4, 4, 4, 5],
 };
+
+/* ---------------------------------------------------------------------------
+ * Class determination logic (mirrors the official rules)
+ * --------------------------------------------------------------------------- */
+
+interface ClassResult {
+  class: AssuranceClass;
+  rule: string;
+  explanation: string;
+}
+
+function determineClass(scores: number[]): ClassResult {
+  const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+  const maxScore = Math.max(...scores);
+  const factorsAt4Plus = scores.filter((s) => s >= 4).length;
+  const factorsAt5 = scores.filter((s) => s >= 5);
+
+  // Rule 1: Any factor at 5 → minimum Class C
+  if (maxScore >= 5) {
+    const names = factorsAt5.length > 0
+      ? scores.map((s, i) => s >= 5 ? factorMeta[i].name : null).filter(Boolean)
+      : [];
+    return {
+      class: 'C',
+      rule: `Factor${names.length > 1 ? 's' : ''} at score 5 → minimum Class C`,
+      explanation: `${names.join(' and ')} score${names.length === 1 ? 's' : ''} 5, which automatically escalates to minimum Class C. Class C requires continuous 24/7 CAPO oversight with real-time alerting.`,
+    };
+  }
+
+  // Rule 2: Average > 3.5 → minimum Class B
+  if (avg > 3.5) {
+    return {
+      class: 'B',
+      rule: `Average score ${avg.toFixed(2)} > 3.5 → minimum Class B`,
+      explanation: `The average factor score of ${avg.toFixed(2)} exceeds the 3.5 threshold, triggering minimum Class B. Class B requires monthly CAPO check-ins and monitored reassessment.`,
+    };
+  }
+
+  // Rule 3: 3+ factors at 4+ → minimum Class B
+  if (factorsAt4Plus >= 3) {
+    const names = scores.map((s, i) => s >= 4 ? factorMeta[i].name : null).filter(Boolean);
+    return {
+      class: 'B',
+      rule: `${factorsAt4Plus} factors score 4+ → minimum Class B`,
+      explanation: `${names.join(', ')} all score 4 or above (${factorsAt4Plus} factors total), triggering the "3+ factors at 4+" rule for minimum Class B.`,
+    };
+  }
+
+  // Otherwise → Class A
+  return {
+    class: 'A',
+    rule: 'No escalation rules triggered — eligible for Class A',
+    explanation: `No factor scores 5, the average of ${avg.toFixed(2)} is at or below 3.5, and fewer than 3 factors score 4+. The system is eligible for Class A with periodic reassessment.`,
+  };
+}
 
 /* ---------------------------------------------------------------------------
  * Tab styling per class
@@ -71,9 +107,9 @@ const tabStyles: Record<AssuranceClass, {
 };
 
 const classLabels: Record<AssuranceClass, string> = {
-  A: 'Class A — Periodic',
-  B: 'Class B — Monitored',
-  C: 'Class C — Continuous',
+  A: 'Class A',
+  B: 'Class B',
+  C: 'Class C',
 };
 
 /* ---------------------------------------------------------------------------
@@ -81,30 +117,64 @@ const classLabels: Record<AssuranceClass, string> = {
  * --------------------------------------------------------------------------- */
 
 export function RiskProfileDemo({ className }: { className?: string }) {
-  const [activeClass, setActiveClass] = useState<AssuranceClass>('B');
+  const [scores, setScores] = useState<number[]>([...classPresets.B]);
+  const [selectedPreset, setSelectedPreset] = useState<AssuranceClass | null>('B');
 
-  const profile = classProfiles[activeClass];
-  const factors = factorMeta.map((f, i) => ({
-    ...f,
-    score: profile.scores[i],
-  }));
+  // Auto-determine class from current scores
+  const result = useMemo(() => determineClass(scores), [scores]);
+  const determinedClass = result.class;
 
-  const avgScore = (profile.scores.reduce((a, b) => a + b, 0) / profile.scores.length).toFixed(2);
-  const maxFactor = Math.max(...profile.scores);
+  const factors = useMemo(() =>
+    factorMeta.map((f, i) => ({ ...f, score: scores[i] })),
+    [scores],
+  );
+
+  const avgScore = useMemo(
+    () => (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2),
+    [scores],
+  );
+  const maxFactor = useMemo(() => Math.max(...scores), [scores]);
+
+  // Check if current scores match any preset
+  const matchesPreset = useCallback((cls: AssuranceClass) => {
+    return classPresets[cls].every((s, i) => s === scores[i]);
+  }, [scores]);
+
+  const handlePresetClick = useCallback((cls: AssuranceClass) => {
+    setScores([...classPresets[cls]]);
+    setSelectedPreset(cls);
+  }, []);
+
+  const handleScoreChange = useCallback((factorIndex: number, newScore: number) => {
+    setScores((prev) => {
+      const next = [...prev];
+      next[factorIndex] = newScore;
+      return next;
+    });
+    // Clear preset indicator since user is customizing
+    setSelectedPreset(null);
+  }, []);
+
+  const handleReset = useCallback(() => {
+    handlePresetClick('B');
+  }, [handlePresetClick]);
+
+  const isCustom = selectedPreset === null && !(['A', 'B', 'C'] as AssuranceClass[]).some(matchesPreset);
 
   return (
     <div className={className}>
-      {/* Class selector tabs */}
-      <div className="flex gap-2 mb-8">
+      {/* Preset tabs + custom indicator */}
+      <div className="flex items-center gap-2 mb-8 flex-wrap">
+        <span className="text-xs font-medium text-muted mr-1 uppercase tracking-wider">Presets:</span>
         {(['A', 'B', 'C'] as AssuranceClass[]).map((cls) => {
-          const isActive = activeClass === cls;
+          const isActive = matchesPreset(cls);
           const styles = tabStyles[cls];
           return (
             <button
               key={cls}
-              onClick={() => setActiveClass(cls)}
+              onClick={() => handlePresetClick(cls)}
               className={`
-                px-4 py-2 rounded-lg border font-medium text-sm transition-all duration-200
+                px-3 py-1.5 rounded-lg border font-medium text-sm transition-all duration-200
                 ${isActive ? styles.active : styles.inactive}
               `}
               aria-pressed={isActive}
@@ -113,13 +183,27 @@ export function RiskProfileDemo({ className }: { className?: string }) {
             </button>
           );
         })}
+        {isCustom && (
+          <span className="ml-2 flex items-center gap-2">
+            <span className="px-2.5 py-1 rounded-lg border border-dashed border-slate-300 text-xs font-medium text-steel bg-white">
+              Custom
+            </span>
+            <button
+              onClick={handleReset}
+              className="text-xs text-muted hover:text-charcoal transition-colors underline"
+            >
+              Reset
+            </button>
+          </span>
+        )}
       </div>
 
       {/* Spider + explanation grid */}
       <div className="grid lg:grid-cols-[1fr_1fr] gap-10 items-start">
         <RiskSpider
           factors={factors}
-          determinedClass={activeClass}
+          determinedClass={determinedClass}
+          onScoreChange={handleScoreChange}
           className="max-w-md"
         />
 
@@ -129,7 +213,7 @@ export function RiskProfileDemo({ className }: { className?: string }) {
             <span className="text-sm font-medium text-steel">
               Determined Class:
             </span>
-            <AssuranceClassBadge assuranceClass={activeClass} />
+            <AssuranceClassBadge assuranceClass={determinedClass} />
           </div>
 
           {/* Score summary */}
@@ -149,12 +233,12 @@ export function RiskProfileDemo({ className }: { className?: string }) {
             <svg className="w-4 h-4 mt-0.5 shrink-0 text-charcoal" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
             </svg>
-            <span className="font-medium text-charcoal">{profile.ruleTriggered}</span>
+            <span className="font-medium text-charcoal">{result.rule}</span>
           </div>
 
           {/* Explanation */}
           <p className="text-sm text-steel leading-relaxed">
-            {profile.explanation}
+            {result.explanation}
           </p>
 
           {/* Factor score breakdown */}
