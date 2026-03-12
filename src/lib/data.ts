@@ -263,7 +263,17 @@ export async function getConsortiumMembers(): Promise<ConsortiumMember[]> {
     .select('*')
     .order('name', { ascending: true });
   if (error) throw error;
-  return data as ConsortiumMember[];
+  return mapRows(data, mapConsortiumMember);
+}
+
+function mapConsortiumMember(row: any): ConsortiumMember {
+  return {
+    id: row.id,
+    name: row.name,
+    role: row.role,
+    sector: row.sector,
+    joinDate: row.join_date,
+  };
 }
 
 // ─── Risk Factors ───────────────────────────────────────────────────────────
