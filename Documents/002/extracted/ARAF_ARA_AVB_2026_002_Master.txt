@@ -1,0 +1,322 @@
+ARA Standard v1.1
+AVB Authorization Guide
+ARAF-ARA-AVB-2026-002
+Autonomous Reliability Assurance Foundation
+Approved | Version 1.1 | March 2026
+Companion to ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+© 2026 Autonomous Reliability Assurance Foundation. All Rights Reserved.
+
+## Document Control
+
+## Revision History
+
+## Summary of Changes in v1.1
+Domain renumbering: All domain references updated for 15-domain structure (former D5-D12 → D6-D12/D14; former D13 → D15).
+Domain 5 competency: Data privacy assessment expertise, GDPR/CCPA/privacy regulation evaluation experience added to evaluator qualification requirements.
+Domain 13 competency: AI safety evaluation, societal impact assessment, fairness testing, and red-team testing for harmful content added to qualification requirements.
+Insurance-relevant reporting: AVB evaluation reports must include standardized data fields that partner insurers need for underwriting autonomous system risk.
+System Profile awareness: AVBs must understand the four-profile framework and Statement of Applicability validation procedures.
+Level 3 rename: Art. 2.1 Authorization Level Definitions table updated to reflect “Level 3 (Comprehensive)” in alignment with EVL and STD v1.1 terminology.
+Platform Certification evaluation authority: New row added to Art. 2.1 table establishing Platform Cert authorization scope by level; Article 13 added establishing supplemental competency requirements, training pathway, and evaluation team requirements for Platform Certification engagements.
+Revalidation triggers expanded: Art. 12.3 updated with new subsections 12.3.1 (Assurance Class Lapse Triggers) and 12.3.2 (Assurance Class Escalation Triggers) establishing elevated response timelines and AVB obligations for both trigger types.
+Glossary expanded: Twelve definitions added to Appendix C: Assurance Class, Assurance Lapse, Certification Inheritance, Certified Technology Partner (CTP), Class A — Periodic, Class B — Monitored, Class C — Continuously Assured, Deployment Certification, Evaluation Level, Platform Certification, Reference Environment, Risk Classification.
+
+# Foreword
+Authorized Validation Bodies (AVBs) are the operational backbone of the ARA certification ecosystem. They conduct the evaluations that determine whether autonomous systems meet the 410 Autonomous Control Requirements across 15 reliability domains defined in the ARA Standard v1.1. The credibility of every ARA certification depends on the competence, independence, and integrity of the AVBs that perform the underlying evaluation work.
+This guide defines the requirements for becoming an AVB, the application and assessment process, ongoing obligations, performance review procedures, and conditions under which authorization may be suspended or revoked.
+Version 1.1 adds competency requirements for two new reliability domains: Domain 5 (Data Privacy and Information Protection) and Domain 13 (Societal Impact and Responsible Deployment). It also introduces insurance-relevant reporting requirements enabling AVB evaluation data to support autonomous system insurance underwriting.
+
+# Article 1 — Scope and Purpose
+
+## 1.1 Purpose
+This document establishes the requirements, processes, and obligations for organizations seeking authorization as Authorized Validation Bodies under the ARA Standard v1.1. It defines eligibility criteria, authorization levels and scope, the application and assessment process, ongoing obligations and performance standards, annual renewal requirements, and suspension, revocation, and appeals procedures.
+
+## 1.2 Role of AVBs in the ARA Ecosystem
+AVBs perform evaluation execution against the 410-ACR Control Matrix using procedures defined in the Evaluation Methodology Guide (ARAF-ARA-EVL-2026-002); evidence collection and validation across four evidence categories (LP, TI, OP, TP); structured evaluation report generation; advisory services subject to conflict-of-interest constraints; reassessment execution per the per-ACR evaluation frequency schedule; and Statement of Applicability validation.
+AVBs do not issue certifications. The ARAF Certification Office is the sole authority for certification decisions. AVBs provide the evaluation evidence and recommendation upon which decisions are based.
+
+## 1.3 Relationship to the Self-Serve Platform
+
+# Article 2 — AVB Authorization Levels
+
+## 2.1 Authorization Level Definitions
+
+## 2.2 Level Progression
+Level 1 to Level 2: Minimum 12 months active evaluation, 5+ completed Level 1 evaluations, no unresolved quality findings, demonstrated adversarial testing capability. Level 2 to Level 3: Minimum 12 months active Level 2 work, 5+ completed Level 2 evaluations, demonstrated red team capability, physical systems capability if seeking Domain 15 authorization. Progression is assessed through supplemental review, not full re-application.
+
+# Article 3 — Authorization Requirements
+
+## 3.1 Organizational Requirements
+Applicants must be a legally constituted entity with 2+ years operational history in technology evaluation, security assessment, quality assurance, or compliance auditing. Financial stability must be demonstrated through 2 years of financial statements. Executive management must formally commit to the AVB program. A designated AVB Manager must be appointed with authority over evaluation staff, quality management, and ARAF reporting.
+
+## 3.2 Independence and Conflict of Interest
+Absolute prohibitions: An AVB SHALL NOT evaluate systems developed, deployed, or operated by its own organization or affiliates; SHALL NOT accept compensation tied to certification outcomes; SHALL NOT provide consulting and subsequently evaluate the same organization within 24 months. Managed conflicts requiring disclosure: prior advisory beyond 24-month cooling period, evaluator who previously worked at the organization (12-month minimum separation), and evaluations of competing organizations (information barriers required).
+
+## 3.3 Technical Competency
+
+### 3.3.1 Evaluator Qualifications
+* New competency areas in v1.1
+
+### 3.3.2 Technical Infrastructure
+Isolated test environments capable of running evaluation suites without production interference.
+Secure evidence storage with tamper-evident controls, access logging, and retention management.
+Encrypted communication channels for evaluation data exchange.
+Integration capability with the ARAF platform for report submission, evidence upload, and status tracking.
+Privacy-compliant data handling infrastructure for Domain 5 evaluations involving sensitive test data.
+
+## 3.4 Operational Capacity
+Minimum two qualified evaluators per engagement. Documented resource planning and peak workload management. For Domain 5 evaluations involving regulated data, evaluators must operate under appropriate data processing agreements.
+
+## 3.5 Quality Management
+AVBs must implement a QMS covering: evaluation process documentation aligned with ARAF-ARA-EVL-2026-002; internal quality review including peer review of reports; non-conformity management; continuous improvement; and document control ensuring current versions of ACR Control Matrix and methodology guides. ISO 9001, ISO/IEC 17025, or ISO/IEC 17065 certification is considered favorably but does not automatically satisfy AVB requirements.
+AVBs should additionally ensure their governance and operational structures align with ISO/IEC 42006:2025 (Requirements for bodies providing audit and certification of AI management systems). ISO/IEC 42006:2025 establishes requirements for AI certification bodies and directly informs AVB accreditation criteria within the ARAF ecosystem. AVBs conducting evaluations of agentic systems should document familiarity with AAIF protocol architecture, including the Model Context Protocol (MCP) and AGENTS.md behavioral conventions, as part of their technical competency requirements for evaluations involving Domains 1, 2, 3, and 4.
+
+## 3.6 Insurance and Liability
+Professional indemnity insurance minimum $2 million per claim, $5 million aggregate. Errors and omissions coverage addressing evaluation and certification advisory services. Coverage maintained throughout authorization period with evidence provided at application and each renewal.
+
+## 3.7 Confidentiality and Data Protection
+AVBs must implement confidentiality controls protecting all evaluation information. Evaluation data is classified as confidential. Staff confidentiality agreements required. Data protection practices must comply with applicable privacy regulations (GDPR, CCPA). Data retention and destruction procedures must follow the Evaluation Methodology Guide specifications.
+
+# Article 4 — Application Process
+
+## 4.1 Pre-Application
+Organizations are encouraged to review this guide, the ARA Standard v1.1, and the Evaluation Methodology Guide v1.1; conduct self-assessment against Article 3 requirements; contact the ARAF AVB Program Office for preliminary consultation; and address qualification gaps before formal application.
+
+## 4.2 Application Submission
+Formal applications must include: completed AVB Application Form; organizational documentation (legal entity, governance, ownership); financial statements (2 years); evaluator CVs with qualifications and D5/D13 competency evidence; QMS documentation; technical infrastructure description; insurance certificates; conflict of interest policy; confidentiality and data protection policies; management commitment statement; requested authorization level with justification; and application fee.
+
+## 4.3 Application Review
+Administrative Review (Weeks 1-2): completeness check, eligibility screening, conflict screening. Technical Review (Weeks 3-6): evaluator qualification assessment including D5 and D13 competencies, QMS review, infrastructure review, reference checks. Competence Assessment (Weeks 7-10): Accreditation Committee conducts competence interviews with proposed evaluators; may include practical assessment using ARAF-provided reference system. Shadow Evaluation (Weeks 11-18): Applicant conducts a supervised evaluation alongside an existing accredited AVB or ARAF assessor. Results reviewed by the Accreditation Committee for methodology conformance and evaluation quality. Accreditation Committee Decision (Weeks 19-20): Accreditation Committee votes on accreditation per ARAF-ARA-GOV-2026-001, Article 1.3.2. Initial accreditation requires unanimous committee approval. Decision outcomes: Authorized, Authorized with Conditions (90-day remediation), Deferred (6-month minimum), or Denied. Decision communicated within 5 business days. Onboarding (2 weeks): Execution of AVB Authorization Agreement, portal access provisioning, evaluator credentialing, mark usage authorization.
+
+# Article 5 — Ongoing Obligations
+
+## 5.1 Evaluation Standards Compliance
+AVBs SHALL conduct all evaluations per the current Evaluation Methodology Guide (ARAF-ARA-EVL-2026-002), use the current ACR Control Matrix (ARAF-ARA-ACR-2026-002) for all evaluations, validate Statements of Applicability per the methodology guide, and apply the four evidence categories (LP, TI, OP, TP) as specified.
+
+## 5.2 Reporting Requirements
+Evaluation reports submitted within 10 business days of completion per the Evaluation Methodology Guide structure. Quarterly activity reports summarizing evaluations conducted. Incident reports with immediate notification and 5-day written follow-up. Change notifications 30 days in advance of material organizational changes.
+
+## 5.3 Insurance-Relevant Reporting (New in v1.1)
+AVB evaluation reports SHALL include standardized data fields that enable partner insurers to make autonomous system underwriting decisions. Required insurance-relevant fields include:
+System profile classification (F/S/A/C) with scoping questionnaire results.
+Certification level achieved with domain-by-domain score breakdown.
+Blocking ACR pass/fail status for all applicable blocking controls.
+Adversarial simulation summary including attack categories tested and pass rates.
+Domain 5 (Data Privacy) compliance status with specific findings on PII handling, data isolation, and breach detection capability.
+Domain 13 (Societal Impact) compliance status with specific findings on content safety, fairness controls, and misuse prevention.
+Continuous monitoring enrollment status and SDK integration completeness.
+Material risk factors identified during evaluation that may affect insurability.
+Historical incident and remediation data if the system has prior certification history.
+Insurance-relevant data fields are appended to the standard evaluation report as a structured annex. The annex format is defined by ARAF in coordination with insurance industry partners and updated periodically.
+
+## 5.4 Calibration and Consistency
+Annual calibration exercises with multiple AVBs evaluating the same test system. Significant deviations require root cause analysis and corrective action. Calibration results factor into annual renewal decisions.
+
+## 5.5 Continued Professional Development
+Minimum 40 hours annually per evaluator. Must include updates on D5 privacy regulation developments and D13 societal impact methodology evolution. New evaluators must complete ARAF’s AVB Evaluator Onboarding within 60 days.
+
+## 5.6 Record Keeping and Platform Integration
+Complete evaluation records retained per Evaluation Methodology Guide specifications plus 2 years. Platform integration required for report submission, evidence upload, and status tracking.
+
+# Article 6 — Annual Renewal
+AVB authorization is granted for 12-month terms. Renewal process: application 60 days before expiration, updated documentation, insurance certificates, renewal fee, and ARAF performance review.
+
+## 6.1 Performance Review Criteria
+* New criteria in v1.1
+Rating scale: 90-100 Excellent (renewed without conditions); 75-89 Satisfactory (renewed, improvement plan if below 80 in any category); 60-74 Below Standard (probationary 6-month renewal); Below 60 Unsatisfactory (non-renewal recommended).
+
+# Article 7 — Suspension and Revocation
+Suspension grounds: material methodology non-compliance, failure to remediate conditions, insurance lapse, staff reduction below minimums, missed calibration exercises, late reports, credible COI allegation. Suspension procedures: written notice (10 business days except urgent), 30-day remediation window, reinstatement requires demonstrated resolution.
+Revocation grounds: fraudulent findings, fabricated evidence, deliberate concealment, undisclosed COI, failure to remediate suspension, repeated suspension (3+ in 24 months), criminal conviction, qualification misrepresentation. Revocation is permanent for fraud; otherwise reapplication after 24 months.
+
+# Article 8 — Appeals
+AVBs may appeal denial, conditions, non-renewal, suspension, or revocation. Written appeal within 30 days to the AVB Program Office. Independent 3-member panel review. Panel hearing within 45 days, decision within 15 days. Panel decision is final for procedural matters; substantive appeal to full TSB.
+
+# Article 9 — AVB Code of Conduct
+All AVBs commit to: Integrity (accurate reporting including unfavorable findings); Independence (disclose all potential conflicts promptly); Competence (accept only engagements within demonstrated capability, including D5 and D13 domains); Objectivity (evidence-based findings); Confidentiality (protect all evaluation information); Professionalism; Accountability (cooperate with quality reviews); and Continuous Improvement.
+
+# Article 10 — Transition Provisions
+During the first 24 months: reduced operational history may be partially satisfied by related experience; initial calibration within 6 months; intensive training programs; application fee reductions for early applicants. For the new D5 and D13 competency requirements, existing AVBs have a 6-month grace period to demonstrate compliance through staff training or hiring. Transition provisions expire 24 months after ARA Standard v1.0 publication. Organizations that do not yet meet the 2-year operational history requirement should refer to Article 11 (Provisional AVB Pathway).
+
+# Article 11 — Provisional AVB Pathway
+
+## 11.1 Purpose
+Organizations that meet all AVB authorization requirements except the 2-year operational history requirement (Article 3.1) may apply for Provisional AVB status. The Provisional AVB pathway is designed to allow qualified new entrants to participate in the ARA ecosystem under supervised conditions while building the track record required for full authorization. This pathway is defined by and consistent with ARAF-ARA-GOV-2026-001, Article 3.4.
+
+## 11.2 Provisional Authorization Conditions
+Provisional AVBs may conduct evaluations under the supervision of an ARAF assessor for a period of 12 months. All evaluations conducted under Provisional status must be co-signed by the ARAF assessor. Provisional AVBs may not conduct Level 3 evaluations independently. Provisional status does not carry the full “Authorized Validation Body” designation; Provisional AVBs must clearly identify their status as “ARAF Provisional AVB” in all client communications and evaluation reports.
+
+## 11.3 Promotion to Full Authorization
+Upon completion of the 12-month provisional period and successful completion of a minimum of three supervised evaluations with satisfactory quality assessments, the Provisional AVB is eligible for promotion to full AVB authorization. The Accreditation Committee reviews the provisional period performance record and votes on promotion. Promotion to full authorization does not require a new application; it requires Accreditation Committee majority approval. The Accreditation Committee may extend the provisional period for an additional 6 months if quality assessments are unsatisfactory.
+
+# Article 12 — AVB-CAPO Relationship
+
+## 12.1 CAPO Role in ARA Evaluations
+Continuous Assurance Platform Operators (CAPOs) are ARAF-accredited technology companies that operate the monitoring infrastructure enabling persistent certification state. The separation of evaluation (AVBs) and monitoring (CAPOs) is an intentional architectural decision in the ARAF ecosystem. AVBs assess compliance at a point in time; CAPOs verify that compliance is maintained continuously. Neither role substitutes for the other, and accredited CAPOs must maintain independence from the AVBs evaluating the same certified systems. See ARAF-ARA-GOV-2026-001, Article 4 for complete CAPO requirements.
+
+## 12.2 AVB Interaction with CAPOs During Level 2 and Level 3 Evaluations
+For Level 2 and Level 3 certifications, the evaluating AVB SHALL: (1) verify that the certified organization has selected and integrated an accredited CAPO from the ARAF CAPO Directory prior to evaluation completion; (2) request CAPO telemetry data confirming SDK integration and baseline compliance signals as part of the evaluation evidence package; (3) review CAPO-generated drift alerts and compliance check results as evidence for Continuous Monitoring Verification (CM) ACRs; and (4) include CAPO integration status and the CAPO’s identity in the evaluation report submitted to ARAF. The AVB does not manage or configure the CAPO; that relationship is between the certified organization and its selected CAPO.
+
+## 12.3 Revalidation Triggers from CAPOs
+CAPOs generate revalidation triggers when monitored systems exhibit drift or compliance degradation exceeding defined thresholds (ARAF-ARA-GOV-2026-001, Article 4.2). When a revalidation trigger is generated, the CAPO notifies ARAF, the certified organization, and the evaluating AVB. The evaluating AVB is responsible for conducting the revalidation assessment within the timeframe specified in the trigger. AVBs must maintain a current relationship with the organization’s designated CAPO to receive revalidation notifications and to access the telemetry evidence required for reassessment.
+12.3.1 Assurance Class Lapse Triggers. An Assurance Lapse occurs when a certified system’s observable behavior or infrastructure state falls below the minimum thresholds required to maintain its current Assurance Class designation. When a CAPO identifies conditions constituting an Assurance Lapse, it generates a Class Lapse Trigger in addition to any standard revalidation trigger. Class Lapse Triggers carry an elevated response timeline: the evaluating AVB must conduct a triage assessment within five (5) business days of notification and submit a remediation determination to ARAF within fifteen (15) business days. During an active Class Lapse, the certified system’s Assurance Class is provisionally downgraded on the ARAF Registry until the AVB submits a remediation determination. AVBs must include Assurance Lapse response protocols in their engagement agreements with certified organizations.
+12.3.2 Assurance Class Escalation Triggers. An Assurance Class Escalation occurs when a certified system’s observed risk profile or operational deployment scope increases materially beyond the conditions assessed at the time of the original Assurance Class determination. CAPOs may generate Class Escalation Triggers when telemetry indicates sustained operation in deployment contexts or at risk levels associated with a higher Assurance Class than currently assigned. Class Escalation Triggers do not automatically change the system’s certified Assurance Class; they initiate an AVB review to determine whether a voluntary Assurance Class upgrade evaluation is appropriate or required. If the AVB determines that the system is operating materially above its certified class, the AVB must notify ARAF and the certified organization within ten (10) business days and recommend a scope upgrade evaluation. Operating continuously above certified Assurance Class thresholds without initiating an upgrade evaluation may constitute grounds for certification suspension under Article 9.
+
+## 12.4 AVB and CAPO Portability
+Certified organizations may switch AVBs or CAPOs without recertification per the marketplace principles established in ARAF-ARA-GOV-2026-001, Articles 2.3 and 8. When a certified organization switches AVBs, the outgoing AVB transfers the most recent evaluation report and evidence package to ARAF (not directly to the new AVB, to preserve independence). The new AVB receives the evaluation report from ARAF and conducts a transition review (not a full re-evaluation) to confirm familiarity with the system. AVBs must cooperate fully with transition processes and may not withhold evaluation reports or evidence packages. CAPO transitions (organizations switching CAPOs) do not require AVB involvement beyond receiving notification from ARAF of the new CAPO identity.
+
+# Article 13 — Platform Certification Competencies
+
+## 13.1 Purpose and Scope
+This Article establishes the supplemental competency requirements that AVBs must satisfy before conducting Platform Certification evaluations. Platform Certification introduces technical complexity not present in standard Deployment Certification, including Reference Environment validation, simulated telemetry assessment, and Certification Inheritance documentation. AVBs authorized at Level 2 or Level 3 must demonstrate these competencies before undertaking Platform Cert engagements. Authorization to conduct Deployment Certifications does not confer automatic authorization to conduct Platform Certifications.
+
+## 13.2 Supplemental Competency Requirements
+To qualify for Platform Certification evaluation authority, an AVB must demonstrate competency in each of the following areas:
+(a)  Reference Environment Assessment. The AVB must demonstrate the ability to evaluate whether a Reference Environment satisfies the fidelity thresholds established in ARAF-ARA-EVL-2026-002, Article 3.9, including identification of material deviations and assessment of their impact on evaluation validity.
+(b)  Simulated Telemetry Evaluation. The AVB must demonstrate competency in assessing the representativeness and sufficiency of simulated telemetry data submitted in lieu of production behavioral telemetry, including review of distribution methodology, coverage of edge-case scenarios, and alignment with the system’s declared operational profile.
+(c)  Certification Inheritance Documentation Review. The AVB must demonstrate the ability to evaluate Certification Inheritance Summary packages, including assessment of scope alignment between the Platform Certification and the proposed deployment, identification of deployment-specific ACR gaps, and determination of whether a full Deployment Certification is required.
+(d)  Material Change Assessment. The AVB must demonstrate competency in evaluating whether a vendor-declared material change to a certified platform requires revalidation, including assessment of the documented material change threshold in the Reference Environment Specification (RES) and independent judgment as to whether threshold criteria have been met.
+(e)  ACR Non-Applicability Justification Review. The AVB must demonstrate the ability to evaluate vendor-submitted justifications for ACR non-applicability in the Platform Certification context, including independent verification that non-applicable ACRs are genuinely inapplicable to the platform’s architectural scope rather than excluded for convenience.
+
+## 13.3 Supplemental Training Pathway
+13.3.1 ARAF shall publish a Platform Certification Supplemental Training module as part of the AVB accreditation curriculum. Completion of the Platform Certification Supplemental Training module is required before an AVB may apply for Platform Cert evaluation authority. Completion of the module does not automatically confer Platform Cert evaluation authority; ARAF reviews the application and may require a supervised pilot evaluation as a condition of authorization.
+13.3.2 AVBs that have conducted at least three Platform Certification evaluations under supervised conditions and have received satisfactory quality review scores from ARAF may apply for unsupervised Platform Cert evaluation authority. ARAF shall maintain records of each AVB’s Platform Cert evaluation history, including outcomes of quality reviews, on the ARAF Registry.
+13.3.3 Platform Cert evaluation authority is a separately noted endorsement on an AVB’s accreditation record and does not replace or modify the AVB’s base authorization level. An AVB holding Level 2 authorization with Platform Cert endorsement may conduct Platform Certifications within Level 2 scope only. Level 3 authorization with Platform Cert endorsement confers authority to conduct Platform Certifications at all authorization levels.
+
+## 13.4 Evaluation Team Requirements
+13.4.1 Each Platform Certification evaluation must include at least one individual assessor who holds current Platform Cert evaluation authority on their personal accreditation record. The AVB may not assign a Platform Certification engagement to a team that does not include at least one such qualified assessor.
+13.4.2 The Platform Certification Evaluation Report (PCER) must identify the lead assessor holding Platform Cert evaluation authority by name and ARAF accreditation number. If ARAF determines on quality review that the evaluation was conducted without a qualified lead assessor, the certification may be suspended pending remediation and the AVB may be subject to a corrective action review under Article 11.
+13.4.3 For Platform Certifications within Domain 15 (Physical and Embodied Systems) scope, at least one additional team member must hold the Domain 15 Physical Systems Evaluation endorsement. The qualified physical systems assessor must be identified separately in the PCER from the Platform Cert lead assessor, though a single individual may hold both endorsements.
+
+# Appendix A — Application Checklist
+* New items in v1.1
+
+# Appendix B — AVB Performance Scorecard
+* New criteria in v1.1. Scorecard weights adjusted to accommodate new domains and insurance reporting.
+
+# Appendix C — Glossary
+END OF DOCUMENT
+AVB Authorization Guide v1.1 | ARAF-ARA-AVB-2026-002
+© 2026 Autonomous Reliability Assurance Foundation
+
+--- TABLE 1 ---
+Field | Value
+Document ID | ARAF-ARA-AVB-2026-002
+Title | AVB Authorization Guide
+Version | 1.1 (Approved)
+Date | March 2026
+Classification | Public
+Issuing Body | Autonomous Reliability Assurance Foundation (ARAF)
+Parent Standard | ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+Supersedes | ARAF-ARA-AVB-2026-001 (v1.0 Public Review Draft)
+Related Documents | ARAF-ARA-EVL-2026-002, ARAF-ARA-ACR-2026-002, ARAF-ARA-SDK-2026-002, ARAF-ARA-PHY-2026-002, ARAF-ARA-REG-2026-002, ARAF-ARA-TMK-2026-002, ARAF-ARA-GOV-2026-001 (Ecosystem and Governance Guide)
+Approved By | Technical Standards Board (TSB)
+
+--- TABLE 2 ---
+Version | Date | Author | Description
+1.0 | January 2026 | ARAF AVB Standards Committee | Initial publication
+1.1 | March 2026 | ARAF TSB | Major update: 15-domain renumbering, Domain 5 Data Privacy, Domain 13 Societal Impact, ACR renumbering, insurance badge specs, tokenized certification badge system, system profiles
+
+--- TABLE 3 ---
+Dimension | Self-Serve Platform | AVB Engagement
+Evaluation method | Automated + platform-guided | Human-led with automated support
+Best suited for | AI agents, LLM systems, API-connected systems, Express Track (L1 Foundational) | Complex deployments, physical systems, regulated industries, bespoke architectures
+Speed | Days to weeks (3-4 weeks Express) | Weeks to months
+Cost model | Subscription + per-evaluation fees | Engagement-based professional fees
+Human involvement | Expert review at certification decision | Throughout the evaluation process
+Profile support | All profiles; optimized for F and S | All profiles; essential for A and C
+
+--- TABLE 4 ---
+AVB Level | Certification Scope | Key Requirements | Typical Profile
+AVB Level 1 | Level 1 (Foundation) certification only | Core technical competency; QMS; 2+ qualified evaluators; D5 privacy basics; D13 safety basics | Consulting firms, technology auditors, QA organizations entering AI evaluation
+AVB Level 2 | Level 1 and Level 2 (Operational) certification | L1 + adversarial testing capability; 4+ evaluators including HS specialists; D5 privacy regulation expertise; D13 fairness testing capability; track record | Security testing firms, AI safety consultancies, technology audit firms
+AVB Level 3 | All levels including Level 3 (Comprehensive) | L2 + red team capability; physical systems (if applicable); 6+ evaluators; D5 cross-border expertise; D13 independent societal safety evaluation capability | Specialized AI safety firms, certification bodies with deep adversarial and physical systems expertise
+Platform Cert evaluation authority | Not authorized — Level 1 AVBs may not conduct Platform Cert evaluations | Authorized at Level 2 scope; Platform Cert supplemental competency required per Article 13 | Authorized at all levels; Platform Cert supplemental competency required per Article 13
+
+--- TABLE 5 ---
+Qualification Area | Level 1 AVB | Level 2 AVB | Level 3 AVB
+Minimum evaluators | 2 qualified | 4 qualified | 6 qualified
+AT competency | Automated testing methodology; test environment management; evidence collection | L1 + adversarial test suite execution; stress test methodology | L2 + advanced adversarial automation; multi-system evaluation
+HS competency | Not required | Social engineering simulation; multi-turn manipulation; 3+ years experience | L2 + red team leadership; novel attack development
+EI competency | Documentation review; architecture assessment; governance audit | L1 + security architecture review; regulatory compliance mapping | L2 + safety-critical systems assessment; physical systems expertise (if applicable)
+CM competency | Telemetry review; drift analysis basics | L1 + statistical drift detection; anomaly detection configuration | L2 + predictive drift analysis; cross-system correlation
+D5 competency * | Basic privacy policy review; data handling assessment | L1 + GDPR/CCPA evaluation; PII detection testing; data isolation verification | L2 + cross-border transfer assessment; privacy impact evaluation; data extraction adversarial testing
+D13 competency * | Basic content safety assessment; limitations documentation review | L1 + fairness testing methodology; bias evaluation with demographic test cases; CBRN guardrail testing | L2 + independent societal safety evaluation; adversarial red-team for harmful content; systemic impact assessment
+Certifications (recommended) | CISA, ISO 27001 Lead Auditor, or equivalent | L1 + OSCP, GPEN, CISSP, CIPP/E, or equivalent | L2 + domain-specific safety certs (CFSE for IEC 61508); AI ethics/fairness training
+
+--- TABLE 6 ---
+Criterion | Measurement | Minimum Standard
+Evaluation quality | Reports accepted without revision | 90%+
+Evidence integrity | Artifact audit compliance rate | 100%
+Methodology compliance | Audit finding rate | No material findings
+Calibration consistency | Deviation from calibration norm | ≤10%
+Reporting timeliness | On-time submission | 95%+
+D5/D13 competency * | Privacy and societal impact evaluation quality | No material competency gaps
+Insurance data quality * | Insurance annex completeness and accuracy | 95%+ field completion
+CPD compliance | Evaluators meeting minimums | 100%
+
+--- TABLE 7 ---
+# | Item | Reference
+1 | Completed AVB Application Form | Art. 4.2
+2 | Legal entity registration documents | Art. 3.1
+3 | Governance structure documentation | Art. 3.1
+4 | Audited financial statements (2 years) | Art. 3.1
+5 | Evaluator CVs with qualifications | Art. 3.3
+6 | D5 privacy competency evidence * | Art. 3.3.1
+7 | D13 societal impact competency evidence * | Art. 3.3.1
+8 | Professional certifications (copies) | Art. 3.3
+9 | QMS manual or equivalent | Art. 3.5
+10 | Test environment description | Art. 3.3.2
+11 | Evidence storage security documentation | Art. 3.3.2
+12 | Professional indemnity insurance certificate | Art. 3.6
+13 | E&O insurance certificate | Art. 3.6
+14 | Conflict of interest policy | Art. 3.2
+15 | Confidentiality and data protection policy | Art. 3.7
+16 | Management commitment statement (signed) | Art. 3.1
+17 | AVB Manager designation letter | Art. 3.1
+18 | Requested authorization level justification | Art. 4.2
+19 | Application fee payment confirmation | Art. 4.2
+
+--- TABLE 8 ---
+Category | Weight | Metric | Target
+Evaluation quality | 20% | Reports accepted without revision | 90%+
+Evidence integrity | 15% | Artifact audit compliance rate | 100%
+Methodology compliance | 12% | Audit finding rate | 0 material findings
+Calibration consistency | 12% | Deviation from norm | ≤10%
+Timeliness | 10% | On-time report submission | 95%+
+D5/D13 quality * | 10% | Privacy and societal impact evaluation quality | No competency gaps
+Insurance data * | 8% | Insurance annex completeness | 95%+ fields
+CPD compliance | 5% | Evaluators meeting minimums | 100%
+Client satisfaction | 5% | Complaint-free engagements | 95%+
+Incident management | 3% | Notification compliance | 100%
+
+--- TABLE 9 ---
+Term | Definition
+ACR | Autonomous Control Requirement. A discrete, measurable, testable requirement within a reliability domain.
+Accreditation Committee | The ARAF governance body (3–5 TSB members + 1 independent assessor) responsible for AVB and CAPO accreditation decisions, annual reviews, and suspension/revocation. Initial accreditation requires unanimous committee approval. See ARAF-ARA-GOV-2026-001, Article 1.1.
+CAPO | Continuous Assurance Platform Operator. An ARAF-accredited technology company that operates the Continuous Assurance Platform (CAP) for real-time telemetry ingestion, compliance monitoring, and revalidation triggering. CAPOs provide the telemetry evidence that AVBs use for Level 2 and Level 3 CM evaluations. See ARAF-ARA-GOV-2026-001, Article 4 and this document’s Article 12.
+RIP | Recognized Insurer Partner. An insurance company formally recognized by ARAF to underwrite autonomous system operational risk using ARA certification data. AVB evaluation reports must include insurance-relevant data fields to support RIP underwriting. See ARAF-ARA-GOV-2026-001, Article 5.
+ARA | Autonomous Reliability Assurance. The certification standard published by ARAF.
+ARAF | Autonomous Reliability Assurance Foundation.
+AVB | Authorized Validation Body. An organization authorized to conduct ARA evaluations.
+AVB Manager | Designated senior individual responsible for AVB compliance with ARAF requirements.
+CAP | Continuous Assurance Platform. ARAF’s always-on monitoring service.
+COI | Conflict of Interest. Any relationship that could impair evaluation objectivity.
+CPD | Continued Professional Development. Ongoing training for evaluators.
+LP/TI/OP/TP | Evidence categories: Legal Policy, Technical Implementation, Operational Process, Third-Party Testing.
+QMS | Quality Management System. Organizational framework for evaluation quality.
+SoA | Statement of Applicability. Document addressing all 410 ACRs with inclusion/exclusion justification.
+System Profile | Capability-based classification (Foundational, Standard, Advanced, Comprehensive).
+TSB | Technical Standards Board. ARAF’s ultimate technical authority.
+Assurance Class | A classification assigned to a certified AI system indicating the rigor of ongoing assurance obligations required to maintain certification validity. Three classes are defined: Class A (Periodic), Class B (Monitored), and Class C (Continuously Assured). Assurance Class is assigned during initial certification based on the system’s Risk Classification and may be upgraded or downgraded based on operational evidence. See ARA Standard, Part IV-B.
+Assurance Lapse | A condition in which a certified system’s ongoing compliance with its assigned Assurance Class obligations has fallen below the minimum threshold required to maintain that class designation. An Assurance Lapse does not automatically void certification but triggers a mandatory remediation process. If remediation is not completed within the prescribed timeline, the system’s certification status transitions to Suspended. See ARA Standard, Part IV-B (Assurance Class Status States).
+Certification Inheritance | The mechanism by which a deployer of a Platform-Certified AI system may claim partial ARA compliance credit derived from the platform vendor’s existing Platform Certification, reducing the scope of the deployer’s required Deployment Certification evaluation. Certification Inheritance is not automatic; it requires a documented Certification Inheritance Summary reviewed and approved by an AVB. See ARA Standard, Article 6b and Part IV-B, and ARAF-ARA-EVL-2026-002, Article 3.8.5.
+Certified Technology Partner (CTP) | A consulting or implementation firm listed in the ARAF CTP Registry as having demonstrated ARA implementation competency. Not a certification — a registry designation. Does not confer evaluation authority or certification rights.
+Class A — Periodic | The lowest Assurance Class, applicable to AI systems with lower-risk profiles. Class A systems are required to undergo periodic re-evaluation at the standard recertification interval but are not required to maintain continuous telemetry monitoring. Assigned at initial certification; eligible for upgrade to Class B or Class C based on demonstrated operational risk escalation. See ARA Standard, Part IV-B.
+Class B — Monitored | The intermediate Assurance Class, applicable to AI systems with moderate risk profiles or operating in regulated contexts. Class B systems are required to maintain telemetry monitoring via an accredited CAPO and to undergo revalidation when drift thresholds are exceeded. Periodic re-evaluation remains required at the standard interval. See ARA Standard, Part IV-B.
+Class C — Continuously Assured | The highest Assurance Class, required for AI systems operating in high-risk or safety-critical contexts. Class C systems must maintain real-time telemetry monitoring with immediate revalidation triggers and are subject to enhanced evidence requirements at each evaluation cycle. Class C designation may be mandated by applicable regulatory frameworks regardless of the certified organization’s preference. See ARA Standard, Part IV-B.
+Deployment Certification | An ARA certification issued to an organization that deploys an AI system in a specific operational context. Deployment Certifications evaluate the full system-in-context, including integration layers, operational processes, and deployment-specific risk factors. Deployment Certifications may leverage Certification Inheritance from a Platform Certification to reduce evaluation scope where applicable. See ARA Standard, Article 5.1.
+Evaluation Level | The depth and rigor tier applied to an ARA evaluation, ranging from Level 1 (Documentation Review) through Level 3 (Comprehensive). Evaluation Level is determined by the system’s Risk Classification, Assurance Class requirements, and any applicable regulatory mandates. Higher Evaluation Levels require greater evidence sufficiency, broader ACR coverage, and more rigorous testing methodologies. See ARAF-ARA-EVL-2026-002, Article 2.
+Platform Certification | An ARA certification issued to an AI platform vendor, attesting that the platform’s core AI components satisfy applicable ACRs as evaluated within a defined Reference Environment. Platform Certifications do not certify any specific deployment; they certify the platform layer. Deployers may use Platform Certifications as the basis for Certification Inheritance in their own Deployment Certification processes. See ARA Standard, Article 5.2, and ARAF-ARA-EVL-2026-002, Article 3.8.
+Reference Environment | A controlled, documented infrastructure environment used by a platform vendor to conduct ARA evaluations in lieu of a live production deployment. The Reference Environment must be attested by an accredited AVB as production-equivalent for all in-scope ACRs. Reference Environment specifications are documented in the Reference Environment Specification (RES) and maintained as a condition of ongoing Platform Certification validity. See ARAF-ARA-EVL-2026-002, Articles 3.8–3.9.
+Risk Classification | A structured assessment of an AI system’s potential to cause harm, determined by evaluating factors including deployment context, autonomy level, consequence severity, affected population, and reversibility of adverse outcomes. Risk Classification drives Evaluation Level selection, Assurance Class assignment, and applicable ACR domain scope. See ARA Standard, Article 3.

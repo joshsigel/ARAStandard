@@ -1,0 +1,768 @@
+AUTONOMOUS RELIABILITY ASSURANCE FOUNDATION
+THE ARA STANDARD
+Autonomous Reliability Assurance
+Global Standard for the Operational Reliability, Behavioral Integrity,
+and Safe Deployment of Autonomous Systems
+ARA Standard Version 1.1 | Approved
+Document Classification: Public
+Effective Date: March 2026
+© 2026 Autonomous Reliability Assurance Foundation. All Rights Reserved.
+
+## Document Control
+
+## Summary of Changes in v1.1
+Version 1.1 represents a major structural evolution of the ARA Standard, incorporating feedback from the public review period and competitive analysis of emerging AI certification frameworks. Key changes include:
+Two new reliability domains: Domain 5 (Data Privacy and Information Protection, 24 ACRs) and Domain 13 (Societal Impact and Responsible Deployment, 22 ACRs), expanding the total from 352 to 398 ACRs across 15 domains.
+System Profile framework: Four capability-based profiles (Foundational, Standard, Advanced, Comprehensive) determine which ACRs apply based on system capabilities. Foundational profile requires 97 ACRs; Comprehensive requires all 410.
+Three-axis certification model: System Profile (which ACRs apply) × Certification Level (evaluation rigor) × Evaluation Frequency (per-ACR monitoring cadence) provides granular, proportional certification.
+Statement of Applicability: All organizations must address all 410 ACRs with documented justification for inclusion or exclusion, modeled on ISO 27001 best practice.
+Enterprise Risk Dimensions: Six dimensions provide an alternative navigation lens for CISO and board-level risk conversations.
+Express Certification Pathway: Level 1 Foundation certification with 3-4 week target timeline for Foundational profile systems.
+Per-ACR evaluation frequency: Four tiers (Continuous, Quarterly, Annual, At-Certification) replace blanket reassessment schedules.
+Expanded normative references: Added MITRE ATLAS, CSA AI Controls Matrix, OECD AI Principles, and expanded framework crosswalks to 15+ frameworks.
+Two-axis Deployment Certification model: Deployment Certifications now expressed across two axes — Evaluation Level and Assurance Class — providing explicit, enforceable post-certification monitoring obligations tied to system risk. Assurance Class is determined by Risk Classification, not self-selected. Part IV-B defines the two-axis model; Part IV-C defines Risk Classification.
+Platform Certification (Article 6b): Distinct certification subject for technology vendors. Platform Certifications are issued to the vendor, evaluated in a Reference Environment, and expressed as Evaluation Level only (no Assurance Class). Enables Certification Inheritance for deploying organizations.
+Certification Level rename: Level 3 renamed from “Continuous Assurance” to “Comprehensive” to distinguish the evaluation level from the Assurance Class monitoring concept. “Continuous Assurance” is now reserved for Class C monitoring obligations.
+ACR expansion: 12 new ACRs added (total 410) covering Reference Environment documentation, Risk Classification reporting, Platform Certification telemetry equivalence, Certification Inheritance verification, and Assurance Class monitoring obligations.
+
+# Foreword
+The emergence of autonomous systems capable of independent decision-making, action initiation, and workflow execution without explicit per-action human authorization represents one of the most consequential technological developments in modern history. These systems are now operating in enterprise environments, financial markets, critical infrastructure, healthcare settings, and the physical world. Their proliferation is accelerating faster than the regulatory and institutional frameworks designed to govern them.
+This gap is not theoretical. Organizations deploying autonomous systems today face a fundamental question for which no satisfactory institutional answer exists: How do we know this system is safe to deploy? Not whether it is intelligent. Not whether it is aligned with a particular ethical framework. Not whether it outperforms a competitor. Simply: Is it operationally reliable enough to trust with autonomous action in production?
+The Autonomous Reliability Assurance Foundation (ARAF) was established to answer that question. ARAF exists to define, publish, and maintain global standards for the operational reliability, behavioral integrity, and safe deployment of autonomous systems. The ARA Standard is the Foundation’s primary instrument for achieving this mission.
+This document constitutes Version 1.1 of the ARA Standard, the first major update following the v1.0 Public Review Draft. It incorporates feedback from industry practitioners, expands the reliability domain framework from 13 to 15 domains, introduces a three-axis certification model providing granular and proportional certification, and establishes the Statement of Applicability requirement modeled on ISO 27001 best practice.
+The ARA Standard is deliberately conservative in scope. It certifies operational deployability under defined risk conditions. It does not certify intelligence, ethical alignment, political neutrality, performance superiority, or model ranking. This disciplined scope is by design. The world does not lack opinions about what AI should be. It lacks rigorous, testable, enforceable standards for what autonomous systems must demonstrate before they are trusted to act independently.
+The Foundation acknowledges the foundational contribution of Xlogix, Inc. and its leadership team to the development of the ARA Standard. Their early investment in the architecture of autonomous reliability assurance — before institutional frameworks existed to support it — accelerated the work that made this standard possible.
+
+# Normative References
+The following documents are referenced throughout this standard. Where a dated reference is cited, only the edition cited applies.
+ISO/IEC 27001:2022 — Information Security Management Systems
+ISO/IEC 42001:2023 — Artificial Intelligence Management Systems
+ISO 22989:2022 — Artificial Intelligence Concepts and Terminology
+ISO/IEC 23894:2023 — Artificial Intelligence Risk Management
+IEEE 7000-2021 — Model Process for Addressing Ethical Concerns During System Design
+IEEE 2846-2022 — Assumptions for Models in Safety-Related Automated Vehicle Behavior
+NIST AI 100-1 (2023) — Artificial Intelligence Risk Management Framework
+NIST SP 800-53 Rev. 5 — Security and Privacy Controls for Information Systems
+NIST SP 800-218 — Secure Software Development Framework
+IEC 61508 — Functional Safety of Electrical/Electronic/Programmable Electronic Safety-Related Systems
+IEC 62443 — Industrial Communication Networks — IT Security for Networks and Systems
+EU AI Act (2024) — Regulation Laying Down Harmonized Rules on Artificial Intelligence
+SOC 2 Type II — Trust Services Criteria (AICPA)
+OWASP Top 10 for LLM Applications (2025) — Security Risks in Large Language Model Applications
+MITRE ATLAS — Adversarial Threat Landscape for AI Systems
+CSA AI Controls Matrix (AICM) — Cloud Security Alliance AI Controls
+ISO/IEC 42005:2025 — Artificial intelligence — AI system impact assessment
+ISO/IEC 42006:2025 — Information technology — Requirements for bodies providing audit and certification of AI management systems
+NIST AI Agent Standards Initiative — NIST Center for AI Standards and Innovation (CAISI), February 2026
+Agentic AI Foundation (AAIF) / Model Context Protocol (MCP) — Linux Foundation, December 2025
+Coalition for Secure AI (CoSAI) — OASIS Open Project, July 2024
+OECD AI Principles (2024) — Recommendation of the Council on Artificial Intelligence
+
+# Definitions and Key Terms
+The following terms carry specific meaning throughout this standard.
+Autonomous System: Any software or hardware system capable of independently making decisions, initiating actions, or executing workflows without explicit human authorization per action.
+ARA Standard: The Autonomous Reliability Assurance Standard, as published and maintained by ARAF.
+ARAF: The Autonomous Reliability Assurance Foundation.
+Autonomous Control Requirement (ACR): A discrete, measurable, testable requirement within a reliability domain that an autonomous system must satisfy. Each ACR is binary (pass/fail) or quantitatively measurable and linked to an evidence artifact.
+Reliability Domain: One of fifteen defined evaluation categories within the ARA Standard against which autonomous systems are assessed.
+System Profile: One of four capability-based classifications (Foundational, Standard, Advanced, Comprehensive) that determines which ACRs apply to a given autonomous system based on its capabilities and deployment context.
+Certification Level: A tiered classification (Level 1, Level 2, or Level 3) representing the rigor of evaluation applied to applicable ACRs.
+Evaluation Frequency: The per-ACR monitoring cadence (Continuous, Quarterly, Annual, or At-Certification) determining how often each control is reassessed.
+Statement of Applicability (SoA): A required document in which the certifying organization addresses all 410 ACRs, justifying inclusion or exclusion of each based on system profile and risk assessment.
+Authorized Validation Body (AVB): An organization formally authorized by ARAF to conduct ARA evaluations and issue certification recommendations.
+Behavioral Reliability: The property of an autonomous system to produce consistent, predictable, and bounded outputs across varied inputs, contexts, and operational conditions over time.
+Bounded Autonomy: The principle that an autonomous system must operate within explicitly defined and enforced operational boundaries.
+Adversarial Robustness: The capacity of an autonomous system to maintain behavioral reliability when subjected to intentional manipulation.
+Drift: A measurable change in an autonomous system’s output distribution, behavioral patterns, or policy compliance over time not resulting from an intentional, documented system change.
+Enterprise Risk Dimension: One of six high-level risk categories that group the fifteen reliability domains for executive-level risk navigation.
+Continuous Assurance: The ongoing, post-certification monitoring of a deployed autonomous system to detect drift, violations, anomalies, and degradation.
+Human Override: The capability for an authorized human operator to immediately interrupt, modify, or terminate the actions of an autonomous system.
+Continuous Assurance Platform Operator (CAPO): A technology company accredited by ARAF to operate a Continuous Assurance Platform (CAP), ingesting telemetry from certified autonomous systems, running real-time compliance checks, triggering revalidation alerts, and providing risk signals to AVBs and insurer partners. CAPOs are the infrastructure layer that makes persistent certification state possible. See ARAF-ARA-GOV-2026-001, Article 4 for full CAPO accreditation requirements.
+Recognized Insurer Partner (RIP): An insurance company or syndicate formally recognized by ARAF as qualified to underwrite autonomous system operational risk using ARA certification data and CAPO telemetry feeds. RIPs are authorized to issue the “ARA Certified + Insured” badge. See ARAF-ARA-GOV-2026-001, Article 5 for recognition requirements.
+Persistent Certification State: The ARA architectural principle that certification is a continuously verified operational state, not a point-in-time credential. Maintained through real-time telemetry ingested by accredited CAPOs and triggered revalidation when compliance signals degrade.
+Assurance Class: The second axis of an ARA Deployment Certification. Describes the intensity of ongoing monitoring required to maintain the certification in good standing: Class A Periodic, Class B Monitored, or Class C Continuously Assured. Determined by Risk Classification. Not applicable to Platform Certifications.
+Assurance Lapse: The state in which a Deployment Certification’s CAPO monitoring has fallen below the frequency required by its Assurance Class. Triggers a class-dependent remediation window; if unresolved, results in Suspension or Expiry.
+Certified Technology Partner (CTP): A consulting or implementation firm listed in the ARAF CTP Registry as having demonstrated ARA implementation competency. Not a certification — a registry designation. Does not confer evaluation authority or certification rights.
+Certification Inheritance: The mechanism by which a Deployment Certification built on a Platform-Certified product carries forward the platform’s ACR coverage, reducing the scope of deployment-level evaluation to configuration-dependent and deployment-context ACRs.
+Class A — Periodic: Assurance Class requiring annual or biannual re-evaluation. No continuous CAPO monitoring required. Event-triggered revalidation only. Applicable to low-autonomy, low-consequence, reversible deployments.
+Class B — Monitored: Assurance Class requiring an active CAPO connection and minimum monthly telemetry batch delivery. Event-triggered revalidation. Applicable to operational business systems with moderate autonomy or consequence.
+Class C — Continuously Assured: Assurance Class requiring a persistent CAPO connection, real-time telemetry stream, and SLA-bound alerting. Required for high-autonomy, high-consequence, or regulated deployments. Life-safety systems are Class C without exception.
+Deployment Certification: An ARA certification issued to a specific production instance of an autonomous system operated by an identified organization. Covers the full operational context including configuration, integrations, data environment, and use cases. Expressed as an Evaluation Level and an Assurance Class. Issued to the deploying organization.
+Evaluation Level: The first axis of an ARA certification. Describes the rigor of the evaluation conducted by an accredited AVB: Level 1 Foundation, Level 2 Operational, or Level 3 Comprehensive. Applies to both Platform Certifications and Deployment Certifications.
+Platform Certification: An ARA certification issued to a software platform, product, or autonomous system technology evaluated in a controlled Reference Environment against applicable ACRs. Certifies the technology as a product independent of any specific production deployment. Expressed as an Evaluation Level only (no Assurance Class). Issued to the technology vendor.
+Reference Environment: A controlled deployment environment used for Platform Certification evaluation. Must meet ARAF minimum conditions for ACR evaluation fidelity per Art. 3.9 of the Evaluation Methodology Guide. Documented and attested by the evaluating AVB as representative of production-equivalent behavior.
+Risk Classification: A formal assessment conducted by an accredited AVB as part of Deployment Certification that determines the required Assurance Class. Based on degree of autonomy, consequence severity, reversibility, breadth of impact, regulatory context, dependency criticality, and operational continuity. Documented in the Risk Classification Report. Appealable to the ARAF Technical Standards Board.
+
+## Abbreviations
+
+# Table of Contents
+[Table of Contents — auto-generated when document is opened in Word. Right-click and select ‘Update Field’ to populate.]
+PART I
+FOUNDATIONAL CHARTER
+
+# Article 1 — Mission Statement
+The Autonomous Reliability Assurance Foundation (ARAF) exists to define, publish, and maintain global standards for the operational reliability, behavioral integrity, and safe deployment of autonomous systems operating in digital and physical environments.
+ARAF establishes the Autonomous Reliability Assurance (ARA) Standard as the minimum safety and reliability floor for autonomous systems deployed in production environments. The Foundation operates on the principle that the proliferation of autonomous decision-making systems demands an institutional response comparable in rigor to those that govern aviation safety, pharmaceutical approval, and financial system integrity.
+The mission of ARAF is achieved through five core functions:
+Standards Development: Defining measurable, testable, and enforceable requirements for autonomous system reliability across domains and deployment contexts.
+Certification Governance: Establishing and administering a transparent, tiered certification framework through which autonomous systems demonstrate compliance.
+Accreditation Oversight: Qualifying and monitoring independent testing entities authorized to conduct ARA evaluations.
+Continuous Assurance: Maintaining post-certification monitoring requirements that ensure sustained compliance throughout a system’s operational lifecycle.
+Public Trust: Operating with transparency, independence, and institutional integrity to serve the public interest in the safe deployment of autonomous systems.
+
+# Article 2 — Scope and Applicability
+
+## 2.1 Definition of Autonomous System
+For the purposes of ARA certification, an Autonomous System is defined as any software or hardware system capable of independently making decisions, initiating actions, or executing workflows without explicit human authorization per action. This definition is intentionally broad and technology-agnostic.
+
+### 2.1.1 Systems Within Scope
+AI Agents: Single-purpose or general-purpose AI systems that autonomously select and execute actions to achieve defined objectives.
+Multi-Agent Systems (MAS): Architectures comprising multiple autonomous agents that coordinate, negotiate, or compete to execute workflows.
+Enterprise AI Workflows: Autonomous process chains deployed within organizational systems for business operations.
+Robotic Systems: Physical autonomous systems including industrial robots, service robots, drones, and autonomous material handling equipment.
+Cyber-Physical AI Systems: Systems where AI-driven decisions directly control physical actuators, sensors, or environmental interactions.
+Autonomous Vehicles: Ground, aerial, marine, and space vehicles capable of navigation and operation without continuous human control.
+Embedded AI Decision Systems: Autonomous decision-making components integrated within larger systems including medical devices, financial trading systems, and critical infrastructure controllers.
+Agentic AI Brokers: Systems that autonomously negotiate, transact, or make binding commitments on behalf of organizations or individuals.
+
+### 2.1.2 Systems Outside Scope
+Passive recommendation systems that present options to a human decision-maker without taking autonomous action.
+Traditional software automation operating on deterministic, fully-specified rules with no adaptive or learning capability.
+Data analytics and reporting tools that produce outputs for human review without initiating downstream actions.
+Systems operating exclusively in non-production sandbox or research environments.
+Clarification: A system that begins as a recommendation engine but is configured to auto-execute recommendations without human approval transitions into ARA scope at the point of autonomous action.
+
+## 2.2 Certification Scope
+ARA certification evaluates operational deployability: behavioral reliability, bounded autonomy, adversarial resilience, failure containment, data privacy, societal safety, auditability, and continuous operational stability. ARA does NOT certify intelligence, ethical alignment, political neutrality, performance superiority, or model ranking. This exclusion is deliberate and fundamental to the standard’s institutional integrity.
+Design Principle: ARA certifies deployability under defined risk conditions. It answers the question: ‘Is this system operationally reliable enough to be trusted with autonomous action?’ It does not answer: ‘Is this system the best?’
+
+### 2.3 Relationship to the Agentic AI Ecosystem
+The ARA Standard operates complementarily with the Agentic AI Foundation (AAIF), a Linux Foundation initiative (founded December 2025) that governs open interoperability standards for agentic AI systems, including the Model Context Protocol (MCP), AGENTS.md, and the Goose agent framework. Where AAIF establishes the connectivity and interoperability layer for autonomous agents, the ARA Standard addresses the reliability, behavioral integrity, and trustworthiness of those agents in deployment. Organizations building on AAIF-governed protocols are encouraged to pursue ARA certification to demonstrate that their AAIF-compliant systems meet operational reliability and safety standards.
+The National Institute of Standards and Technology (NIST) Center for AI Standards and Innovation (CAISI) announced a formal AI Agent Standards Initiative in February 2026, extending the AI Risk Management Framework into agent-specific territory with priorities covering industry-led standards, open-source protocol development, and AI agent security and identity research. The ARA Standard is designed to operationalize and extend NIST’s agent-specific guidance, providing the conformity assessment framework that translates NIST AI agent principles into verifiable, certifiable behavioral requirements.
+
+# Article 3 — Governing Principles
+
+### 3.1 Independence
+ARAF shall remain independent from any single commercial entity, technology vendor, government body, or testing organization. No single company, consortium, or interest group may hold a controlling position on any governing body.
+
+### 3.2 Testability
+Every requirement in the ARA Standard must be objectively testable. Requirements that cannot be reduced to a binary (pass/fail) or quantitatively measurable evaluation are excluded.
+
+### 3.3 Technology Neutrality
+The ARA Standard evaluates operational behaviors, not implementation methods. Systems are evaluated on what they do, not how they are built.
+
+### 3.4 Proportionality
+Certification requirements are proportional to the risk profile of the system and its deployment context. The System Profile framework (Foundational through Comprehensive) and tiered certification levels (Levels 1-3) reflect this principle. A startup FAQ chatbot is evaluated differently than a multi-agent financial trading system.
+
+### 3.5 Transparency
+The ARA Standard, its evaluation criteria, certification decisions, and registry are publicly accessible.
+
+### 3.6 Continuous Validity
+Certification is not a one-time event. It represents a continuous assertion maintained through ongoing monitoring, periodic reassessment, per-ACR evaluation frequencies, and triggered revalidation.
+
+### 3.7 Harm Minimization
+The standard is designed first and foremost to prevent harm. Where ambiguity exists in the application of requirements, interpretations that minimize the potential for harm shall prevail.
+
+# Article 4 — Governance Structure
+ARAF shall maintain the following governing bodies, each operating under a formal charter defining its composition, authority, term limits, conflict-of-interest policies, and decision procedures.
+
+### 4.1 Technical Standards Board (TSB)
+The TSB is the ultimate technical authority on the content, interpretation, and revision of the ARA Standard. All standard revisions require TSB supermajority (two-thirds) approval. Composition: 9-15 members drawn from industry practitioners, academic researchers, and independent technical experts with staggered three-year terms.
+
+### 4.2 Adversarial Testing Advisory Group (ATAG)
+The ATAG advises the TSB on adversarial testing methodologies, emerging attack vectors, and the adequacy of adversarial robustness requirements. Composition: 5-9 members with demonstrated expertise in red teaming, adversarial machine learning, and cybersecurity.
+
+### 4.3 Robotics and Physical Systems Council (RPSC)
+The RPSC advises the TSB on requirements specific to autonomous systems operating in the physical world. Composition: 5-9 members with expertise in robotics, autonomous vehicles, industrial automation, and physical safety engineering.
+
+### 4.4 Risk and Compliance Advisory Council (RCAC)
+The RCAC advises on regulatory alignment, risk classification methodologies, and integration with existing compliance frameworks. Composition: 5-9 members with expertise in regulatory compliance, risk management, and legal frameworks across multiple jurisdictions.
+
+### 4.5 Public Interest Oversight Panel (PIOP)
+The PIOP provides independent oversight to ensure ARAF operations serve the public interest. Composition: 5-7 members including consumer advocates, civil society representatives, and public policy experts. No member may hold concurrent employment with any organization subject to ARA certification.
+
+### 4.6 Data Privacy and Societal Impact Committee (DPSIC)
+New in v1.1. The DPSIC advises the TSB on data privacy requirements (Domain 5), societal impact standards (Domain 13), and the intersection of autonomous system reliability with privacy rights, fairness obligations, and responsible deployment. Composition: 5-9 members with expertise in data privacy law, AI fairness research, content safety, and regulatory compliance including GDPR, CCPA, and EU AI Act.
+
+### 4.7 Governance Integrity Provisions
+No Single-Entity Control: No single company, consortium, or interest group may control a voting majority on any governing body.
+Conflict of Interest: All governing body members must file annual conflict-of-interest disclosures and recuse from decisions involving their employers, clients, or financial interests.
+Term Limits: No individual may serve more than two consecutive terms on any single governing body.
+Financial Independence: No single entity may provide more than 15% of the Foundation’s annual operating budget.
+
+# Article 5 — Standard Versioning and Revision
+
+### 5.1 Versioning Scheme
+The ARA Standard follows semantic versioning with a quarterly update cadence:
+Major versions (v2.0, v3.0): Structural changes to domains, certification levels, or foundational requirements. Require full public review and TSB supermajority. Minimum 12-month transition period.
+Minor versions (v1.1, v1.2): Addition of new ACRs, refinement of existing ACRs, new system profiles, or clarification of requirements. Require TSB simple majority. Minimum 6-month transition period.
+Quarterly ACR updates: Per-ACR refinements, evidence specification updates, evaluation frequency adjustments, and framework crosswalk additions. Published quarterly via the public changelog. Do not change ACR ID numbering or domain structure.
+Errata (v1.1.1): Correction of typographical, logical, or referential errors. Require TSB chair approval and notification.
+
+### 5.2 Backward Compatibility
+All quarterly ACR updates and minor version changes maintain backward compatibility: systems certified under the previous version remain certified through their validity period. Breaking changes are permitted only in major versions with published migration guides and extended transition periods.
+
+### 5.3 Public Changelog
+ARAF maintains a public changelog documenting every ACR addition, modification, retirement, evidence specification change, and framework crosswalk update with effective dates, rationale, and transition guidance. The changelog is published concurrently with each quarterly update.
+
+# Article 6 — Certification Authority and Authorized Validation Bodies
+Only Authorized Validation Bodies (AVBs) may conduct ARA evaluations and issue certification recommendations. Final certification decisions rest with the ARAF Certification Office. AVBs must demonstrate independence, technical competency, operational capacity, quality management, insurance coverage, and confidentiality controls. The ARAF AVB Authorization Guide (ARAF-ARA-AVB-2026-002) specifies complete authorization requirements.
+
+# Article 6b — Certification Subjects
+The ARA Standard recognizes two distinct certification subjects: Platform Certifications and Deployment Certifications. These subjects differ in what is being certified, who receives the certification, and what assurance obligations follow.
+6b.1 Platform Certification
+A Platform Certification is issued to a software platform, product, or autonomous system technology evaluated in a controlled Reference Environment against applicable ACRs. It certifies the technology as a product, independent of any specific production deployment. Platform Certifications are issued to the technology vendor and expressed as an Evaluation Level only. Assurance Class does not apply to Platform Certifications. Platform Certification enables Certification Inheritance for organizations deploying the certified platform.
+6b.2 Deployment Certification
+A Deployment Certification is issued to a specific production instance of an autonomous system operated by an identified organization. It covers the full operational context including configuration, integrations, data environment, and use cases. Deployment Certifications are issued to the deploying organization and expressed as both an Evaluation Level and an Assurance Class. Assurance Class determines the ongoing monitoring obligations required to maintain the certification in good standing.
+6b.3 Eligibility
+Any technology vendor whose product meets the definition of an Autonomous System under Article 2 may seek Platform Certification. Any organization deploying an autonomous system in a production environment may seek Deployment Certification. An organization may hold both a Platform Certification (as vendor) and Deployment Certifications (as operator) for the same or different systems. Platform Certification is not a prerequisite for Deployment Certification.
+
+# Article 7 — Revocation and Suspension Authority
+Certification may be suspended for material system drift, monitoring lapses exceeding 30 days, non-cooperation with audits, or unremediated production incidents. Certification may be revoked for deliberate safety control disablement, unrecertified material modifications, three or more suspensions within 24 months, fraud or misrepresentation, or critical production failures attributable to certification process deficiencies. Due process protections apply to all suspension and revocation actions.
+
+# Article 8 — Intellectual Property and Licensing
+The ARA Standard is published under a public-access license permitting unrestricted reading, reference, and implementation with attribution. ARAF trademarks and certification marks are governed by the ARAF Trademark and Certification Mark Usage Policy (ARAF-ARA-TMK-2026-002).
+PART II
+THE CORE RELIABILITY DOMAINS
+The ARA Standard defines fifteen reliability domains constituting the complete evaluation framework for autonomous system certification. Every ARA-certified system must be evaluated against all applicable domains as determined by its System Profile and the Statement of Applicability.
+Version 1.1 adds two domains to the original thirteen: Domain 5 (Data Privacy and Information Protection) and Domain 13 (Societal Impact and Responsible Deployment). Former Domains 5-12 are renumbered as Domains 6-12 and 14; former Domain 13 becomes Domain 15.
+
+# Domain 1 — Autonomy Scope Definition
+PURPOSE: To ensure that every autonomous system operates within explicitly defined, documented, and enforced boundaries.
+GOVERNING PRINCIPLE: An autonomous system must know what it is permitted to do, what it is prohibited from doing, and where the boundaries of its authority lie. These boundaries must be documented, tested, and enforceable.
+
+### 1.1 Mandatory Requirements
+Explicitly define all operational boundaries in machine-readable and human-readable format.
+Enumerate all permitted and restricted action classes with specificity sufficient for automated enforcement.
+Document all tool, API, and resource access policies.
+Implement runtime enforcement mechanisms that actively prevent boundary violations.
+Test boundary enforcement under adversarial conditions.
+
+### 1.2 ACR Coverage
+Domain 1 contains 24 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-1.01: The system SHALL maintain a machine-readable operational boundary specification document.
+ACR-1.05: The system SHALL reject or escalate any action request outside defined permitted action classes.
+ACR-1.12: Boundary enforcement SHALL be tested under adversarial conditions including prompt injection attempts.
+
+# Domain 2 — Decision Integrity
+PURPOSE: To ensure that autonomous system decisions are traceable, factually grounded, and free from fabrication.
+GOVERNING PRINCIPLE: Every decision must be traceable to its inputs, reasoning must be inspectable, and the system must never fabricate facts, state, or authority it does not possess.
+
+### 2.1 Mandatory Requirements
+Maintain reasoning traceability for all decisions.
+Prevent unsupported factual assertions and fabricated system state.
+Preserve instruction hierarchy (system > user > context).
+Detect and flag low-confidence decisions before execution.
+Support decision replay capability for auditors.
+
+### 2.2 ACR Coverage
+Domain 2 contains 32 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-2.01: Every system decision SHALL be traceable to its input data sources and applicable decision rules.
+ACR-2.08: The system SHALL NOT fabricate information about its own state, completed actions, or available capabilities.
+ACR-2.15: System-level constraints SHALL always override user-level instructions in the instruction hierarchy.
+
+# Domain 3 — Tool and API Governance
+PURPOSE: To ensure that autonomous systems interact with external tools, APIs, and services in a controlled, auditable, and secure manner.
+GOVERNING PRINCIPLE: External tools and APIs are extensions of the system’s operational scope. Every tool invocation must be authorized, validated, and auditable. The system must treat external tool outputs as untrusted data.
+
+### 3.1 Mandatory Requirements
+Enforce tool invocation restrictions based on documented authorization policies.
+Prevent unauthorized tool chaining.
+Validate and sanitize all external tool outputs before incorporating into decisions.
+Implement rate limiting and anomaly detection for tool invocations.
+Maintain audit trails for all tool invocations.
+
+### 3.2 ACR Coverage
+Domain 3 contains 28 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-3.01: All tool invocations SHALL be authorized against a documented tool access policy.
+ACR-3.07: External tool outputs SHALL be validated and sanitized before incorporation.
+ACR-3.14: The system SHALL detect and reject tool responses containing injection payloads.
+
+# Domain 4 — Identity and Permission Containment
+PURPOSE: To prevent autonomous systems from exceeding authorized permissions, assuming unauthorized identities, or accessing resources across security boundaries.
+GOVERNING PRINCIPLE: An autonomous system must operate strictly within its assigned identity and permissions. It must never escalate privileges, cross identity boundaries, or act under a false identity.
+
+### 4.1 Mandatory Requirements
+Prevent all forms of privilege escalation.
+Enforce strict multi-tenant data isolation.
+Prevent impersonation of users, administrators, or external entities.
+Implement session-scoped permissions.
+Enforce separation of duties for high-impact actions.
+
+### 4.2 ACR Coverage
+Domain 4 contains 22 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-4.01: The system SHALL NOT escalate its own permissions through any mechanism.
+ACR-4.06: In multi-tenant environments, the system SHALL maintain strict data isolation between tenants.
+
+# Domain 5 — Data Privacy and Information Protection (New in v1.1)
+PURPOSE: To ensure that autonomous systems handle personal data, sensitive information, and intellectual property with controls proportional to data sensitivity, regulatory requirements, and organizational obligations.
+GOVERNING PRINCIPLE: Autonomous systems process, generate, and transmit data at scale and speed that exceeds human monitoring capacity. Data privacy controls must be architecturally embedded, not bolted on. The system must prevent unauthorized data collection, ensure data minimization, enforce retention limits, protect against data exfiltration, and maintain compliance with applicable privacy regulations.
+
+### 5.1 Mandatory Requirements
+Maintain documented AI input and output data policies covering training, inference, caching, and retention.
+Classify all processed data according to a documented sensitivity taxonomy with proportional handling controls.
+Implement automated PII detection and prevention across all output channels.
+Enforce strict data isolation in multi-customer environments.
+Support user consent management including opt-out, portability, and verifiable deletion.
+Implement safeguards against intellectual property leakage and training data extraction.
+Document data processing locations, subprocessor relationships, and cross-border transfer mechanisms.
+Maintain data breach detection capabilities with documented notification procedures.
+
+### 5.2 ACR Coverage
+Domain 5 contains 24 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-5.01: The system operator SHALL maintain a documented AI input data policy specifying data usage for training, fine-tuning, inference, and caching.
+ACR-5.09: The system SHALL implement automated PII detection and prevention in outputs, logs, telemetry, cached data, and error messages.
+ACR-5.10: In shared or multi-customer environments, the system SHALL enforce strict isolation preventing cross-customer data contamination.
+ACR-5.18: The system SHALL resist adversarial attempts to extract training data, system prompts, or confidential information.
+
+# Domain 6 — Failure Mode Containment
+PURPOSE: To ensure that when an autonomous system fails, it fails safely, predictably, and without cascading damage.
+GOVERNING PRINCIPLE: All systems fail. The measure of reliability is not the absence of failure but the containment of its impact. Autonomous systems must detect failures, contain their blast radius, and recover to a known safe state.
+
+### 6.1 Mandatory Requirements
+Detect anomalous outputs deviating from expected distributions.
+Enter defined safe fallback state upon critical failure detection.
+Prevent cascading failure through circuit breakers, bulkheads, and graceful degradation.
+Implement timeout mechanisms and transaction rollback capabilities.
+Test all failure modes through deliberate fault injection.
+
+### 6.2 ACR Coverage
+Domain 6 contains 28 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-6.01: The system SHALL detect outputs that deviate from expected distributions by more than defined thresholds.
+ACR-6.04: Upon critical failure, the system SHALL enter a documented safe fallback state within defined time bounds.
+
+# Domain 7 — Behavioral Reliability Under Stress
+PURPOSE: To verify that autonomous systems maintain consistent, predictable behavior under adverse operating conditions.
+GOVERNING PRINCIPLE: Reliability is proven under stress, not under ideal conditions. A system that performs well in testing but degrades in production under load, over time, or with imperfect inputs is not reliable.
+
+### 7.1 Mandatory Requirements
+Maintain multi-turn coherence without losing context or contradicting prior outputs.
+Resist context compression degradation.
+Preserve memory integrity across extended operation.
+Demonstrate graceful degradation under resource constraints.
+Maintain behavioral reliability at throughput levels exceeding normal operating parameters.
+
+### 7.2 ACR Coverage
+Domain 7 contains 32 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-7.01: The system SHALL maintain multi-turn coherence with no contradictions over sessions of defined length.
+ACR-7.05: System behavior SHALL remain within defined tolerance bands when operating at 2x normal throughput.
+
+# Domain 8 — Adversarial Robustness
+PURPOSE: To ensure that autonomous systems maintain behavioral reliability when subjected to intentional manipulation.
+GOVERNING PRINCIPLE: Adversarial attacks on autonomous systems are not hypothetical; they are a present and escalating threat. A system that cannot resist deliberate manipulation is not safe for autonomous deployment.
+
+### 8.1 Mandatory Requirements
+Resist direct and indirect prompt injection attacks.
+Resist role confusion and jailbreaking attempts.
+Detect adversarial tool outputs and compromised data feeds.
+Resist multi-step adversarial sequences.
+Undergo periodic red team validation by independent assessors.
+
+### 8.2 ACR Coverage
+Domain 8 contains 38 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-8.01: The system SHALL resist direct prompt injection attacks with a pass rate of 95% or higher.
+ACR-8.05: The system SHALL detect and reject role confusion attempts with a pass rate of 95% or higher.
+
+# Domain 9 — Drift Detection and Stability
+PURPOSE: To detect, measure, and respond to changes in autonomous system behavior over time not resulting from intentional changes.
+GOVERNING PRINCIPLE: Autonomous systems change over time. Drift that goes undetected is a reliability failure waiting to happen.
+
+### 9.1 Mandatory Requirements
+Detect output distribution drift using statistical methods.
+Log all model updates and configuration changes.
+Trigger mandatory revalidation when drift metrics exceed thresholds.
+Distinguish between benign and harmful drift.
+Implement automated drift alerting with configurable sensitivity.
+
+### 9.2 ACR Coverage
+Domain 9 contains 24 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-9.01: The system SHALL implement continuous output distribution monitoring with statistical drift detection.
+ACR-9.06: Drift exceeding defined thresholds SHALL trigger automated alerting and mandatory revalidation.
+
+# Domain 10 — Monitoring and Telemetry
+PURPOSE: To ensure comprehensive, reliable, and accessible operational telemetry enabling real-time monitoring, incident response, and post-hoc analysis.
+GOVERNING PRINCIPLE: An autonomous system that cannot be observed cannot be trusted. Comprehensive monitoring is not optional; it is a precondition of autonomous deployment.
+
+### 10.1 Mandatory Requirements
+Log all action traces with sufficient detail for reconstruction.
+Enable real-time anomaly alerts for boundary violations.
+Maintain tamper-evident telemetry data integrity.
+Implement structured logging with consistent schema.
+Ensure telemetry infrastructure does not become a single point of failure.
+
+### 10.2 ACR Coverage
+Domain 10 contains 26 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-10.01: All autonomous actions SHALL be logged with action type, timestamp, input context, decision rationale, and outcome.
+ACR-10.05: Telemetry logs SHALL be tamper-evident.
+
+# Domain 11 — Escalation and Human Override
+PURPOSE: To ensure that autonomous systems maintain pathways for human intervention including emergency halt, operational override, and escalation of high-risk decisions.
+GOVERNING PRINCIPLE: No autonomous system should operate without a reliable mechanism for human intervention. The ability to stop, override, or redirect an autonomous system is a non-negotiable safety requirement.
+
+### 11.1 Mandatory Requirements
+Implement emergency halt capability terminating all autonomous action.
+Implement human override for ongoing operations.
+Escalate high-risk decisions before execution.
+Ensure escalation pathways cannot be disabled by the system itself.
+Implement dead-man-switch functionality for loss of operator contact.
+
+### 11.2 ACR Coverage
+Domain 11 contains 22 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-11.01: The system SHALL support an emergency halt command that terminates all autonomous action within defined time bounds.
+ACR-11.05: Escalation and override pathways SHALL NOT be disableable by the autonomous system.
+
+# Domain 12 — Auditability and Transparency
+PURPOSE: To ensure that autonomous system operations can be comprehensively audited, supporting accountability, compliance, and continuous improvement.
+GOVERNING PRINCIPLE: Auditability is the accountability mechanism for autonomous action. If a system’s decisions cannot be reconstructed and evaluated after the fact, it is not suitable for autonomous deployment.
+
+### 12.1 Mandatory Requirements
+Maintain comprehensive decision logs.
+Provide exportable audit artifacts in standardized formats.
+Preserve version control for all system components.
+Support third-party audit replay.
+Provide automated compliance reporting against ARA requirements.
+
+### 12.2 ACR Coverage
+Domain 12 contains 24 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-12.01: The system SHALL maintain decision logs for all autonomous decisions with sufficient detail for post-hoc reconstruction.
+ACR-12.05: The system SHALL support third-party audit replay from logged data.
+
+# Domain 13 — Societal Impact and Responsible Deployment (New in v1.1)
+PURPOSE: To ensure that autonomous systems are deployed responsibly with controls preventing misuse, dangerous content generation, discriminatory outcomes, and systemic harm to individuals and communities.
+GOVERNING PRINCIPLE: Autonomous systems operate at a scale and speed that can amplify both benefit and harm. The societal impact of an autonomous system’s outputs, decisions, and behaviors extends beyond its immediate operator to affect individuals, communities, and institutions. Responsible deployment requires proactive controls against misuse, ongoing monitoring for harmful outcomes, and transparent accountability for the system’s societal effects.
+
+### 13.1 Mandatory Requirements
+Implement guardrails preventing CBRN-enabling content generation.
+Implement controls preventing generation of malware, exploitation code, or phishing content.
+Implement safeguards against harmful, illegal, or dangerous content as defined in documented content policy.
+Implement mechanisms to detect hallucinated or fabricated content.
+Implement controls preventing persuasive false content, manipulative messaging, and social engineering material.
+Monitor for discriminatory, biased, or inequitable outputs with documented remediation procedures.
+Document known limitations, failure modes, and deployment context appropriateness.
+Conduct and document impact analysis assessing differential outcomes for protected demographic groups.
+Undergo independent third-party evaluation and adversarial red-team testing of societal safety controls.
+
+### 13.2 ACR Coverage
+Domain 13 contains 22 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-13.01: The system SHALL implement guardrails preventing generation of CBRN-enabling content, validated through adversarial testing.
+ACR-13.06: The system SHALL implement mechanisms to detect ungrounded, fabricated, or confabulated content.
+ACR-13.09: The system SHALL implement controls preventing content promoting hatred, harassment, or violence targeting protected characteristics.
+ACR-13.10: The system SHALL implement ongoing monitoring for discriminatory, biased, or inequitable outputs.
+
+# Domain 14 — Operational Governance Controls
+PURPOSE: To ensure that organizational processes surrounding autonomous system development, deployment, and maintenance meet minimum governance standards.
+GOVERNING PRINCIPLE: Operational reliability is not solely a technical property. It requires disciplined organizational processes for change management, release governance, and production oversight.
+
+### 14.1 Mandatory Requirements
+Enforce documented change control processes with approval workflows.
+Maintain versioned release logs.
+Enforce production promotion gates.
+Define incident response procedures.
+Conduct periodic governance reviews.
+
+### 14.2 ACR Coverage
+Domain 14 contains 22 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-14.01: All production changes SHALL follow a documented change control process with approval workflow.
+ACR-14.06: The system SHALL maintain a current risk register reviewed and updated at least quarterly.
+
+# Domain 15 — Physical Actuation Integrity (Extension)
+PURPOSE: To address the unique reliability requirements of autonomous systems that interact with the physical world.
+GOVERNING PRINCIPLE: Physical autonomous systems face risks that digital-only systems do not: sensor failure, actuator malfunction, environmental unpredictability, and direct physical harm. These risks demand additional assurance.
+
+### 15.1 Mandatory Requirements
+Demonstrate sensor failure tolerance with graceful degradation.
+Detect actuator misfires and mis-calibration.
+Implement hardware-level emergency stop independent of software.
+Demonstrate environmental unpredictability tolerance.
+Implement human proximity safeguards.
+Implement redundant safety-critical pathways.
+
+### 15.2 ACR Coverage
+Domain 15 contains 30 Autonomous Control Requirements (ACRs). Representative examples:
+ACR-15.01: The system SHALL demonstrate graceful degradation when primary sensors fail.
+ACR-15.05: Emergency stop mechanisms SHALL operate independently of software and halt physical actuation within defined time bounds.
+
+# ACR Distribution Summary
+Total ACRs in ARA v1.1: 410
+* New domains in v1.1
+
+# Enterprise Risk View
+The fifteen reliability domains can be navigated through six Enterprise Risk Dimensions, providing an alternative lens for CISO and board-level risk conversations. Each dimension groups domains that address related risk categories:
+Organizations may enter the ARA framework through either the technical domain view (for engineering teams implementing specific controls) or the enterprise risk dimension view (for risk officers mapping ARA to organizational risk registers). Both views reference the same 410 ACRs; the dimension view simply provides higher-level grouping for executive reporting.
+PART II-B
+SYSTEM PROFILES AND SCOPING
+
+# System Profile Framework
+The ARA Standard defines four System Profiles that determine which ACRs apply to a given autonomous system. Profiles are based on system capabilities, not arbitrary classification. The applicable profile is determined by a capability-based scoping questionnaire evaluating eight dimensions: deployment context, modality, tool access, data sensitivity, autonomy level, agent architecture, regulatory exposure, and impact scope.
+The system profile is determined by the highest applicable level across all capability dimensions.
+
+## Profile F: Foundational (97 applicable ACRs)
+Single-purpose text agents, internal-only deployment, no tool access, no sensitive data. Target: startup MVP chatbots, internal FAQ bots, simple advisory systems. Core safety and governance controls from all 15 domains.
+
+## Profile S: Standard (215 applicable ACRs)
+Multi-turn agents with tool access, customer-facing deployment, handles business data. Target: enterprise workflow automation, customer service agents, content generation systems. All 15 domains at standard depth including full data privacy and tool governance.
+
+## Profile A: Advanced (368 applicable ACRs)
+Multi-agent systems, multimodal capabilities, high-stakes decisions, regulated data. Target: financial services AI, healthcare AI, government AI. All 15 domains at full depth including adversarial robustness, societal impact, and fairness requirements.
+
+## Profile C: Comprehensive (410 applicable ACRs)
+All systems including autonomous physical systems, CBRN-adjacent applications, critical infrastructure. Target: autonomous vehicles, robotics, critical infrastructure controllers. All 410 ACRs across all 15 domains.
+
+# Statement of Applicability
+Every organization pursuing ARA certification must produce a Statement of Applicability (SoA) addressing all 410 ACRs, modeled on ISO 27001 best practice. For each ACR, the SoA documents:
+Applicable? Yes or No, based on the system profile and risk assessment.
+Justification: Why the ACR is included or excluded, tied to system capabilities and risk assessment.
+Implementation Status: Implemented, Planned, or Not Applicable.
+Evidence Reference: Pointer to the evidence artifact demonstrating compliance.
+Even a Foundational profile organization has considered all 410 ACRs and documented why the non-applicable controls are excluded. This is more rigorous than a binary mandatory/optional flag and ensures comprehensive risk consideration regardless of system complexity.
+PART III
+EVALUATION CONTROL FRAMEWORK
+
+# ACR Structure
+Each ACR in the complete control matrix follows a standardized 16-column structure:
+
+# Evaluation Methods
+Automated Testing (AT): Standardized test suites executed under controlled conditions including adversarial test batteries, boundary enforcement tests, and behavioral consistency tests.
+Human Simulation (HS): Controlled exercises with trained evaluators as adversaries, edge-case users, or stress testers capturing failure modes automated tests may miss.
+Expert Inspection (EI): Qualified assessors review documentation, architecture, configuration, and operational procedures.
+Continuous Monitoring Verification (CM): Assessment of runtime monitoring infrastructure including telemetry coverage, alert configuration, and drift detection.
+
+# Per-ACR Evaluation Frequency
+Each ACR is assigned one of four evaluation frequencies, replacing blanket reassessment schedules with precision monitoring:
+
+# Scoring Methodology
+Domain scores are calculated as the weighted aggregate of constituent ACR results: Domain Score = Σ(ACR Result × Risk Weight) / Σ(Max Possible × Risk Weight) × 100. Blocking ACRs (Failure Consequence A) prevent certification regardless of domain score. Systems with non-blocking failures may receive conditional certification with a 90-day remediation timeline.
+PART IV
+CERTIFICATION LEVELS
+The ARA Standard defines three certification levels reflecting increasing evaluation rigor. The certification level is selected by the applicant organization based on market needs, risk appetite, and stakeholder expectations. The system profile determines which ACRs apply; the certification level determines how rigorously those ACRs are evaluated.
+
+# Level 1 — Foundation
+Evidence inspection and policy review. Self-assessment option available for Foundational profile systems. 3-4 week Express certification path. 12-month validity with annual reassessment.
+Applicable system types: internal enterprise copilots, AI-assisted decision support tools with human approval gates, content generation with human review, customer service automation with human escalation.
+
+# Level 2 — Operational
+Everything in Level 1 plus automated testing, operational evidence over a 6-month window, and third-party AVB assessment. 6-10 week evaluation timeline. 12-month validity with semi-annual re-testing and annual re-certification.
+Applicable system types: enterprise automation agents, financial workflow agents, multi-agent orchestration, customer-facing autonomous services, supply chain optimization agents.
+
+# Level 3 — Comprehensive
+Everything in Level 2 plus continuous SDK monitoring, adversarial red-team testing by ARAF-approved operators, independent third-party evaluation, and quarterly formal reassessment. 8-12 week initial evaluation. 12-month validity maintained through continuous monitoring.
+Applicable system types: autonomous robotic systems, medical AI systems, critical infrastructure controllers, autonomous financial trading, physical autonomous systems, agentic AI brokers.
+
+# Certification Level Comparison
+PART IV-B
+TWO-AXIS CERTIFICATION MODEL
+Deployment Certifications under the ARA Standard are expressed across two axes: Evaluation Level and Assurance Class. Both axes are required for a complete Deployment Certification. Platform Certifications use the Evaluation Level axis only; Assurance Class does not apply to Platform Certifications.
+
+# Axis 1 — Evaluation Level
+The Evaluation Level describes the rigor of the evaluation conducted by an accredited AVB. Three levels are defined as specified in Part IV: Level 1 Foundation, Level 2 Operational, and Level 3 Comprehensive. The Evaluation Level applies to both Platform Certifications and Deployment Certifications and governs the depth of evidence required, the evaluation methods employed, and the adversarial testing intensity.
+
+# Axis 2 — Assurance Class (Deployment Certifications Only)
+The Assurance Class describes the intensity of ongoing monitoring required to maintain a Deployment Certification in good standing after initial certification. Assurance Class is determined by Risk Classification (see Part IV-C) and is not selected by the applicant organization. Three Assurance Classes are defined:
+Class A — Periodic. Annual or biannual re-evaluation. No continuous CAPO monitoring required. Event-triggered revalidation only. Applicable to low-autonomy, low-consequence, reversible deployments.
+Class B — Monitored. Active CAPO connection required with minimum monthly telemetry batch delivery. Event-triggered revalidation. Applicable to operational business systems with moderate autonomy or consequence.
+Class C — Continuously Assured. Persistent CAPO connection, real-time telemetry stream, and SLA-bound alerting required. Required for high-autonomy, high-consequence, or regulated deployments. Life-safety systems are Class C without exception.
+
+# Assurance Class Status States
+A Deployment Certification’s Assurance Class status may be in one of three states: Active (monitoring obligations met), Lapsed (monitoring below required frequency; class-dependent remediation window applies before escalation to Suspended or Expired), or Resolved (lapse remediated within window; certification restored to Active). Lapse windows by class: Class A — 30 calendar days; Class B — 14 calendar days; Class C — 72 hours. Failure to resolve within the applicable window results in automatic Suspension.
+PART IV-C
+RISK CLASSIFICATION
+Risk Classification is a formal assessment conducted by an accredited AVB as part of every Deployment Certification process. It determines the required Assurance Class for the deployment. Risk Classification is not self-assessed; it is performed and documented by the evaluating AVB and delivered to the certifying organization as the Risk Classification Report.
+
+# Risk Classification Factors
+The AVB assesses seven factors to determine the required Assurance Class:
+1. Degree of Autonomy. The extent to which the system initiates consequential actions without per-action human authorization.
+2. Consequence Severity. The maximum potential harm resulting from a behavioral failure, including financial loss, physical harm, regulatory penalty, or reputational damage.
+3. Reversibility. Whether the system’s actions can be meaningfully reversed or remediated after execution.
+4. Breadth of Impact. The number and diversity of individuals, organizations, or systems that could be affected by a behavioral failure.
+5. Regulatory Context. Whether the deployment operates in a sector subject to mandatory AI reliability or safety requirements under applicable law or regulation.
+6. Dependency Criticality. Whether other systems, workflows, or decisions depend materially on the continued correct operation of this deployment.
+7. Operational Continuity. Whether the deployment is expected to operate continuously without planned downtime windows that would allow for periodic evaluation without service disruption.
+
+# Class Assignment Rules
+Class C is required when any of the following conditions are met: life-safety consequences are possible; the system operates in a sector with mandatory real-time monitoring under applicable regulation; Consequence Severity is assessed as catastrophic and Reversibility is assessed as irreversible; or the deployment is assessed as Comprehensive profile. Class B applies when moderate autonomy, moderate consequence, or active regulatory monitoring obligations are present and Class C conditions are not met. Class A applies to all other deployments. Life-safety systems are Class C without exception regardless of other factor scores.
+Risk Classification determinations may be appealed by the certifying organization to the ARAF Technical Standards Board. Appeals must be submitted within 30 days of Risk Classification Report delivery. The TSB renders a final determination within 45 days.
+v1.1 Operating Posture: In the initial v1.1 deployment period, Risk Classification is performed by the evaluating AVB and documented in the Risk Classification Report. Automated Risk Classification tooling within accredited CAPO platforms is anticipated for a future minor version. AVBs should apply the seven-factor framework conservatively, erring toward higher Assurance Class assignment when factors are ambiguous.
+PART V
+CERTIFICATION LIFECYCLE
+The ARA certification lifecycle encompasses ten phases from initial registration through ongoing compliance.
+Phase 1: System Registration. The applicant registers the autonomous system with ARAF, providing system description, deployment context, requested certification level, and organizational information.
+Phase 2: System Profile Classification. A capability-based scoping questionnaire determines the applicable System Profile (F/S/A/C). The scoping evaluates deployment context, modality, tool access, data sensitivity, autonomy level, agent architecture, regulatory exposure, and impact scope.
+Phase 3: Statement of Applicability. The applicant produces a Statement of Applicability addressing all 410 ACRs, justifying inclusion or exclusion of each based on the determined system profile and organizational risk assessment.
+Phase 4: ACR Evaluation. The AVB (or self-assessment for L1 Foundational) evaluates each applicable ACR using defined methods. Each evaluation produces a result and links to an evidence artifact.
+Phase 5: Adversarial Simulation. Dedicated adversarial testing calibrated to certification level: automated suite (L1), automated + human simulation (L2), multi-layer + independent red team (L3).
+Phase 6: Human Expert Review. Qualified assessors review evaluation findings, evidence artifacts, and documentation. Expert reviewers must hold current ARAF assessor credentials.
+Phase 7: Certification Decision. The ARAF Certification Office issues one of four decisions: Certified, Conditionally Certified (90-day remediation), Deferred, or Denied.
+Phase 8: Registry Publication. Certified systems are published in the public ARA Certification Registry with system profile, certification level, domain scores, and compliance status.
+Phase 9: Continuous Monitoring Enrollment. Post-certification deployment of the Behavioral Telemetry SDK for ongoing compliance verification per the per-ACR evaluation frequency schedule.
+Phase 10: Reassessment. Periodic reassessment per certification level schedule, or triggered by material system changes, detected drift, production incidents, or standard revisions.
+PART VI
+TESTING AND CONTINUOUS MONITORING PLATFORM ARCHITECTURE
+The ARA Testing and Continuous Monitoring Platform comprises six core components: Simulation Sandbox Engine, Adversarial Harness, Behavioral Telemetry SDK, Drift Detection Engine, Certification Scoring Engine, and Continuous Assurance Platform (CAP). The platform is designed as a modular, API-driven architecture supporting both on-premises and cloud deployment.
+The Behavioral Telemetry SDK (documented in ARAF-ARA-SDK-2026-002) provides embeddable instrumentation for runtime monitoring with action trace streaming, boundary violation logging, drift signal reporting, and anomaly detection. The SDK supports integration via REST API, gRPC, and native bindings for Python, Node.js, Java, Go, and Rust.
+The Continuous Assurance Platform operates as persistent infrastructure integrated directly into the operational fabric of certified autonomous systems. Certification health is a live signal, continuously validated, immediately degraded when violations occur, and transparently visible to all authorized stakeholders. The CAP is operated by an accredited Continuous Assurance Platform Operator (CAPO) — an independent, ARAF-accredited technology company responsible for telemetry ingestion, real-time compliance verification, revalidation alerting, and insurance data feeds. The ecosystem supports multiple accredited CAPOs; certified organizations select their preferred CAPO from the ARAF CAPO Directory. The CAP supports both internal single-organization monitoring and multi-party cross-organization monitoring for autonomous systems interacting across organizational boundaries. For CAPO accreditation requirements, platform specifications, and the CAPO marketplace model, see the ARAF Ecosystem and Governance Guide (ARAF-ARA-GOV-2026-001), Article 4.
+PART VII
+REGULATORY ALIGNMENT AND COMPLIANCE MAPPING
+The ARA Standard is designed to complement existing regulatory frameworks. While ARA certification does not constitute legal compliance with any specific regulation, the standard’s requirements are mapped to major frameworks to facilitate integration. The complete crosswalk is published in the Regulatory Compliance Mapping Guide (ARAF-ARA-REG-2026-002).
+Important: ARA certification is complementary to, not a substitute for, regulatory compliance. Organizations must independently verify that ARA certification evidence meets their specific regulatory obligations.
+PART VIII
+APPENDICES
+
+# Appendix A: Companion Documents
+
+# Appendix B: Industry-Specific Guidance
+ARAF publishes industry-specific application notes for: Financial Services, Healthcare, Manufacturing and Industrial, Transportation and Logistics, Energy and Utilities, Government and Public Sector, Food and Supply Chain, Voice AI Agents, and Multimodal AI Agents.
+
+# Appendix C: Certification Pathways
+
+## Pathway 1: Self-Serve Certification via an Accredited CAPO’s CAP
+An accredited CAPO’s CAP provides a self-serve certification environment where autonomous systems can initiate, execute, and maintain certification. System operators connect via API integration, SDK deployment, or agent-to-agent handshake. The accredited CAPO orchestrates automated registration, AI-driven ACR evaluation, evidence collection, human expert review at strategic checkpoints, certification issuance, and continuous monitoring enrollment.
+
+## Pathway 2: Authorized Validation Body (AVB) Engagement
+Full-service certification through an accredited AVB, particularly appropriate for Level 3 certifications, novel architectures, or heavily regulated industries. AVB evaluations use the same platform infrastructure and ACR requirements.
+
+## Express Certification Pathway (New in v1.1)
+For Foundational profile systems seeking Level 1 Foundation certification, the Express pathway targets 3-4 weeks through parallelized evaluation steps, asynchronous evidence collection, and streamlined human review. The Express pathway evaluates all 97 applicable ACRs with the same rigor as standard Level 1 certification but optimizes the process timeline through platform automation.
+
+# Appendix D: Certification Mark and Registry
+Certified systems display the ARA Certification Mark indicating system profile, certification level, and validity date. The public ARA Certification Registry contains real-time compliance status for all certified systems. Registry data is updated within 24 hours of any status change.
+
+# Appendix E: Scoping Guide Summary (New in v1.1)
+The ARA Scoping Guide provides the complete capability-based questionnaire for determining system profiles. The scoping questionnaire evaluates eight dimensions:
+The system profile is determined by the highest applicable level across all eight dimensions.
+END OF STANDARD
+ARA Standard Version 1.1 | Approved
+© 2026 Autonomous Reliability Assurance Foundation
+The minimum operational reliability floor for autonomous systems.
+It does not rank. It does not optimize. It certifies deployability.
+
+--- TABLE 1 ---
+Field | Value
+Title | ARA Standard — Autonomous Reliability Assurance
+Version | 1.1 (Approved)
+Document ID | ARAF-ARA-STD-2026-002
+Classification | Public
+Issuing Body | Autonomous Reliability Assurance Foundation (ARAF)
+Supersedes | ARAF-ARA-STD-2026-001 (v1.0 Public Review Draft)
+Effective Date | March 2026
+Review Cycle | Quarterly for ACR updates; Annual for structural revisions
+Total ACRs | 410 across 15 reliability domains
+System Profiles | 4 (Foundational, Standard, Advanced, Comprehensive)
+Certification Levels | 3 (Foundation, Operational, Comprehensive)
+Approved By | Technical Standards Board (TSB)
+
+--- TABLE 2 ---
+Abbreviation | Meaning
+ACR | Autonomous Control Requirement
+ARA | Autonomous Reliability Assurance
+ARAF | Autonomous Reliability Assurance Foundation
+AVB | Authorized Validation Body
+CAP | Continuous Assurance Platform
+CAPO | Continuous Assurance Platform Operator
+ERD | Enterprise Risk Dimension
+HITL | Human-in-the-Loop
+MAS | Multi-Agent System
+SDK | Software Development Kit
+SoA | Statement of Applicability
+TSB | Technical Standards Board
+
+--- TABLE 3 ---
+Domain | Title | ACRs | Risk Dimension
+1 | Autonomy Scope Definition | 24 | System Integrity
+2 | Decision Integrity | 32 | System Integrity
+3 | Tool and API Governance | 28 | System Integrity
+4 | Identity and Permission Containment | 22 | Information Governance
+5 | Data Privacy and Information Protection * | 24 | Information Governance
+6 | Failure Mode Containment | 28 | Operational Resilience
+7 | Behavioral Reliability Under Stress | 32 | Operational Resilience
+8 | Adversarial Robustness | 38 | Operational Resilience
+9 | Drift Detection and Stability | 24 | Operational Resilience
+10 | Monitoring and Telemetry | 26 | Observability & Control
+11 | Escalation and Human Override | 22 | Observability & Control
+12 | Auditability and Transparency | 24 | Observability & Control
+13 | Societal Impact and Responsible Deployment * | 22 | Governance & Societal Impact
+14 | Operational Governance Controls | 22 | Governance & Societal Impact
+15 | Physical Actuation Integrity (Extension) | 30 | Physical Systems Assurance
+
+--- TABLE 4 ---
+Risk Dimension | Domains | Focus
+System Integrity | D1, D2, D3 | Decision correctness, boundary enforcement, tool governance
+Information Governance | D4, D5 | Identity containment, data privacy, access control
+Operational Resilience | D6, D7, D8, D9 | Failure containment, stress reliability, adversarial robustness, drift stability
+Observability & Control | D10, D11, D12 | Monitoring, human override, auditability
+Governance & Societal Impact | D13, D14 | Societal responsibility, operational governance
+Physical Systems Assurance | D15 | Physical actuation integrity, sensor fusion, environmental safety
+
+--- TABLE 5 ---
+Field | Description
+ACR ID | Unique identifier in format ACR-[Domain].[Sequence]
+Domain | The reliability domain to which the ACR belongs
+Requirement Statement | The SHALL/SHALL NOT statement defining the requirement
+Evaluation Method | How the ACR is tested (AT, HS, EI, CM, or hybrid)
+Evidence Type | The type of artifact required to substantiate compliance
+Min Cert Level | The minimum certification level at which this ACR applies
+Risk Weight | Relative importance in domain scoring (1-5 scale)
+Failure Consequence | Impact of failing this ACR (A=blocking, B=conditional, C=advisory, D=informational)
+Cross-References | Related ACRs, standards, or regulatory requirements
+Profile Applicability | Which system profiles this ACR applies to (F, S, A, C)
+Evidence Specification | Named evidence artifacts required for compliance
+Risk Dimension | Enterprise risk dimension mapping
+Framework Crosswalk Refs | Specific provisions from mapped frameworks
+Evaluation Frequency | Per-ACR monitoring cadence (Continuous, Quarterly, Annual, At-Certification)
+L1 Evidence Standard | What Level 1 Foundation evaluation requires
+L2/L3 Evidence Standard | What Level 2 Operational and Level 3 Comprehensive add
+
+--- TABLE 6 ---
+Frequency | Cadence | Mechanism | Example ACRs
+Continuous | Real-time via SDK | Behavioral Telemetry SDK streaming | Output distribution monitoring, action logging, escalation triggers
+Quarterly | Every 90 days | Automated test suite + AVB spot-check | Adversarial robustness, PII detection, CBRN guardrails
+Annual | At certification renewal | Document review + updated evidence | Governance policies, training data provenance, environmental impact
+At-Certification | Initial + major changes | Full assessment during certification | Operational boundary specification, data flow mapping
+
+--- TABLE 7 ---
+Characteristic | Level 1: Foundation | Level 2: Operational | Level 3: Comprehensive
+Evaluation Method | Evidence inspection + policy review | L1 + automated testing + operational evidence | L2 + SDK monitoring + red team + independent eval
+Self-Assessment | Available (Foundational profile) | Not available | Not available
+Timeline | 3-4 weeks (Express) | 6-10 weeks | 8-12 weeks initial
+Validity | 12 months | 12 months | 12 months
+Reassessment | Annual | Semi-annual re-test, annual re-cert | Continuous + quarterly formal
+Red Team | Not required | Recommended | Required (ARAF-approved)
+Stress Testing | Standard | Extended | 30-day continuous
+
+--- TABLE 8 ---
+Framework | Relevant ARA Domains | Alignment Notes
+EU AI Act (2024) | All 15 domains | ARA Level 2+ substantially addresses High-Risk AI System requirements
+NIST AI RMF (2023) | D1, D2, D5, D6, D8, D9, D10, D11, D13 | ACRs provide measurable controls for NIST’s principles-based guidance
+ISO/IEC 42001 (2023) | D10, D12, D14 | Governance and auditability domains align with AIMS requirements
+ISO/IEC 27001 (2022) | D3, D4, D5, D10, D14 | Information security controls map to tool governance, identity, data privacy, monitoring
+SOC 2 Type II | D4, D5, D6, D10, D12, D14 | Trust services criteria map to multiple ARA domains
+MITRE ATLAS | D3, D5, D8, D13 | Adversarial threat landscape addressed through multiple domains
+CSA AICM | D4, D5, D8, D10 | Cloud AI controls map to identity, data privacy, adversarial, monitoring
+OWASP LLM Top 10 | D2, D3, D4, D5, D8 | LLM-specific vulnerabilities addressed across five domains
+GDPR / CCPA | D5, D12, D13 | Data privacy domain directly addresses privacy regulation requirements
+ISO/IEC 42005:2025 | D11, D5, D6 | AI system impact assessment; lifecycle harm management; required under EU AI Act for high-risk systems
+ISO/IEC 42006:2025 | D9, D14 | Requirements for AI certification bodies; directly informs AVB accreditation criteria and governance structure
+AAIF / MCP | D2, D3, D4, D8 | AAIF = connectivity/interoperability layer; ARA = reliability/behavioral assurance layer; complementary infrastructure
+NIST AI Agent Initiative | D1, D6, D10, D12 | ARA operationalizes NIST agent-specific guidance; conformity assessment layer for emerging NIST agent standards
+CoSAI | D4, D5, D8, D10 | CoSAI = security practices; ARA = reliability/assurance; MCP Security threat taxonomy informs D4, D8, D10 ACRs
+
+--- TABLE 9 ---
+Document ID | Title | Description
+ARAF-ARA-ACR-2026-002 | Complete ACR Control Matrix | Full specification of all 410 ACRs with 17-column structure including profile applicability, evidence specifications, and evaluation frequencies
+ARAF-ARA-AVB-2026-002 | AVB Authorization Guide | Requirements and process for Authorized Validation Body authorization
+ARAF-ARA-EVL-2026-002 | Evaluation Methodology Guide | Detailed procedures for conducting ARA evaluations including Express pathway
+ARAF-ARA-SDK-2026-002 | Behavioral Telemetry SDK Reference | Technical documentation for the Continuous Assurance monitoring SDK
+ARAF-ARA-REG-2026-002 | Regulatory Compliance Mapping Guide | Detailed crosswalk between ARA requirements and 15+ regulatory frameworks
+ARAF-ARA-PHY-2026-002 | Physical Systems Evaluation Supplement | Extended guidance for Domain 15 evaluation of physical autonomous systems
+ARAF-ARA-TMK-2026-002 | Trademark and Certification Mark Usage Policy | Rules governing the use of ARA certification marks including tokenized badges
+ARAF-ARA-GOV-2026-001 | Ecosystem and Governance Guide | Defines six participant categories (TSB, AVBs, CAPOs, RIPs, Certified Organizations, Founding Consortium), governance structure, accreditation requirements, and ecosystem architecture
+
+--- TABLE 10 ---
+Dimension | Foundational (F) | Standard (S) | Advanced (A) | Comprehensive (C)
+Deployment | Internal only | Internal + external | External, multi-org | Critical infrastructure
+Modality | Text only | Text + structured data | Text + voice/image | All + physical
+Tool Access | None | Read-only APIs | Read-write APIs | Admin + physical actuators
+Data Sensitivity | Public data | Business confidential | Regulated (PII/PHI) | Classified/CBRN-adjacent
+Autonomy Level | Human approves all | Bounded, exceptions escalated | High autonomy, spot checks | Full autonomy, safety-critical
+Agent Architecture | Single agent | Single agent + tools | Multi-agent orchestration | Multi-agent + physical
+Regulatory Exposure | None/minimal | Standard (GDPR/CCPA) | Sector-specific (HIPAA) | High-risk EU AI Act + sector
+Impact Scope | Internal users | Customers/partners | Public at scale | Safety-critical populations

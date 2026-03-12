@@ -1,0 +1,587 @@
+AUTONOMOUS RELIABILITY ASSURANCE FOUNDATION
+ARA Standard v1.1
+Trademark and Certification Mark
+Usage Policy
+ARAF-ARA-TMK-2026-002
+Approved | Version 1.1 | March 2026
+Classification: Public
+© 2026 Autonomous Reliability Assurance Foundation. All Rights Reserved.
+
+## Document Control
+
+## Revision History
+
+## Summary of Changes in v1.1
+Domain renumbering: All references to Domain 13 (Physical Actuation Integrity) updated to Domain 15, consistent with the 15-domain structure introduced in ARA Standard v1.1.
+Standard version indicator: New required mark component displaying the ARA Standard version (e.g., “v1.1”) against which the system was evaluated. Added to mark anatomy (Article 3.1), tokenized badge metadata (Article 6.6), and digital badge rendering.
+Insurance badge variant: New Article 6.7 defines the “ARA Certified + Insured” supplementary mark attribute for certified systems that also carry coverage from an ARAF-recognized insurer partner. Includes visual specification, verification protocol, and lifecycle management.
+Document references updated: All companion document references updated to v1.1 (-002 suffix).
+Fifteen-domain references: Foreword and scope updated from “twelve core domains” to “fourteen core domains plus one extension domain (Domain 15).”
+Platform Certification mark variant: New section 4.5 defines the Platform Certification mark variant (ARA wordmark + “Platform Certified” designation), its permitted uses on vendor product pages, API documentation, developer portals, and SDK integration guides, and the scope statement requirement. Includes Certification Inheritance display rules restricting deployers to the Deployment Certification mark or the “Powered by ARA Platform Certified Technology” lockup.
+Platform Certification prohibited uses: New section 7.3 adds three specific prohibited uses: (a) deployer display of Platform Certification mark to imply system-level ARA certification; (b) platform vendor claims that Platform Certification covers excluded deployment-specific ACRs; (c) use of “Powered by ARA Platform Certified Technology” lockup without prior written ARAF approval.
+Platform Certification badge scope payload: New section 6.6.8 specifies the Platform Certification badge variant, which carries a scope payload in the JWT containing covered ACR domains, excluded ACR domains, Reference Environment version, and material change threshold. Badge verifiers must verify scope payload integrity separately from the certification status field. A badge with an altered scope payload is invalid regardless of certification status verification.
+Glossary additions: Twelve new terms added to Appendix C: Assurance Class, Assurance Lapse, Certification Inheritance, Certified Technology Partner (CTP), Class A — Periodic, Class B — Monitored, Class C — Continuously Assured, Deployment Certification, Evaluation Level, Platform Certification, Reference Environment, and Risk Classification.
+
+# Foreword
+The ARA Certification Mark is the public-facing symbol of the Autonomous Reliability Assurance Standard. It communicates to customers, partners, regulators, and the public that an autonomous system has been evaluated against rigorous reliability criteria and meets the requirements of its certified level.
+The value of the ARA Certification Mark depends entirely on the integrity of its use. When the mark is displayed accurately and consistently, it builds trust in the certification ecosystem. When it is misused, misrepresented, or displayed without authorization, it undermines the credibility of every organization that has invested in earning legitimate certification.
+This Trademark and Certification Mark Usage Policy establishes binding rules governing the display, reproduction, and management of ARAF trademarks and the ARA Certification Mark. It applies to all certified organizations, Authorized Validation Bodies (AVBs), ARAF partners, and any party that references ARAF or ARA certification in products, marketing, or communications.
+Compliance with this policy is a condition of maintaining ARA certification. Violations may result in enforcement actions up to and including certification revocation.
+The ARAF Legal and Standards Office maintains this policy and welcomes questions regarding mark usage. Inquiries may be directed to the trademark team through the ARAF website.
+
+# Article 1: Purpose and Scope
+
+## 1.1 Purpose
+This policy defines the authorized uses, visual standards, placement requirements, and enforcement procedures for the ARAF trademark portfolio and the ARA Certification Mark. Its objectives are to: preserve the integrity and recognition value of the ARA Certification Mark; ensure that all representations of ARA certification are accurate and verifiable; protect certified organizations from confusion caused by unauthorized mark use; provide clear guidance for all parties on what constitutes authorized versus unauthorized use; and establish proportionate enforcement procedures for policy violations.
+
+## 1.2 Scope of Applicability
+This policy applies to all uses of ARAF trademarks and the ARA Certification Mark in any medium, including but not limited to:
+Physical media: Product packaging, printed marketing materials, trade show displays, signage, business cards, letterhead, and physical product labeling.
+Digital media: Websites, mobile applications, software interfaces, digital advertising, social media, email communications, API documentation, and developer portals.
+Documentation: Technical documentation, compliance reports, audit reports, RFP responses, sales proposals, and investor materials.
+Press and media: Press releases, news articles, analyst reports, blog posts, podcasts, and video content.
+Contractual references: Service agreements, partnership agreements, vendor contracts, and procurement documents.
+
+## 1.3 Binding Authority
+This policy is incorporated by reference into every ARA Certification Agreement, AVB Authorization Agreement, and ARAF Partner Agreement. By obtaining or maintaining ARA certification, organizations agree to comply with this policy as amended from time to time. Non-compliance constitutes a breach of the Certification Agreement and may trigger enforcement actions under Article 10 of this policy.
+
+## 1.4 Policy Amendments
+ARAF reserves the right to amend this policy at any time. Material amendments will be communicated to all certified organizations and AVBs with a minimum 90-day implementation period. Certified organizations are responsible for updating their mark usage to comply with amendments within the implementation period. Continued use of marks after the implementation period constitutes acceptance of the amended policy.
+
+# Article 2: ARAF Trademark Portfolio
+
+## 2.1 Protected Marks
+The following marks are registered trademarks of the Autonomous Reliability Assurance Foundation. All rights are reserved.
+
+## 2.2 ARAF Organizational Logo
+The ARAF organizational logo (the stylized “ARAF” wordmark with “Autonomous Reliability Assurance Foundation” tagline) is reserved for use by ARAF in its own communications, publications, and platforms. Limited exceptions apply:
+Authorized Validation Bodies: AVBs may display the ARAF logo on their “Authorized by ARAF” credential page, sized no larger than 1.5 inches (38 mm) wide, with the required “Authorized Validation Body” designation displayed adjacent to the logo.
+Certified organizations: Certified organizations SHALL NOT display the ARAF organizational logo. Certified organizations use the ARA Certification Mark (Article 3) to indicate certification status.
+Press and media: Journalists and publications may reproduce the ARAF logo for editorial purposes without modification, at a resolution sufficient to preserve legibility, with attribution to ARAF.
+
+## 2.3 Trademark Notice Requirements
+All documents, web pages, and marketing materials displaying any ARAF mark SHALL use the appropriate trademark symbol on first use and include the attribution statement:
+Required attribution statement: “ARAF, ARA, and the ARA Certification Mark are registered trademarks of the Autonomous Reliability Assurance Foundation. Used under license.”
+This statement SHALL appear in a legible font size (minimum 6pt print, 10px digital) at the bottom of the page, document, or in a legal notices section of the website.
+
+# Article 3: ARA Certification Mark Specifications
+
+## 3.1 Mark Anatomy
+The ARA Certification Mark is a circular badge containing the following required components. All components must be present for a valid mark display.
+Removal, alteration, or obscuring of any required component renders the mark display invalid and constitutes a violation of this policy.
+Note on standard version indicator: Marks issued prior to v1.1 (January 2026 and earlier) do not include the standard version indicator. These marks remain valid for the duration of their certification period. Upon recertification or reassessment under ARA Standard v1.1 or later, the updated mark with version indicator will be issued.
+
+## 3.2 Authorized Color Variations
+The mark SHALL NOT be rendered in the certified organization’s brand colors, in gradient fills, with drop shadows, with transparency or opacity effects, with embossing or 3D effects, or in any color combination not specified above.
+
+## 3.3 Minimum Size Requirements
+
+## 3.4 Clear Space
+A minimum clear space equal to 15% of the mark’s diameter SHALL be maintained on all sides of the mark. No text, graphics, logos, rules, borders, or other visual elements may enter the clear space zone.
+
+## 3.5 Color Specifications
+
+## 3.6 Typography
+The ARA Certification Mark uses the following typography: the “ARA” central wordmark is rendered in the proprietary ARAF geometric logotype, a custom-designed letterform with distinctive angled cuts matching the ARAF organizational wordmark. This logotype is not a standard typeface and SHALL NOT be recreated from any font. The “CERTIFIED” and “LEVEL” text use a bold sans-serif typeface. The “AUTONOMOUS RELIABILITY ASSURANCE” ring text uses a regular-weight sans-serif. The Certification ID and version indicator use a light-weight sans-serif. Certified organizations SHALL NOT recreate the mark from component elements. They SHALL use only the official vector artwork files (.SVG, .EPS, .AI) or approved raster files (.PNG at 300+ DPI) provided through the ARAF Certification Portal.
+
+# Article 4: Authorized Usage by Certification Level
+
+## 4.1 Usage Rights Matrix
+
+## 4.2 Scope Limitation Requirement
+Regardless of certification level, the ARA Certification Mark SHALL only be displayed in connection with the specific system or systems that have been evaluated and certified. The mark SHALL NOT be used to imply certification of systems, products, or services not included in the evaluation scope. Blanket statements such as “Our products are ARA Certified” are prohibited unless all products of the referenced type are certified.
+
+## 4.3 Level 2 Marketing Usage Restrictions
+Level 2 certified organizations may use the mark in marketing materials subject to the following restrictions: the material must identify the specific certified system by name; the material must not imply certification extends to uncertified systems; the Certification ID must be legible in the mark display or referenced in adjacent text; and the material must include the required attribution statement (Article 2, Section 2.3).
+
+## 4.4 Level 3 Product Naming Approval Process
+Level 3 certified organizations seeking to incorporate “ARA Certified” into product naming must submit a written request to the ARAF Legal and Standards Office including: the proposed product name, the Certification ID, the intended markets and channels, and sample packaging mockups. ARAF will respond within 30 business days.
+
+## 4.5 Platform Certification Mark Variant
+Platform Certification is a distinct ARA certification variant issued to platform vendors and technology providers whose components or capabilities have been evaluated within a Reference Environment. The Platform Certification mark variant uses the ARA wordmark combined with the “Platform Certified” designation and is governed by the usage rules in this section in addition to the general mark requirements in Articles 2 through 4.
+Permitted uses. The Platform Certification mark variant may be displayed on vendor product pages, API documentation, developer portals, SDK integration guides, and partner integration materials, provided the display accurately identifies the covered ACR domains and system version and is accompanied by the Platform Certification scope statement (see below).
+Prohibited contexts. The Platform Certification mark SHALL NOT be displayed in contexts that imply deployment-level certification of end-user applications or of the deployer’s own system. Use of the Platform Certification mark in contexts where a reasonable observer would conclude that the deployer’s system has obtained Deployment Certification is a prohibited misleading use under Article 7.
+Scope statement requirement. Each display of the Platform Certification mark variant SHALL be accompanied by a Platform Certification scope statement that identifies: the covered ACR domains; the ARA Standard version evaluated against; and the Reference Environment system version. The scope statement may appear as a linked disclosure rather than inline text provided the link destination is the ARAF Registry entry for that Platform Certification.
+Certification Inheritance and mark display. Deployers that have obtained Deployment Certification and are claiming Certification Inheritance from a Platform Certified component SHALL display only their Deployment Certification mark or the ARAF-approved “Powered by ARA Platform Certified Technology” lockup for that component. Deployers claiming Certification Inheritance may not display the Platform Certification mark itself.
+
+# Article 5: Placement and Display Requirements
+
+## 5.1 General Placement Principles
+The ARA Certification Mark SHALL be displayed in a manner that is: clearly associated with the certified system; legible at the displayed size; visually distinct from the certified organization’s own logos and branding; and consistent with the clear space requirements defined in Article 3.
+
+## 5.2 Product Packaging
+For Level 2 and Level 3 certified organizations: the mark shall appear on the rear or side panel; minimum 0.75 inches (19 mm) diameter, maximum 2.0 inches (51 mm); placed within 2 inches of the product name to which certification applies; and the attribution statement shall appear on the same panel or the legal information panel.
+
+## 5.3 Website Display
+Certified organizations SHALL maintain a dedicated certification page identifying the certified system, certification level, Certification ID, certification date, next reassessment date, and ARA Standard version. A hyperlink to the ARAF Public Certification Registry is required. The mark may appear on homepage or product pages only if it links to the dedicated certification page. A small footer badge (80 pixels) is permitted if it links to the certification page.
+
+## 5.4 Software and System Interface
+For Level 2 and Level 3 organizations: the mark may appear on Settings, About, or Compliance screens; on login or splash screens of the certified system only; as a clickable element linking to the ARAF Registry entry; and on the cover page or header of technical documentation.
+
+## 5.5 Print Advertising and Marketing Materials
+The mark shall appear at minimum size (0.75 inches) and no more than 15% of total advertisement area. The certified system must be clearly identified. If both certified and uncertified products appear, a disclaimer is required.
+
+# Article 6: Digital Usage, Registry Badge, and Tokenized Badge
+
+## 6.1 ARAF Public Certification Registry
+ARAF maintains a publicly accessible Certification Registry at registry.araf.org listing all currently certified systems. Each entry contains: organization name, system name and version, certification level, Certification ID, ARA Standard version evaluated against, certification and expiration dates, evaluation scope summary, most recent reassessment date, insurance status (if applicable), and current certification status (Active, Suspended, Expired, or Revoked). The registry URL format is: registry.araf.org/verify/ARA-YYYY-NNNNN
+
+## 6.2 Registry Verification Badge
+ARAF provides a dynamic Registry Verification Badge for digital placements. The badge is an embeddable HTML/JavaScript component that: displays the ARA Certification Mark in authorized digital format; connects to the ARAF registry API to verify current certification status in real-time; displays a green indicator when Active, yellow within 30 days of expiration, red when Expired/Suspended/Revoked; displays the ARA Standard version the system was evaluated against; and links to the certified system’s registry entry when clicked.
+
+## 6.3 Badge Implementation
+Certified organizations are encouraged to use the Registry Verification Badge instead of static mark images. The embed code is available through the ARAF Certification Portal. The badge supports light and dark theme variants. If the badge cannot connect to the registry, it displays the static mark with a “Verification unavailable” tooltip.
+
+## 6.4 Social Media Usage
+Organizations may state “Our [system name] has achieved ARA Level [N] certification (v1.1)” or equivalent factual statements. The mark may be included as an image meeting platform minimum size requirements. The mark SHALL NOT be used as profile pictures, avatars, or header images.
+
+## 6.5 Email Signatures
+The mark may appear in email signatures for personnel directly associated with the certified system, meeting minimum digital size (80 pixels), linking to the registry entry, and including the Certification ID in adjacent or alt text. The mark SHALL NOT appear in email signatures of unrelated personnel.
+
+## 6.6 Tokenized Certification Badge
+
+### 6.6.1 Token Architecture
+Each tokenized badge contains: a cryptographic signature binding the badge to the Certification ID, system identity, certification level, ARA Standard version, and validity period; a unique non-transferable token identifier; an embedded verification URL; a machine-readable JWT payload containing structured certification metadata including the standard version field; and a visual rendering of the ARA Certification Mark with the correct level, version indicator, and Certification ID.
+
+### 6.6.2 Token Metadata Schema
+The JWT payload of each tokenized badge includes the following standardized fields:
+
+### 6.6.3 Issuance and Lifecycle
+Tokenized badges are issued automatically upon certification grant. Each badge lifecycle mirrors the certification: activated upon issuance; refreshed upon successful reassessment (with updated standard version if applicable); suspended if certification is suspended; revoked and permanently invalidated if certification is revoked; and expires when the certification period ends without renewal.
+
+### 6.6.4 Physical Asset Usage
+The tokenized badge may be rendered as a QR code or NFC-readable tag for physical assets. Applications include: product labels and packaging (Level 2 and Level 3); hardware enclosures for certified physical autonomous systems; safety compliance placards; and equipment identification tags. The QR/NFC tag SHALL resolve to the live ARAF registry entry.
+
+### 6.6.5 Digital Asset Usage
+Digital applications include: API response headers (X-ARA-Certification-Token) enabling automated verification; agent-to-agent handshake where autonomous agents present their tokenized badge during multi-agent interactions to establish certified status, standard version compatibility, and insurance status with peer systems; continuous assurance integration linked to CAP telemetry; developer portal and marketplace listings; and digital procurement and RFP responses.
+
+### 6.6.6 Verification Protocol
+Any party may verify a tokenized badge through: scanning the QR/NFC tag; submitting the token to the Verification API (GET https://api.araf.org/v1/verify/{token-id}); offline signature validation using the ARAF public key; or the ARAF SDK verification method. The API response includes the standard version, certification level, system profile, and insurance status.
+
+### 6.6.7 Token Security
+Security measures include: asymmetric cryptographic signatures (RSA-4096 or Ed25519); token binding to certified system identity; short-lived verification tokens (24-hour validity); revocation checking via CRL and OCSP endpoints; and tamper detection. Attempting to forge, duplicate, or tamper with a tokenized badge constitutes a violation under Article 7 and Article 10, and may additionally constitute fraud under applicable law.
+
+### 6.6.8 Platform Certification Badge Variant
+The Platform Certification badge is a specialized variant of the tokenized certification badge issued to organizations holding Platform Certification. In addition to the standard JWT fields defined in section 6.6.2, the Platform Certification badge JWT payload carries a scope payload that documents the boundaries of the Platform Certification.
+Scope payload fields. The scope payload SHALL include: (i) covered ACR domains — the list of domain IDs within the Platform Certification scope; (ii) excluded ACR domains — the list of domain IDs explicitly outside the Platform Certification scope; (iii) Reference Environment version — the system version string of the Reference Environment against which the platform was evaluated; and (iv) material change threshold — the version change threshold above which the Platform Certification requires re-evaluation.
+Verification requirement. Badge verifiers processing Platform Certification badges SHALL verify the scope payload integrity as a separate verification step, independent of verification of the certification status field. A badge in which the scope payload has been altered, truncated, or substituted is invalid regardless of whether the certification status field verifies successfully. Relying parties that do not perform scope payload verification cannot rely on the badge as confirmation of specific ACR domain coverage.
+Invalid badge treatment. A Platform Certification badge with an altered scope payload is an invalid badge and SHALL be treated as equivalent to no certification badge for purposes of any access control, Certification Inheritance claim, or compliance representation. ARAF maintains the canonical scope payload on record in the ARAF Registry; the Registry entry is authoritative in the event of any conflict with the badge payload.
+
+## 6.7 Insurance Badge Variant: ARA Certified + Insured
+ARA Standard v1.1 introduces an optional supplementary mark attribute for certified systems that also carry coverage from an ARAF-recognized insurer partner. The “ARA Certified + Insured” designation communicates that the certified system’s operational risks are backed by insurance underwritten on the basis of ARA certification data. Insurance partners eligible to activate this badge must be formally recognized by ARAF as Recognized Insurer Partners (RIPs) through the recognition process defined in ARAF-ARA-GOV-2026-001, Article 5. Organizations should verify that their insurer holds current RIP status in the ARAF Insurer Partner Directory before displaying this designation.
+
+### 6.7.1 Eligibility Requirements
+The “ARA Certified + Insured” designation may only be displayed when all of the following conditions are met:
+The system holds an active ARA certification at Level 2 or Level 3.
+The system is covered by an active insurance policy from an ARAF-recognized insurer partner.
+The insurer has confirmed coverage to ARAF through the Insurance Data Feed (ARAF-ARA-SDK-2026-002, Article 6.6) or equivalent written confirmation.
+The insurance policy specifically references the ARA Certification ID and covers risks associated with autonomous system operation.
+The ARAF registry entry for the system displays “Insurance Status: Active.”
+
+### 6.7.2 Visual Specification
+The insurance badge variant adds a supplementary band beneath the standard ARA Certification Mark. The supplementary band is NOT a modification of the certification mark itself (which would violate Article 7). It is a separate, adjacent element that may be displayed with the mark:
+
+### 6.7.3 Insurer Recognition Process
+Insurance companies seeking recognition as ARAF insurer partners must: execute an ARAF Insurance Partner Agreement; demonstrate underwriting capability for autonomous system operational risks; agree to integrate with the ARA Insurance Data Feed for real-time risk signal consumption; and pass an ARAF review of their autonomous systems insurance products. Recognized insurers are listed in the ARAF Insurance Partner Registry.
+
+### 6.7.4 Insurance Badge Lifecycle
+The insurance badge is dynamically controlled through the ARAF registry:
+The Registry Verification Badge (Article 6.2) automatically reflects insurance status changes. Organizations using static mark images must monitor insurance status and remove the insurance banner within the specified timeframes.
+
+### 6.7.5 Insurance Badge in Tokenized Badges
+The tokenized badge (Article 6.6) includes insurance status in its JWT payload. When insurance is active, the tokenized badge’s visual rendering includes the insurance banner. The token’s insurance_status and insurer_id fields enable automated verification of insurance coverage by consuming systems, procurement platforms, and multi-agent handshakes.
+
+### 6.7.6 Prohibited Insurance Badge Uses
+The following uses of the insurance badge are prohibited: displaying the “INSURED” banner without active insurance coverage from an ARAF-recognized insurer; implying that ARA certification itself constitutes insurance or warranty; using the insurance badge to imply coverage scope beyond the actual insurance policy terms; modifying the insurance banner colors, text, or dimensions; and displaying the insurance badge for Level 1 certifications.
+
+# Article 7: Prohibited Uses
+
+## 7.1 Absolute Prohibitions
+
+### 7.1.1 Mark Modification
+The mark SHALL NOT be altered, redrawn, distorted, rotated, animated, fragmented, or modified in any way. This includes changing colors, fonts, stretching, adding visual effects, overlaying graphics, removing required components, cropping, or animating the mark.
+
+### 7.1.2 False or Misleading Certification Claims
+No party SHALL display the ARA Certification Mark or claim ARA certification for any system that has not been evaluated and certified. This includes displaying the mark for unevaluated systems, displaying an incorrect level, displaying a mark with an incorrect standard version, using a fictitious Certification ID, and displaying the mark after certification has expired, been suspended, or been revoked.
+
+### 7.1.3 Implied Endorsement
+The mark SHALL NOT be used to imply ARAF endorsement, recommendation, sponsorship, or guarantee beyond the specific scope of ARA certification.
+
+### 7.1.4 Competitive Disparagement
+The mark SHALL NOT be used to disparage competitors or imply that uncertified systems are unsafe or inferior. Factual comparisons are permitted if accurate, not characterizing uncertified systems as deficient, and not suggesting ARA is the only valid standard.
+
+## 7.2 Context-Specific Prohibitions
+
+### 7.2.1 Co-Branding
+The mark SHALL NOT be combined with other certification marks into a composite graphic. Adjacent placement is permitted with individual clear spaces maintained. The insurance banner (Article 6.7) is the sole authorized supplementary element.
+
+### 7.2.2 Domain Names and URLs
+Certified organizations SHALL NOT register domain names containing “ARAF,” “ARA Certified,” or confusingly similar terms. References in URL paths are permitted.
+
+### 7.2.3 Product Names and Service Names
+Except as authorized under Article 4.4, no organization SHALL incorporate ARAF trademarks into product or service names without written approval.
+
+### 7.2.4 NFTs, Tokens, and Blockchain
+The mark SHALL NOT be minted as an NFT, used as a token symbol, or placed on blockchain assets without ARAF authorization. ARAF’s official tokenized certification badge (Article 6.6) is the only authorized digital token.
+
+## 7.3 Platform Certification Prohibited Uses
+In addition to the general prohibitions in sections 7.1 and 7.2, the following uses are prohibited specifically in connection with Platform Certification:
+(a) A deployer that has integrated a Platform Certified component MAY NOT display the Platform Certification mark or represent the deployer’s own system as ARA Platform Certified. Deployers seeking to represent their system’s compliance status must obtain Deployment Certification through the applicable pathway defined in ARAF-ARA-EVL-2026-002.
+(b) A platform vendor holding Platform Certification MAY NOT represent or imply that the Platform Certification covers deployment-specific ACRs that are explicitly excluded from the Platform Certification’s documented scope. Any representation of Platform Certification coverage that omits or contradicts the exclusions stated in the ARAF Registry entry for that certification is a prohibited misleading claim.
+(c) The “Powered by ARA Platform Certified Technology” lockup requires prior written approval from the ARAF Legal and Standards Office before any public use. Use of this lockup without written ARAF approval, including use in beta, preview, or limited-release materials, constitutes a trademark violation and may result in suspension of the organization’s certification mark license.
+
+# Article 8: Mark Display with Conditions and Limitations
+
+## 8.1 Conditional Certification Display
+When an ARA certification includes conditions or limitations, the mark display must reflect these conditions in specific circumstances.
+
+## 8.2 Active Remediation Status
+If a certified system is operating under an active remediation plan for Conditional ACR deficiencies, the organization may continue to display the mark provided: the remediation timeline has not expired; the registry status is “Active — Remediation in Progress”; the organization does not represent certification as unconditional in material contexts; and the Registry Verification Badge is used for digital placements.
+
+## 8.3 Scope-Limited Certification
+When certification is limited to specific operational modes, deployment environments, or use cases, a scope limitation statement must be displayed adjacent to the mark in contexts where the limitation is material. Example: “ARA Level 2 Certified for warehouse automation environments. Certification does not extend to outdoor or public-space deployment.”
+
+## 8.4 Domain 15 Physical Systems Notation
+For systems certified with Domain 15 (Physical Actuation Integrity) evaluation, the standard ARA Certification Mark is used without modification. When the mark is displayed in documentation or marketing describing the system’s physical capabilities, the organization is encouraged (but not required) to include: “Including physical actuation integrity evaluation per ARA Domain 15.”
+
+## 8.5 Multi-Level Certification
+If an organization has systems certified at different levels, each system’s mark SHALL display the correct level for that specific system. Level mismatch is a prohibited use under Article 7.
+
+## 8.6 Standard Version Display
+When a certified system’s evaluation was conducted against a specific ARA Standard version, all mark displays SHALL accurately reflect that version. Systems evaluated under v1.0 display the v1.0 mark; systems evaluated under v1.1 display the v1.1 mark. Displaying a version indicator that does not match the evaluation version is a prohibited use under Article 7.
+
+# Article 9: Sublicensing, Transfers, and Third-Party Use
+
+## 9.1 No Sublicensing
+The right to display the mark is granted exclusively to the certified organization and may not be sublicensed, assigned, or transferred without ARAF approval. This includes resellers, distributors, OEM customers, parent companies, subsidiaries, affiliates, and contractors.
+
+## 9.2 Reseller and Partner References
+Resellers and partners may make factual text references (e.g., “[Product] by [Organization] holds ARA Level 2 Certification, ID: ARA-2026-XXXXX”). They SHALL NOT display the mark graphic.
+
+## 9.3 Mergers and Acquisitions
+The acquiring entity must notify ARAF within 30 days. ARAF will review continued certification validity. The mark may continue to be displayed during the review period (up to 90 days). Reassessment may be required if the change materially affects the certified system.
+
+## 9.4 White-Label and OEM Scenarios
+The mark SHALL NOT be displayed on white-labeled products unless the end customer has obtained its own certification. The underlying certified organization may reference certification in technical documentation.
+
+# Article 10: Monitoring, Enforcement, and Violations
+
+## 10.1 Monitoring
+ARAF actively monitors trademark use through: automated web monitoring; annual compliance reviews; AVB reporting; industry and community reporting (trademarks@araf.org); and social media and marketplace monitoring.
+
+## 10.2 Violation Categories
+
+## 10.3 Enforcement Escalation
+
+### 10.3.1 Tier 1 Process
+Written notice with 30 calendar days to correct. If corrected, no further action. If not corrected, escalates to Tier 2.
+
+### 10.3.2 Tier 2 Process
+Formal written demand with 14 calendar days to correct. Certification review initiated. Two Tier 2 violations within 12 months triggers Tier 3.
+
+### 10.3.3 Tier 3 Process
+Immediate cease-and-desist. Certification suspended pending investigation. Willful or fraudulent misuse results in revocation. ARAF may pursue legal action and publish a revocation notice.
+
+## 10.4 Unauthorized Third-Party Enforcement
+Unauthorized mark usage triggers cease-and-desist with 14-day compliance period, followed by legal action if necessary.
+
+## 10.5 Appeals
+Certified organizations may appeal to the ARAF Board of Directors within 30 days. Appeals must be in writing with supporting evidence. Board decisions are final.
+
+# Article 11: Mark Revocation and Transition
+
+## 11.1 Events Triggering Mark Removal
+
+## 11.2 Transition Period for Expiration
+When certification approaches expiration and reassessment is underway, ARAF may grant a grace period of up to 60 days. The Registry Verification Badge will display “Pending reassessment” status.
+
+## 11.3 Mark Removal Verification
+ARAF will verify removal through web monitoring and direct review. Non-removal triggers enforcement under Article 10. The Registry Verification Badge automatically disables display upon status changes.
+
+## 11.4 Recertification After Revocation
+Organizations may apply for recertification after 12 months from revocation, with evidence of remediation and a compliance plan.
+
+## 11.5 Legacy References
+After expiration or voluntary withdrawal (not revocation), past-tense text references are permitted. Display of the mark graphic is not permitted in legacy references.
+
+# Appendix A: Certification Mark Visual Reference and Artwork
+This appendix provides the official artwork reference for the ARAF organizational identity and the ARA Certification Mark. Official high-resolution artwork files are available exclusively through the ARAF Certification Portal.
+
+## A.1 ARAF Organizational Wordmark
+The ARAF organizational wordmark consists of the stylized “ARAF” logotype with the “Autonomous Reliability Assurance Foundation” tagline. This wordmark is reserved for ARAF use only (see Article 2.2).
+Figure A.1a — ARAF Organizational Wordmark, Standard (black on light/transparent)
+Figure A.1b — ARAF Organizational Wordmark, Reverse (white on dark)
+
+## A.2 ARA Certification Mark — Standard Variation (Dark on Light)
+The standard variation is the primary mark for use on white and light-colored backgrounds. The v1.1 mark includes the standard version indicator.
+Figure A.2 — ARA Certification Mark, Standard Variation (dark on light)
+
+## A.3 ARA Certification Mark — Reverse Variation (Light on Dark)
+Figure A.3 — ARA Certification Mark, Reverse Variation (light on dark)
+
+## A.4 Complete Brand Identity Reference
+Figure A.4 — ARAF Brand Identity: Organizational Wordmark and Certification Mark Variations
+Note: The certification marks shown above display “Level 2” and Certification ID “ARA-2026-00421” as reference examples. Marks issued under v1.1 will additionally display the standard version indicator. Each certified system receives system-specific artwork through the ARAF Certification Portal.
+
+## A.5 Mark Component Reference
+
+## A.6 Color Reference
+
+## A.7 File Formats Available
+
+# Appendix B: Usage Compliance Checklist
+
+## B.1 Pre-Publication Checklist
+
+## B.2 Website-Specific Checklist
+
+## B.3 Annual Compliance Review
+Certified organizations are required to conduct an internal review of all ARA Certification Mark usage at least annually. The review should confirm: all marks reflect current certification level, Certification ID, and standard version; no marks exist for systems no longer certified; all digital placements use current artwork files; the attribution statement is present; insurance badge status matches current insurance coverage; and any new placements since the last review comply with this policy.
+
+# Appendix C: Glossary of Terms
+
+--- TABLE 1 ---
+Field | Value
+Document ID | ARAF-ARA-TMK-2026-002
+Title | Trademark and Certification Mark Usage Policy
+Version | 1.1 (Approved)
+Status | Published
+Classification | Public
+Date Published | March 2026
+Supersedes | ARAF-ARA-TMK-2026-001 (v1.0)
+Approved By | ARAF Board of Directors
+Parent Document | ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+Related Documents | ARAF-ARA-EVL-2026-002 (Evaluation Methodology Guide), ARAF-ARA-ACR-2026-002 (ACR Control Matrix), ARAF-ARA-AVB-2026-002 (AVB Authorization Guide v1.1), ARAF-ARA-SDK-2026-002 (Behavioral Telemetry SDK Reference), ARAF-ARA-PHY-2026-002 (Physical Systems Evaluation Supplement), ARAF-ARA-REG-2026-002 (Regulatory Compliance Mapping Guide), ARAF-ARA-GOV-2026-001 (Ecosystem and Governance Guide, defines RIP recognition process)
+
+--- TABLE 2 ---
+Version | Date | Author | Description
+1.0 | January 2026 | ARAF Legal and Standards Office | Initial publication
+1.1 | March 2026 | ARAF Legal and Standards Office / TSB | Domain references updated for 15-domain structure (D13→D15). Insurance badge variant added (Article 6.7). Standard version indicator added to mark anatomy and digital badges. Tokenized badge metadata updated.
+
+--- TABLE 3 ---
+Mark | Type | Registration Status | Primary Authorized Users
+ARAF | Word mark | Registered | ARAF, AVBs, press/media (editorial)
+ARAF Logo (stylized wordmark with tagline) | Design mark | Registered | ARAF only (limited AVB exception)
+ARA | Word mark | Registered | ARAF, AVBs, certified organizations
+ARA Certification Mark (circular badge) | Certification mark | Registered | Certified organizations, ARAF, AVBs
+Autonomous Reliability Assurance | Word mark | Registered | ARAF, AVBs, certified organizations (descriptive)
+"ARA Certified" | Word mark | Registered | Certified organizations only (current certification)
+"ARA Certified + Insured" | Supplementary mark | Pending | Certified organizations with ARAF-recognized insurance
+Continuous Assurance Platform / CAP | Word mark | Pending | ARAF, licensed platform users
+
+--- TABLE 4 ---
+Mark | First Use on Page or Document | Subsequent Uses on Same Page
+ARAF | ARAF® | ARAF (no symbol)
+ARA | ARA® | ARA (no symbol)
+ARA Certification Mark (badge) | ™ adjacent to first display of badge | No symbol required
+"ARA Certified" | ARA Certified® | ARA Certified (no symbol)
+"ARA Certified + Insured" | ARA Certified + Insured™ | ARA Certified + Insured (no symbol)
+
+--- TABLE 5 ---
+Component | Description | Required
+Outer ring text | "AUTONOMOUS RELIABILITY ASSURANCE" in uppercase, arranged in a semicircular arc from the left side, over the top, to the right side of the mark | Yes
+Lower ring text | "CERTIFIED" in uppercase, arranged in a circular arc at the lower portion of the mark | Yes
+Central wordmark | "ARA" in the proprietary ARAF geometric logotype with distinctive angled letterform cuts, centered within the mark | Yes
+Certification level | "LEVEL 1", "LEVEL 2", or "LEVEL 3" displayed beneath the ARA wordmark, corresponding to the organization’s certified level | Yes
+Standard version | The ARA Standard version against which the system was evaluated (e.g., "v1.1"), displayed adjacent to or below the level indicator. Introduced in v1.1. | Yes (v1.1+)
+Certification ID | "Certification ID: ARA-YYYY-NNNNN" in small text at the bottom interior of the mark | Yes
+Circular border | Two concentric circular borders forming a text band that contains the ring text, enclosing all elements | Yes
+
+--- TABLE 6 ---
+Variation | Use Case | Background Requirement
+Standard (dark on light) | Primary use on white or light-colored backgrounds | Background #F0F0F0 or lighter
+Reverse (light on dark) | Use on dark backgrounds, dark-themed interfaces | Background #404040 or darker
+Monochrome black | Single-color printing (black ink only) | White or light background
+Monochrome white | Single-color reversed printing | Dark or black background
+
+--- TABLE 7 ---
+Medium | Minimum Diameter | Rationale
+Print (300+ DPI) | 0.75 inches (19 mm) | Ensures Certification ID and version text remain legible
+Digital display (screen) | 80 pixels diameter | Ensures legibility at standard screen densities
+High-DPI / Retina display | 80 CSS pixels (160+ device pixels) | Maintains visual consistency on high-density screens
+Favicon / app icon | Not permitted | Mark cannot maintain required component legibility at favicon size
+
+--- TABLE 8 ---
+Element | Standard (Dark on Light) | Reverse (Light on Dark)
+Circular borders | #000000 (Black) | #FFFFFF (White)
+Ring text | #000000 (Black) | #FFFFFF (White)
+ARA central wordmark | #000000 (Black) | #FFFFFF (White)
+LEVEL text | #000000 (Black) | #FFFFFF (White)
+Version text | #333333 (Dark Gray) | #BBBBBB (Light Gray)
+Certification ID text | #555555 (Dark Gray) | #AAAAAA (Light Gray)
+
+--- TABLE 9 ---
+Usage Right | Level 1 | Level 2 | Level 3
+Display mark on certified system documentation | Yes | Yes | Yes
+Display mark on company website (certification page) | Yes | Yes | Yes
+Reference certification in API documentation | Yes | Yes | Yes
+Display mark on product packaging or labeling | No | Yes | Yes
+Display mark in product UI or system interface | No | Yes | Yes
+Reference certification in press releases | ARAF pre-approval required | Yes | Yes
+Display mark in advertising or marketing materials | No | Scope-limited (see 4.3) | Yes
+Display mark in sales proposals or RFP responses | No | Yes | Yes
+Use "ARA Certified" in product naming or branding | No | No | ARAF pre-approval required
+Display mark at trade shows or conferences | Own booth only | Yes | Yes
+Include mark in investor or board materials | Yes | Yes | Yes
+Display "ARA Certified + Insured" badge | No | Yes (with insurance) | Yes (with insurance)
+
+--- TABLE 10 ---
+Field | Type | Description
+certification_id | string | Unique certification identifier (ARA-YYYY-NNNNN)
+system_name | string | Name of the certified system
+organization | string | Certified organization name
+certification_level | integer | Certification level (1, 2, or 3)
+standard_version | string | ARA Standard version evaluated against (e.g., “1.1”)
+system_profile | string | System profile classification (Foundational, Standard, Advanced, Comprehensive)
+issued_at | datetime | Token issuance timestamp
+expires_at | datetime | Token expiration timestamp
+domains_evaluated | array | List of domain IDs included in evaluation scope
+insurance_status | string | Insurance status: “none”, “active”, or “expired”
+insurer_id | string | ARAF-recognized insurer identifier (if applicable)
+verification_url | string | URL to ARAF registry entry
+signature | string | Cryptographic signature (RSA-4096 or Ed25519)
+
+--- TABLE 11 ---
+Component | Specification
+Shape | Rectangular banner with rounded corners, positioned directly below the ARA Certification Mark within the clear space allowance
+Text | "INSURED" in uppercase bold sans-serif, centered
+Background (standard) | #2C6B2F (Insurance Green)
+Text color (standard) | #FFFFFF (White)
+Background (reverse) | #FFFFFF (White)
+Text color (reverse) | #2C6B2F (Insurance Green)
+Size | Width matches the certification mark diameter; height approximately 20% of mark diameter
+Clear space | The insurance banner is considered part of the combined mark display for clear space purposes. 15% of the combined height on all sides.
+Minimum size (print) | 0.75 inches (19 mm) total mark width (same as base mark)
+Minimum size (digital) | 80 pixels total mark width (same as base mark)
+
+--- TABLE 12 ---
+Event | Insurance Badge Status | Action Required
+Insurance policy issued | Activated upon insurer confirmation to ARAF | None (automatic)
+Insurance policy renewed | Refreshed with updated expiration | None (automatic)
+Insurance policy lapsed | Removed within 7 days of lapse | Organization must remove insurance badge from all displays
+Insurance policy cancelled | Immediately deactivated | Organization must remove insurance badge from all displays
+ARA certification suspended | Suspended (insurance badge hidden) | Insurance badge display prohibited during certification suspension
+ARA certification revoked | Permanently deactivated | Insurance badge must be removed along with certification mark
+
+--- TABLE 13 ---
+Tier | Category | Examples | Initial Response
+Tier 1 | Minor / Inadvertent | Incorrect color variation, missing attribution, mark below minimum size, outdated symbol, missing version indicator | Written notice with 30-day correction period
+Tier 2 | Substantive | Mark for uncertified system, missing Certification ID, mark after expiration, unauthorized marketing, mark modification, incorrect standard version, unauthorized insurance badge | Written demand with 14-day correction; certification review
+Tier 3 | Willful / Fraudulent | Fabricated Certification ID, forged mark, deliberate level/version misrepresentation, continued violation after Tier 2 demand, unauthorized party displaying mark, forged insurance badge | Immediate cease-and-desist; suspension; legal action
+
+--- TABLE 14 ---
+Event | Mark Removal Deadline | Additional Requirements
+Certification expires (not renewed) | 30 days after expiration | May state "Previously ARA Certified" with dates
+Certification suspended | 7 days after suspension notice | Remove from all public displays; internal docs may retain with "SUSPENDED" overlay
+Certification revoked | Immediately upon revocation notice | All displays removed; no "previously certified" reference for 12 months
+Certified system decommissioned | 30 days after decommissioning | May retain historical references with past-tense language
+Voluntary withdrawal | 30 days after withdrawal confirmation | May state "Previously ARA Certified" with dates
+Insurance policy lapsed/cancelled | 7 days (insurance badge only) | Insurance banner removed; base certification mark unaffected if certification remains active
+
+--- TABLE 15 ---
+Component | Specification
+Shape | Circular badge with two concentric borders forming a text band
+Outer ring text | "AUTONOMOUS RELIABILITY ASSURANCE" (uppercase, semicircular arc)
+Lower ring text | "CERTIFIED" (uppercase, circular arc, bottom)
+Central wordmark | "ARA" (proprietary geometric logotype, centered)
+Level text | "LEVEL 1" / "LEVEL 2" / "LEVEL 3" (below ARA wordmark)
+Version indicator | "v1.0" / "v1.1" / etc. (below level text, smaller weight)
+Certification ID | "Certification ID: ARA-YYYY-NNNNN" (small, bottom interior)
+Primary typeface | Proprietary ARAF geometric logotype (ARA); sans-serif family (supporting text)
+Minimum size (print) | 0.75 inches (19 mm) diameter
+Minimum size (digital) | 80 pixels diameter
+Clear space | 15% of diameter on all sides
+
+--- TABLE 16 ---
+Variation | Borders/Ring Text | ARA Wordmark | Level/Version | Cert ID
+Standard (dark on light) | #000000 | #000000 | #000000 / #333333 | #555555
+Reverse (light on dark) | #FFFFFF | #FFFFFF | #FFFFFF / #BBBBBB | #AAAAAA
+Monochrome black | #000000 | #000000 | #000000 / #333333 | #333333
+Monochrome white | #FFFFFF | #FFFFFF | #FFFFFF / #CCCCCC | #CCCCCC
+Insurance banner (standard) | n/a | n/a | n/a | BG: #2C6B2F, Text: #FFFFFF
+Insurance banner (reverse) | n/a | n/a | n/a | BG: #FFFFFF, Text: #2C6B2F
+
+--- TABLE 17 ---
+Format | Use Case | Provided Sizes
+SVG (vector) | Web display, scalable digital applications | Scalable (no fixed size)
+EPS (vector) | Professional print production | Scalable (no fixed size)
+AI (vector) | Adobe Illustrator source file | Scalable (no fixed size)
+PNG (raster, transparent) | Web, email, presentations, documents | 80px, 120px, 240px, 480px, 960px diameter
+PNG (raster, white bg) | Print, documents, white backgrounds | 300 DPI at 0.75in, 1.0in, 1.5in, 2.0in diameter
+Tokenized badge (QR) | Physical assets, equipment labeling | System-specific; generated via Portal
+Tokenized badge (JWT) | Digital integration, API, agent-to-agent | System-specific; JWT token via Portal
+Insurance variant (all above) | All formats with insurance banner | Same sizes as base mark
+
+--- TABLE 18 ---
+Check Item | Policy Reference | Status
+Mark uses official artwork file (not recreated) | Article 3.6 | 
+Mark is an authorized color variation | Article 3.2 | 
+Mark meets minimum size requirement | Article 3.3 | 
+Clear space maintained (15% of diameter) | Article 3.4 | 
+All required mark components present and unmodified | Article 3.1 | 
+Certification ID in mark matches actual certification | Article 3.1 | 
+Level in mark matches actual certification level | Article 3.1 | 
+Standard version indicator matches evaluation version | Article 3.1 / 8.6 | 
+Usage authorized for organization’s certification level | Article 4.1 | 
+Mark associated only with the certified system | Article 4.2 | 
+Trademark symbol (® or ™) on first use | Article 2.3 | 
+Attribution statement included | Article 2.3 | 
+No prohibited modifications applied | Article 7.1.1 | 
+No implied endorsement language | Article 7.1.3 | 
+No co-branding with other certification marks | Article 7.2.1 | 
+Certification is currently Active | Article 11 | 
+Insurance badge displayed only with active coverage | Article 6.7 | 
+Tokenized badge used for physical/digital assets where applicable | Article 6.6 | 
+
+--- TABLE 19 ---
+Check Item | Policy Reference | Status
+Dedicated certification page with required information | Article 5.3 | 
+Registry link to registry.araf.org included | Article 5.3 | 
+ARA Standard version displayed on certification page | Article 5.3 | 
+Homepage/product page mark links to certification page | Article 5.3 | 
+Registry Verification Badge used where possible | Article 6.3 | 
+Social media usage follows rules | Article 6.4 | 
+Mark not used as favicon or profile image | Article 3.3 / 6.4 | 
+Email signature usage limited to relevant personnel | Article 6.5 | 
+Tokenized badge QR resolves to live registry entry | Article 6.6.4 | 
+Insurance badge reflects current insurance status | Article 6.7.4 | 
+API integration uses X-ARA-Certification-Token header | Article 6.6.5 | 
+
+--- TABLE 20 ---
+Term | Definition
+ARA | Autonomous Reliability Assurance. The certification standard published by ARAF.
+ARA Certification Mark | The circular badge displaying "AUTONOMOUS RELIABILITY ASSURANCE / ARA / LEVEL [N] / v[X.X] / CERTIFIED / Certification ID" that certified organizations are authorized to display.
+ARA Certified + Insured | Supplementary mark designation for certified systems that also carry coverage from an ARAF-recognized insurer partner. Available for Level 2 and Level 3 certifications.
+ARAF | Autonomous Reliability Assurance Foundation. The independent standards body that publishes and governs the ARA Standard.
+Attribution Statement | “ARAF, ARA, and the ARA Certification Mark are registered trademarks of the Autonomous Reliability Assurance Foundation. Used under license.”
+AVB | Authorized Validation Body. A third-party organization authorized by ARAF to conduct ARA evaluations.
+CAPO | Continuous Assurance Platform Operator. An ARAF-accredited technology company authorized to operate the Continuous Assurance Platform (CAP) infrastructure. CAPOs provide the real-time telemetry monitoring that underlies Level 2 and Level 3 certifications and provision insurance data feeds for Recognized Insurer Partners. Certified organizations select their preferred CAPO from the ARAF CAPO Directory. See ARAF-ARA-GOV-2026-001, Article 4.
+Certification Agreement | The legal agreement between ARAF and a certified organization governing certification terms including mark usage rights.
+Certification ID | A unique alphanumeric identifier (format: ARA-YYYY-NNNNN) assigned to each certified system.
+Certification Portal | The ARAF-operated web platform for accessing official mark artwork, embed codes, and certification management tools.
+Clear Space | The minimum unoccupied area surrounding the mark (15% of diameter).
+Design Mark | A trademark consisting of a specific visual design or logo.
+Insurance Banner | The supplementary “INSURED” banner displayed beneath the ARA Certification Mark for systems with active ARAF-recognized insurance coverage.
+Insurance Data Feed | The standardized data exchange between the ARA SDK and recognized insurance partners, providing aggregated risk signals for underwriting purposes (see ARAF-ARA-SDK-2026-002).
+Public Certification Registry | The publicly accessible database at registry.araf.org listing all certified systems.
+Registry Verification Badge | A dynamic HTML/JavaScript embeddable component with real-time certification and insurance status verification.
+Scope Limitation | A restriction on the operational modes, environments, or use cases covered by a certification.
+Standard Version Indicator | The ARA Standard version (e.g., “v1.1”) displayed on the certification mark, indicating which version of the standard the system was evaluated against.
+System Profile | Classification of system complexity: Foundational, Standard, Advanced, or Comprehensive, as defined in ARA Standard v1.1.
+Tokenized Badge | A cryptographically signed digital artifact containing certification metadata, standard version, insurance status, and a machine-readable JWT payload for tamper-evident verification.
+Token Identifier | A unique, non-transferable string assigned to each tokenized badge for API-based verification.
+RIP | Recognized Insurer Partner. An insurance company formally recognized by ARAF to underwrite autonomous system operational risk using ARA certification data. RIPs are the only entities authorized to activate the “ARA Certified + Insured” badge designation for their policyholders. Recognition requirements and the Insurer Partner Directory are defined in ARAF-ARA-GOV-2026-001, Article 5.
+TSB | Technical Standards Board. The ARAF committee responsible for standard development and technical governance.
+Word Mark | A trademark consisting of text/words without specific design treatment.
+Assurance Class | Classification assigned to a certified system that determines the intensity of runtime monitoring obligations. Three classes: Class A (Periodic), Class B (Monitored), Class C (Continuously Assured).
+Assurance Lapse | The condition in which a certified system fails to meet the continuous telemetry or check-in obligations required for its Assurance Class, resulting in automatic downgrade of certification status.
+Certification Inheritance | The conditional transfer of a platform vendor’s Platform Certification to deployer systems that integrate the certified platform component, subject to Deployment Certification and compliance with all applicable ACRs not covered by the platform scope.
+Certified Technology Partner (CTP) | A consulting or implementation firm listed in the ARAF CTP Registry as having demonstrated ARA implementation competency. Not a certification — a registry designation. Does not confer evaluation authority or certification rights.
+Class A — Periodic | Assurance Class designation for certified systems with lower operational risk profiles. Requires periodic compliance reporting. Continuous real-time telemetry is not mandated; SDK integration is optional.
+Class B — Monitored | Assurance Class designation for certified systems with elevated operational risk profiles. Requires real-time telemetry transmission and mandatory SDK integration. Drift detection events are required.
+Class C — Continuously Assured | Assurance Class designation for certified systems with the highest operational risk profiles. Requires full SDK integration, all seven telemetry event types, continuous check-in mode, and anomaly event emission within CAPO SLA latency thresholds.
+Deployment Certification | The ARA certification issued to an organization that deploys an autonomous system in production, covering the full deployed system including any integrated Platform Certified components. Distinct from Platform Certification.
+Evaluation Level | One axis of the ARA three-axis certification model. Defines the rigor of the certification assessment: Level 1 (Foundation), Level 2 (Operational), Level 3 (Comprehensive).
+Platform Certification | An ARA certification variant issued to a platform vendor or technology provider for a defined component or capability evaluated within a Reference Environment. Platform Certification covers only the ACR domains within its documented scope; deployer systems must obtain Deployment Certification for remaining ACRs.
+Reference Environment | A controlled, reproducible environment specification used for evaluating Platform Certifications. Documents the simulated telemetry mechanism, system version, and ACR domain scope applicable to the evaluation.
+Risk Classification | The ARA framework designation assigned to a system or component that determines its required Assurance Class and applicable ACR set, based on assessed operational risk, deployment context, and potential for harm.

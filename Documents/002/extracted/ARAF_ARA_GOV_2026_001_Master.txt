@@ -1,0 +1,510 @@
+AUTONOMOUS RELIABILITY ASSURANCE FOUNDATION
+ARAF Ecosystem and Governance Guide
+ARAF-ARA-GOV-2026-001
+Participant Categories, Governance Structure, and Ecosystem Architecture
+Version 1.1 | March 2026 | Classification: Public
+© 2026 Autonomous Reliability Assurance Foundation. All Rights Reserved.
+
+## Document Control
+
+## Revision History
+
+# Executive Summary
+The Autonomous Reliability Assurance Foundation (ARAF) operates a multi-stakeholder ecosystem for the certification, continuous monitoring, and insurance of autonomous systems. This document defines the six participant categories within the ARAF ecosystem, their roles, rights, obligations, accreditation requirements, and governance relationships.
+Unlike traditional certification frameworks that rely on point-in-time audits, the ARA Standard is designed around persistent certification state — continuous monitoring that ensures autonomous systems remain in compliance throughout their operational lifecycle, not just at the moment of evaluation. This architectural decision creates distinct participant roles that do not exist in legacy certification ecosystems.
+The six participant categories are:
+
+# Foreword
+The ARA Standard exists to answer a simple question for organizations deploying autonomous systems: Is this system operationally reliable enough to trust with autonomous action in production?
+Answering that question requires more than a standard published by a single body. It requires an ecosystem: evaluators who can assess compliance, platforms that can monitor compliance continuously, insurers who can underwrite the risk, and a governance structure that ensures the standard evolves with the technology it governs.
+This document defines that ecosystem. It establishes the roles, requirements, and relationships for every participant category, from the Technical Standards Board that maintains the standard to the certified organizations that deploy under it. It is designed to be the authoritative reference for anyone seeking to understand how the ARAF ecosystem works and how to participate in it.
+A key architectural distinction separates ARAF from legacy certification frameworks. Traditional standards like SOC 2 or ISO 27001 rely on annual point-in-time audits. An auditor visits, reviews evidence, issues a report, and leaves. For the next twelve months, compliance is assumed. This model is fundamentally inadequate for autonomous systems, which can drift, degrade, or develop new failure modes between audits. The ARA Standard addresses this through persistent certification state: continuous telemetry-based monitoring that verifies compliance in real-time, every hour of every day.
+This architectural choice creates a participant category that does not exist in legacy ecosystems: the Continuous Assurance Platform Operator (CAPO). CAPOs are technology platforms accredited by ARAF to ingest telemetry from certified systems, run real-time compliance checks, trigger revalidation alerts, and feed risk signals to insurers. They are the infrastructure layer that makes persistent certification possible.
+The separation of evaluation (AVBs) from monitoring (CAPOs) is intentional. It creates a marketplace dynamic where AVBs can partner with any accredited CAPO, CAPOs can serve systems evaluated by any AVB, and both sides compete on quality and innovation. This is how the ecosystem scales.
+
+# Article 1: ARAF Governance Architecture
+
+## 1.1 Organizational Structure
+The Autonomous Reliability Assurance Foundation is an independent, non-profit standards organization. Its governance structure consists of the following bodies:
+
+## 1.2 Advisory Councils
+The TSB is supported by four standing advisory councils, each providing domain-specific expertise:
+
+## 1.3 Decision-Making Process
+
+### 1.3.1 Standard Updates
+The ARA Standard follows a structured update cadence:
+
+### 1.3.2 Accreditation Decisions
+AVB and CAPO accreditation decisions are made by the Accreditation Committee. Initial accreditation requires unanimous committee approval. Suspension requires majority vote. Revocation requires supermajority vote with a 30-day appeal period. All accreditation decisions are documented with rationale and communicated to the affected party within 5 business days.
+
+## 1.4 Conflict of Interest Policy
+TSB members, advisory council members, and Accreditation Committee members must disclose any financial or organizational relationships with AVBs, CAPOs, insurer partners, or certified organizations. Members with conflicts of interest must recuse themselves from decisions affecting the conflicted party. The Board of Directors reviews conflict disclosures annually.
+
+# Article 2: Ecosystem Participant Categories
+
+## 2.1 Ecosystem Architecture
+The ARAF ecosystem consists of six participant categories that interact through defined relationships:
+ARAF (TSB) → publishes the ARA Standard and accredits AVBs and CAPOs.
+AVBs → evaluate autonomous systems against the standard and recommend certification.
+CAPOs → operate monitoring platforms that ingest telemetry and verify ongoing compliance.
+Insurer Partners → underwrite operational risk using certification data and CAPO telemetry feeds.
+Certified Organizations → deploy autonomous systems that hold active ARA certification.
+Founding Consortium → provide institutional credibility, thought leadership, and financial support.
+
+## 2.2 Relationship Map
+Key relationships between participant categories:
+
+## 2.3 Marketplace Principles
+The ARAF ecosystem operates on marketplace principles designed to prevent monopolization and encourage quality competition:
+Multiple AVBs: ARAF accredits multiple AVBs. No single firm holds exclusive evaluation rights. Certified organizations may choose any accredited AVB.
+Multiple CAPOs: ARAF accredits multiple CAPOs. AVBs and certified organizations may choose any accredited CAPO. CAPOs compete on platform capability, reliability, and cost.
+Multiple Insurers: ARAF recognizes multiple insurer partners. Certified organizations choose their insurer. Insurers compete on coverage terms and premium.
+Interoperability: AVBs and CAPOs must implement the ARAF interoperability protocol, ensuring certified organizations are not locked into a single vendor pairing.
+Portability: Certified organizations may switch AVBs or CAPOs without recertification, provided the new AVB/CAPO accepts the existing certification data and the transition follows the handoff protocol defined in Article 8.
+
+# Article 3: Authorized Validation Bodies (AVBs)
+
+## 3.1 Role Definition
+Authorized Validation Bodies are third-party organizations accredited by ARAF to conduct evaluations of autonomous systems against the ARA Standard and to recommend certification decisions. AVBs are the “auditors” of the ARA ecosystem. They assess whether a system meets the requirements of its applicable ACRs at the requested certification level.
+AVBs do NOT grant certification directly. AVBs conduct evaluations and submit certification recommendations to ARAF. ARAF issues the certification based on the AVB’s recommendation, the system’s CAPO telemetry (for Level 2 and Level 3), and any additional ARAF review.
+
+## 3.2 Accreditation Requirements
+Organizations seeking AVB accreditation must demonstrate:
+
+## 3.3 Accreditation Process
+
+## 3.4 Provisional AVB Pathway
+Organizations that meet all requirements except the 2-year track record may apply for Provisional AVB status. Provisional AVBs may conduct evaluations under the supervision of an ARAF assessor for a period of 12 months. Upon successful completion of the provisional period (minimum 3 supervised evaluations with satisfactory quality), the Provisional AVB is promoted to full AVB status.
+
+## 3.6 AVB Rights and Obligations
+
+## 3.7 Annual Review and Renewal
+AVB accreditation is reviewed annually. The review includes: evaluation quality assessment (random sample review of completed evaluations), evaluator competence verification, insurance and organizational status confirmation, complaint history review, and methodology conformance check. Accreditation renewal requires Accreditation Committee majority vote. Renewal is for a 12-month period.
+
+## 3.8 Suspension and Revocation
+AVB accreditation may be suspended for: failure to maintain accreditation requirements, quality deficiencies identified during annual review or complaint investigation, failure to submit evaluation reports timely, or material misrepresentation. Suspension is effective immediately upon notice. The AVB has 60 days to remediate. Failure to remediate results in revocation. Revoked AVBs may reapply after 12 months.
+
+# Article 4: Continuous Assurance Platform Operators (CAPOs)
+
+## 4.1 Role Definition
+Continuous Assurance Platform Operators are technology companies accredited by ARAF to operate monitoring platforms that ingest telemetry from certified autonomous systems, verify ongoing compliance with ARA Standard requirements, and provide real-time risk signals to AVBs, insurers, and certified organizations.
+CAPOs are the infrastructure layer that makes persistent certification possible. Without CAPOs, ARA certification would be a point-in-time assessment, no different from SOC 2 or ISO 27001. With CAPOs, certification becomes a living, continuously verified state.
+CAPOs do NOT conduct evaluations or recommend certifications. That is the exclusive role of AVBs. CAPOs provide the continuous monitoring data that informs revalidation decisions, supports insurance underwriting, and gives certified organizations real-time visibility into their compliance posture.
+
+## 4.2 Platform Requirements
+
+## 4.3 Accreditation Process
+
+## 4.4 CAPO Rights and Obligations
+
+## 4.5 Service Level Requirements
+
+## 4.6 Annual Review
+CAPO accreditation is reviewed annually through: platform conformance testing against the current ARA Standard version, SLA compliance review, security certification verification, incident history review, customer satisfaction survey (administered by ARAF), and insurance feed reliability assessment. Accreditation renewal requires Accreditation Committee majority vote.
+
+# Article 5: Recognized Insurer Partners (RIPs)
+
+## 5.1 Role Definition
+Recognized Insurer Partners are insurance companies or syndicates that have been recognized by ARAF as qualified to underwrite autonomous system operational risk using ARA certification data and CAPO telemetry feeds. They provide insurance products that complement ARA certification, enabling the “ARA Certified + Insured” badge (ARAF-ARA-TMK-2026-002, Article 6.7).
+Insurance integration is a strategic differentiator for the ARA ecosystem. By connecting certification data directly to underwriting, ARAF creates a feedback loop where certification quality directly affects insurance premiums, and insurance claims data informs standard improvements. This loop does not exist in any competing certification framework.
+
+## 5.2 Recognition Requirements
+
+## 5.3 Recognition Process
+
+## 5.4 Insurer Partner Rights and Obligations
+
+## 5.5 Data Access and Privacy
+Insurer partners receive only aggregated risk signals, not raw telemetry. The Insurance Data Feed (ARAF-ARA-SDK-2026-002, Article 6.6) provides seven signal categories: Certification Health, Boundary Incidents, Drift Alerts, Availability, Privacy Incidents, Societal Safety, and Revalidation History. All data is scoped to the insured system only. Insurers may not request or receive data about uninsured systems. Data sharing requires a tripartite agreement between the certified organization, the CAPO, and the insurer.
+
+## 5.6 Annual Review
+Insurer partner recognition is reviewed annually. The review includes: regulatory standing verification, financial stability check, integration health assessment, product accuracy review (insurance products still accurately represent ARA certification), and claims data sharing compliance. Recognition renewal is administrative unless issues are identified.
+
+# Article 6: Certified Organizations
+
+## 6.1 Role Definition
+Certified Organizations are companies or entities whose autonomous systems hold active ARA certification. They are the primary beneficiaries of the ARAF ecosystem: the standard exists to serve them by providing a credible, verifiable certification that demonstrates operational reliability to customers, partners, regulators, and insurers.
+
+## 6.2 Certification Pathway
+
+## 6.3 Certified Organization Rights
+Display the ARA Certification Mark per ARAF-ARA-TMK-2026-002.
+Display the “ARA Certified + Insured” badge (if insured by a recognized partner).
+Access real-time compliance dashboard through their selected CAPO.
+Choose and switch AVBs and CAPOs per marketplace principles (Article 2.3).
+Participate in ARAF advisory processes and standard feedback.
+Access the ARAF Certification Portal for mark artwork, embed codes, and tokenized badges.
+Reference certification in marketing, sales, and procurement per trademark policy.
+
+## 6.4 Certified Organization Obligations
+Maintain SDK integration with an accredited CAPO for the duration of certification (Level 2 and Level 3).
+Provide accurate, complete telemetry data through the SDK. Suppressing, filtering, or falsifying telemetry is grounds for immediate certification revocation.
+Notify ARAF and the evaluating AVB of material system changes within 14 days.
+Comply with the trademark policy for all mark usage.
+Participate in annual reassessment.
+Pay certification fees as agreed in the Certification Agreement.
+Cooperate with ARAF or AVB investigations into compliance concerns.
+
+## 6.5 Certification Fees
+Certification fees consist of three components:
+ARAF publishes a fee schedule for the ARAF certification fee component. AVB and CAPO fees are market-driven and not set by ARAF.
+
+# Article 7: Founding Consortium Members and Technical Contributors
+
+## 7.1 Role Definition
+Founding Consortium Members and Technical Contributors are organizations and individuals that provide institutional credibility, thought leadership, technical expertise, and financial support to the ARAF ecosystem. They are the “social proof” of the standard: their participation signals to the market that the ARA Standard is credible, well-governed, and backed by recognized institutions.
+Consortium participation is distinct from certification. An organization can be a consortium member without being certified (e.g., a research university), and a certified organization can hold certification without being a consortium member.
+
+## 7.2 Membership Tiers
+
+## 7.3 Target Membership Profile
+ARAF targets a balanced consortium representing the following stakeholder categories:
+
+## 7.4 Consortium Application Process
+
+# Article 8: Interoperability and Portability
+
+## 8.1 Purpose
+The ARAF Interoperability Protocol ensures that certified organizations are not locked into a single AVB or CAPO. Portability is a core marketplace principle: organizations must be able to switch providers without losing certification status, telemetry history, or compliance continuity.
+
+## 8.2 AVB Portability
+A certified organization may switch AVBs at any point during its certification period. The transition process is:
+The organization notifies ARAF and the current AVB of its intent to switch.
+The current AVB transfers the most recent evaluation report and evidence package to ARAF (not directly to the new AVB, to preserve independence).
+The new AVB receives the evaluation report from ARAF and conducts a transition review (not a full re-evaluation) to confirm familiarity with the system.
+The new AVB assumes responsibility for the next reassessment.
+Certification status is unaffected during the transition.
+
+## 8.3 CAPO Portability
+A certified organization may switch CAPOs. The transition process is:
+The organization notifies ARAF, the current CAPO, and the evaluating AVB.
+The current CAPO exports the organization’s telemetry data in the ARAF Standard Export Format within 48 hours of request.
+The new CAPO imports the telemetry data and establishes baseline monitoring.
+A monitoring continuity gap of up to 72 hours is permitted during CAPO transition for Level 2. For Level 3, a monitoring gap of more than 4 hours requires ARAF notification and may trigger a revalidation review.
+The current CAPO retains a copy of the exported data per its data retention obligations.
+
+## 8.4 Standard Export Format
+The ARAF Standard Export Format is a structured JSON archive containing: all telemetry events for the export period (minimum 13 months), all compliance check results and alert history, all configuration snapshots (SDK version, privacy modes, monitoring parameters), certification checkpoint data (check-in history, revalidation triggers), and a cryptographic integrity manifest enabling the receiving CAPO to verify data completeness and authenticity. All accredited CAPOs must support both import and export of the Standard Export Format.
+
+## 8.5 Insurer Transition
+Certified organizations may switch insurer partners at any time. Insurance transitions do not affect certification status. The outgoing insurer notifies ARAF of policy cancellation. The incoming insurer notifies ARAF of new coverage. The ARAF registry and tokenized badge update automatically. There is no insurance data portability requirement between insurers.
+
+# Article 9: Public Directories and Transparency
+
+## 9.1 ARAF Public Directories
+ARAF maintains the following public directories, accessible through the ARAF website and registry:
+
+## 9.2 Transparency Commitments
+ARAF commits to the following transparency practices:
+All published standards are freely available to the public.
+Certification requirements, fees, and processes are publicly documented.
+Accreditation criteria for AVBs and CAPOs are publicly documented.
+The Certification Registry is publicly searchable without registration.
+Standard update changelogs are published with each release.
+TSB meeting summaries (non-confidential) are published quarterly.
+Annual governance report published, including: number of certified systems, active AVBs, active CAPOs, recognized insurers, consortium members, standard updates issued, enforcement actions taken, and complaints received.
+
+# Article 10: Ecosystem Evolution and Future Participant Categories
+
+## 10.1 Planned Participant Categories
+The following participant categories are under consideration for future versions of this document:
+
+## 10.2 Governance Evolution
+As the ecosystem grows, ARAF governance will evolve:
+Board expansion: Board will expand to include elected representatives from AVBs, CAPOs, and certified organizations as each category reaches critical mass (5+ participants).
+TSB elections: TSB membership will transition from appointed to partially elected, with consortium members voting for a portion of TSB seats.
+Regional representation: Advisory councils will include geographic representation requirements to ensure global relevance.
+Regulatory engagement: ARAF will establish formal liaison relationships with regulatory bodies (NIST, EU AI Office, UK AI Safety Institute, Singapore IMDA) as adoption grows.
+ARAF maintains active awareness of complementary standards bodies operating in adjacent layers of the agentic AI stack. These include the Agentic AI Foundation (AAIF, Linux Foundation) governing interoperability protocols including MCP; the Coalition for Secure AI (CoSAI, OASIS Open Project) addressing AI security practices and secure-by-design agentic system principles; the UK DSIT AI Assurance Roadmap; and IEEE P2863 (Organizational Governance of Artificial Intelligence). The NIST Center for AI Standards and Innovation (CAISI) AI Agent Standards Initiative, announced February 2026, extends the AI Risk Management Framework into agent-specific territory; ARA certification is designed to operationalize and complement this emerging guidance. None of these bodies are competitive with ARAF—each addresses a distinct layer of the AI assurance landscape.
+
+## 10.3 Standard Versioning and Backward Compatibility
+ARAF commits to the following versioning principles:
+Minor updates (v1.1 → v1.2) maintain backward compatibility. Certified organizations do not need immediate recertification.
+Major updates (v1.x → v2.0) may break backward compatibility. Certified organizations receive a minimum 12-month transition period.
+ACR additions are non-breaking: new ACRs do not affect existing certifications until reassessment.
+ACR removals include a 6-month sunset period.
+All versions are permanently archived and accessible through the ARAF document library.
+
+# Appendix A: Participant Category Comparison Matrix
+
+# Appendix B: Glossary of Terms
+
+--- TABLE 1 ---
+Field | Value
+Document ID | ARAF-ARA-GOV-2026-001
+Title | ARAF Ecosystem and Governance Guide
+Version | 
+Status | Approved
+Classification | Public
+Date Published | March 2026
+Approved By | ARAF Board of Directors
+Parent Document | ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+Related Documents | ARAF-ARA-EVL-2026-002 (Evaluation Methodology Guide), ARAF-ARA-ACR-2026-002 (ACR Control Matrix), ARAF-ARA-AVB-2026-002 (AVB Authorization Guide), ARAF-ARA-SDK-2026-002 (Behavioral Telemetry SDK Reference), ARAF-ARA-PHY-2026-002 (Physical Systems Evaluation Supplement), ARAF-ARA-REG-2026-002 (Regulatory Compliance Mapping Guide), ARAF-ARA-TMK-2026-002 (Trademark and Certification Mark Usage Policy), ARAF-ARA-INS-2026-001 (Insurance Integration Guide, forthcoming)
+
+--- TABLE 2 ---
+Version | Date | Author | Description
+1.0 | March 2026 | ARAF Board of Directors / TSB | Initial publication. Establishes six participant categories, governance structure, accreditation requirements, and ecosystem architecture.
+1.1 | March 4, 2026 |  | Version 1.1 update. Removes Art. 7.5 (founding member provision; contributor acknowledgment moved to Foreword). Adds Art. 3.5 Platform Certification Pathway, Art. 10.4 CTP Registry placeholder. Updates Art. 4.5 CAPO SLAs with Assurance Class differentiation. Updates Art. 6.2 Certification Pathway with Risk Classification step and Platform Cert pathway. Adds 12 new glossary terms aligned with ARA Standard v1.1 (ARAF-ARA-STD-2026-002).
+
+--- TABLE 3 ---
+# | Participant Category | Role | Analogy
+1 | Technical Standards Board (TSB) | Governs and publishes the ARA Standard | AICPA (sets GAAP/audit standards)
+2 | Authorized Validation Bodies (AVBs) | Evaluate and certify autonomous systems against the ARA Standard | Schellman, Coalfire, A-LIGN (audit firms)
+3 | Continuous Assurance Platform Operators (CAPOs) | Operate accredited monitoring platforms providing 24/7 compliance telemetry | Datadog, Splunk, Vanta (continuous monitoring)
+4 | Recognized Insurer Partners (RIPs) | Underwrite autonomous system operational risk using ARA certification data | Lloyd’s syndicates, specialty AI insurers
+5 | Certified Organizations | Companies whose autonomous systems hold active ARA certification | Any enterprise deploying autonomous systems
+6 | Founding Consortium Members and Technical Contributors | Provide thought leadership, institutional credibility, and financial support for the standard | MITRE, Cisco, Stanford (for AIUC-1)
+
+--- TABLE 4 ---
+Body | Composition | Authority | Reporting
+Board of Directors | 5–9 members: independent directors, founding member representatives, public interest representative | Strategic direction, budget, executive appointments, policy approval | N/A (governing body)
+Technical Standards Board (TSB) | 7–15 members: domain experts in AI safety, cybersecurity, functional safety, insurance, regulatory compliance | Standard development, domain structure, ACR definitions, evaluation methodology, accreditation criteria | Board of Directors
+Advisory Councils (4) | 3–5 members each, domain-specific expertise | Non-binding recommendations to the TSB on domain-specific matters | TSB
+Legal and Standards Office | ARAF staff | Trademark enforcement, legal compliance, partnership agreements, day-to-day operations | Board of Directors
+Accreditation Committee | 3–5 TSB members + 1 independent assessor | AVB and CAPO accreditation decisions, annual reviews, suspension/revocation | TSB
+
+--- TABLE 5 ---
+Council | Focus Areas | Target Membership
+AI Safety and Adversarial Testing Advisory Group (ATAG) | Domains 2–4, 7–9: Decision correctness, boundary enforcement, stress testing, adversarial robustness, drift monitoring | AI safety researchers, red team practitioners, ML engineers
+Robotics and Physical Systems Council (RPSC) | Domain 15: Physical actuation integrity, functional safety, human proximity safeguards | Robotics engineers, functional safety experts, industrial automation specialists
+Risk, Compliance, and Insurance Advisory Council (RCIAC) | Domains 12, 14: Auditability, operational governance, insurance integration, regulatory mapping | Enterprise risk officers, compliance leaders, insurance actuaries, regulatory specialists
+Data Privacy and Societal Impact Council (DPSIC) | Domains 5, 13: Data privacy, PII protection, societal impact, bias monitoring, CBRN guardrails | Privacy engineers, ethicists, civil society representatives, policy researchers
+
+--- TABLE 6 ---
+Update Type | Cadence | Approval Authority | Notice Period
+Minor (ACR clarifications, evidence guidance) | Quarterly | TSB majority vote | 30 days
+Moderate (new ACRs within existing domains, methodology changes) | Semi-annual | TSB supermajority (2/3) | 90 days
+Major (new domains, structural changes, certification model changes) | Annual minimum | TSB supermajority + Board approval | 180 days
+Emergency (critical safety gap, zero-day vulnerability class) | As needed | TSB Chair + 2 TSB members | Immediate (retroactive Board ratification within 30 days)
+
+--- TABLE 7 ---
+Relationship | Description | Governing Document
+ARAF ↔ AVB | Accreditation, oversight, annual review, methodology updates | AVB Authorization Agreement (ARAF-ARA-AVB-2026-002)
+ARAF ↔ CAPO | Platform accreditation, telemetry standards, SLA requirements | CAPO Accreditation Agreement (this document, Article 4)
+ARAF ↔ Insurer | Partner recognition, data feed access, badge authorization | Insurance Partner Agreement (this document, Article 5)
+ARAF ↔ Certified Org | Certification grant, mark license, ongoing obligations | Certification Agreement (ARAF-ARA-TMK-2026-002)
+ARAF ↔ Consortium | Membership agreement, governance rights, contribution obligations | Consortium Membership Agreement (this document, Article 7)
+AVB ↔ CAPO | AVBs select accredited CAPOs for monitoring; CAPOs provide telemetry for revalidation | Interoperability Protocol (this document, Article 8)
+AVB ↔ Certified Org | Evaluation engagement, evidence review, certification recommendation | Evaluation Engagement Agreement (per AVB)
+CAPO ↔ Certified Org | SDK integration, telemetry ingestion, continuous monitoring, alerting | Monitoring Service Agreement (per CAPO)
+CAPO ↔ Insurer | Aggregated risk feeds, claims-relevant incident data | Insurance Data Feed Protocol (ARAF-ARA-SDK-2026-002, Art. 6.6)
+Insurer ↔ Certified Org | Insurance policy, premium, claims management | Insurance Contract (per insurer)
+
+--- TABLE 8 ---
+Requirement Category | Minimum Criteria
+Organizational independence | No financial interest in systems being evaluated. No shared ownership, board members, or executive officers with certified organizations or CAPOs.
+Professional qualifications | Minimum 3 qualified evaluators on staff. Each evaluator must hold relevant certifications (CISA, CISSP, ISO 27001 Lead Auditor, IEC 61508 FSE, or equivalent) plus demonstrated AI/autonomous systems expertise.
+Domain competence | Demonstrated competence in a minimum of 10 of 15 ARA domains. Specialized domains (Domain 5 Data Privacy, Domain 13 Societal Impact, Domain 15 Physical Systems) require domain-specific qualified evaluators.
+Evaluation methodology | Documented evaluation methodology conforming to ARAF-ARA-EVL-2026-002. Includes evidence collection procedures, evaluator assignment protocols, quality review processes, and conflict resolution.
+Insurance and liability | Professional liability (E&O) insurance with minimum coverage of $5M per occurrence. General liability insurance with minimum $2M per occurrence.
+Quality management | Documented quality management system. ISO 17021 or ISO 17065 accreditation is a positive indicator but not required. AVBs should additionally ensure their governance and operational structures align with ISO/IEC 42006:2025 (Requirements for bodies providing audit and certification of AI management systems). AVBs conducting evaluations of agentic systems should document familiarity with AAIF protocol architecture, including MCP and AGENTS.md behavioral conventions, as part of their technical competency requirements.
+Information security | Documented information security program protecting evaluation evidence and certified organization data. SOC 2 Type II or ISO 27001 certification required.
+Track record | Minimum 2 years of operational history in technology assessment, security auditing, or compliance evaluation. New entrants may apply through the Provisional AVB pathway (Section 3.4).
+
+--- TABLE 9 ---
+Phase | Duration | Activities
+1. Application | 2 weeks | Submit application, organizational documentation, evaluator qualifications, sample evaluation reports, insurance certificates.
+2. Document Review | 4 weeks | Accreditation Committee reviews application against requirements. Written feedback provided.
+3. Competence Assessment | 2–4 weeks | Accreditation Committee conducts competence interviews with proposed evaluators. May include practical assessment using reference system.
+4. Shadow Evaluation | 4–8 weeks | Applicant conducts a supervised evaluation alongside an existing accredited AVB or ARAF assessor. Results reviewed for methodology conformance and quality.
+5. Committee Decision | 2 weeks | Accreditation Committee votes on accreditation. Decision communicated within 5 business days.
+6. Onboarding | 2 weeks | Execution of AVB Authorization Agreement, portal access provisioning, evaluator credentialing, mark usage authorization.
+
+--- TABLE 10 ---
+Rights | Obligations
+Conduct ARA evaluations and recommend certifications | Follow ARAF evaluation methodology (ARAF-ARA-EVL-2026-002) without deviation
+Use “ARAF Authorized Validation Body” designation | Maintain accreditation requirements continuously
+Display ARAF logo per trademark policy (ARAF-ARA-TMK-2026-002) | Submit evaluation reports to ARAF within 30 days of completion
+Access ARAF evaluator training and resources | Participate in annual accreditation review
+Participate in TSB advisory processes | Report material changes (ownership, key personnel, insurance) within 14 days
+Access evaluation tooling and reference materials | Maintain evaluator competence through continuing education (40 hours/year per evaluator)
+List on ARAF public AVB directory | Cooperate with ARAF quality audits and complaint investigations
+
+--- TABLE 11 ---
+Requirement Category | Minimum Criteria
+SDK compatibility | Full implementation of the ARA Behavioral Telemetry SDK (ARAF-ARA-SDK-2026-002) including REST and gRPC ingestion endpoints, all 8 event schemas (Action Trace, Decision Boundary, Escalation, Drift Signal, Resource Utilization, Privacy Event, Societal Impact Event), and check-in protocol.
+Ingestion capacity | Demonstrated capacity to ingest telemetry at sustained rates of 10,000 events/second per monitored system, with burst handling to 100,000 events/second. Horizontal scaling architecture required.
+Real-time processing | Event processing latency of less than 5 seconds from ingestion to compliance check for Critical and Emergency severity events. Less than 60 seconds for all other events.
+Compliance engine | Rule engine capable of evaluating all 410 ACRs in the ARA Standard. Rules must be updatable within 24 hours of an ARAF standard update release without platform downtime.
+Alerting | Multi-channel alerting (email, webhook, SMS, PagerDuty/OpsGenie integration) with configurable severity thresholds aligned to the ARA alerting taxonomy (Informational, Warning, Critical, Emergency).
+Dashboard | Web-based compliance dashboard providing certified organizations with real-time visibility into their certification health, active alerts, drift trends, and revalidation status.
+Insurance data feed | Implementation of the Insurance Data Feed specification (ARAF-ARA-SDK-2026-002, Article 6.6) including aggregated risk signals, claims-relevant incident data, and authentication for authorized insurer partners.
+Data retention | Minimum 13 months of telemetry data retention for compliance evidence. 7 years for audit trail and certification-relevant events.
+Availability | 99.9% platform availability measured monthly. Documented disaster recovery with RTO ≤ 4 hours and RPO ≤ 1 hour.
+Security | SOC 2 Type II or ISO 27001 certification. Encryption at rest (AES-256) and in transit (TLS 1.3). Role-based access control. Penetration testing annually.
+Privacy | Compliance with applicable data protection regulations (GDPR, CCPA, etc.). Support for privacy-preserving telemetry modes defined in ARAF-ARA-SDK-2026-002, Article 7.5.
+Multi-tenancy | Strict data isolation between certified organizations. No cross-tenant data access. Tenant-specific encryption keys.
+Interoperability | Implementation of the ARAF Interoperability Protocol (Article 8) enabling certified organizations to migrate between CAPOs without data loss or compliance gaps.
+
+--- TABLE 12 ---
+Phase | Duration | Activities
+1. Application | 2 weeks | Submit application, platform architecture documentation, security certifications, team qualifications.
+2. Technical Review | 4–6 weeks | ARAF technical assessors review platform against requirements. Includes architecture review, security assessment, and SDK conformance testing.
+3. Conformance Testing | 4–8 weeks | Platform tested against ARAF reference telemetry dataset. Tests cover ingestion performance, compliance rule accuracy, alerting reliability, and insurance feed correctness.
+4. Operational Readiness | 2–4 weeks | Review of operational procedures: incident response, disaster recovery, customer onboarding, data migration, support SLAs.
+5. Committee Decision | 2 weeks | Accreditation Committee votes. Decision communicated within 5 business days.
+6. Onboarding | 2–4 weeks | Agreement execution, ARAF registry integration, insurer feed provisioning, public directory listing.
+
+--- TABLE 13 ---
+Rights | Obligations
+Operate an accredited ARA monitoring platform | Maintain all platform requirements continuously
+Use “ARAF Accredited Continuous Assurance Platform” designation | Process all standard updates within 24 hours of release
+Provide monitoring services to any certified organization | Provide insurance data feeds to all recognized insurer partners
+Integrate with any accredited AVB | Implement and maintain the ARAF Interoperability Protocol
+List on ARAF public CAPO directory | Participate in annual platform conformance testing
+Participate in TSB advisory processes | Report platform incidents affecting monitoring accuracy within 4 hours
+Access ARAF integration tooling and test data | Maintain certified staff for platform operations (minimum 2 qualified engineers)
+
+--- TABLE 14 ---
+SLA Metric | Requirement | Measurement
+Platform availability | 99.9% monthly | Uptime monitoring (ARAF may verify independently)
+Ingestion latency (p99) | < 2 seconds | Measured from SDK submission to platform acknowledgment
+Compliance check latency (Critical) | < 5 seconds | Measured from event ingestion to alert generation
+Compliance check latency (Standard) | < 60 seconds | Measured from event ingestion to dashboard update
+Alert delivery | < 30 seconds from generation | Measured across all configured channels
+Standard update deployment | < 24 hours from ARAF release | Measured from ARAF notification to rule engine update
+Data retention (telemetry) | 13 months minimum | Verified during annual review
+Data retention (audit trail) | 7 years minimum | Verified during annual review
+Insurance feed availability | 99.9% monthly | Measured separately from platform availability
+Interoperability export | < 48 hours from request | Full tenant data export per ARAF protocol
+Class B telemetry batch (minimum) | Monthly | Required for all Class B (Monitored) deployments. Verified during annual review.
+Class C SLA-bound alerting | < 72-hour lapse window | Required for Class C (Continuously Assured) deployments. Real-time stream with CAPO-generated alert on any lapse. Life-safety systems: immediate escalation, no grace period.
+
+--- TABLE 15 ---
+Requirement Category | Minimum Criteria
+Regulatory standing | Licensed to underwrite insurance in at least one major market (US, EU, UK, or equivalent). In good standing with applicable insurance regulators.
+Underwriting capability | Demonstrated capability to underwrite technology errors and omissions, cyber liability, or equivalent autonomous system operational risk lines.
+Actuarial capacity | Actuarial staff with demonstrated expertise in technology risk modeling. Ability to incorporate ARA telemetry signals into underwriting models.
+Technical integration | Ability to consume the ARA Insurance Data Feed (ARAF-ARA-SDK-2026-002, Article 6.6) through at least one accredited CAPO. Integration testing completed successfully.
+Claims handling | Documented claims handling process for autonomous system incidents. Ability to correlate claims with ARA certification data and CAPO telemetry.
+Data security | Insurance partner data handling must comply with applicable regulations and ARAF data sharing agreement terms. SOC 2 or equivalent required.
+Financial stability | Minimum A.M. Best rating of A- (Excellent) or equivalent from S&P, Moody’s, or Fitch. Lloyd’s syndicates must be in good standing.
+
+--- TABLE 16 ---
+Phase | Duration | Activities
+1. Expression of Interest | N/A | Insurer contacts ARAF. Initial discussion of product scope, markets, and integration approach.
+2. Application | 2 weeks | Submit application with regulatory licenses, financial ratings, technical integration plan, and proposed product summary.
+3. Due Diligence | 4–6 weeks | ARAF reviews regulatory standing, financial stability, and actuarial capability. May engage independent assessor.
+4. Integration Testing | 4–8 weeks | Insurer connects to Insurance Data Feed through a test CAPO environment. Validates data consumption, risk signal processing, and claims correlation.
+5. Product Review | 2–4 weeks | ARAF reviews proposed insurance product terms to verify they accurately represent ARA certification scope and do not misrepresent ARAF or the standard.
+6. Agreement Execution | 2 weeks | Execute Insurance Partner Agreement. Public listing in ARAF Insurer Partner Directory. Badge authorization.
+
+--- TABLE 17 ---
+Rights | Obligations
+Access aggregated risk signals through the Insurance Data Feed | Accurately represent ARA certification scope in insurance products
+Use “ARAF Recognized Insurer Partner” designation | Report coverage confirmations to ARAF for badge activation
+Issue policies that qualify for the “ARA Certified + Insured” badge | Report policy lapses and cancellations to ARAF within 48 hours
+Participate in RCIAC advisory council | Maintain integration with at least one accredited CAPO
+Access de-identified, aggregate claims data for actuarial modeling | Share aggregate (non-identifying) claims data with ARAF for standard improvement
+List on ARAF public Insurer Partner Directory | Maintain regulatory standing and financial stability requirements
+
+--- TABLE 18 ---
+Phase | Activities | Participant Involvement
+1. Scoping | Organization determines applicable domains, system profile, and target certification level using the ARAF Scoping and Readiness Guide (forthcoming). | Organization (self-service)
+2. AVB Selection | Organization selects an accredited AVB from the ARAF AVB Directory. | Organization → AVB
+3. CAPO Selection | Organization selects an accredited CAPO and integrates the ARA Behavioral Telemetry SDK. Required for Level 2 and Level 3. | Organization → CAPO
+4. Readiness Assessment | Optional pre-evaluation assessment by the selected AVB to identify gaps before formal evaluation. | AVB → Organization
+5. Formal Evaluation | AVB conducts the evaluation per ARAF-ARA-EVL-2026-002. Reviews evidence, tests controls, assesses ACR compliance. | AVB
+6. CAPO Validation | For Level 2 and Level 3, the CAPO provides telemetry data confirming SDK integration and baseline compliance signals. | CAPO
+7. Certification Recommendation | AVB submits evaluation report and certification recommendation to ARAF. | AVB → ARAF
+8. ARAF Review and Grant | ARAF reviews recommendation, verifies CAPO integration, and grants certification. Tokenized badge issued. Registry entry created. | ARAF
+9. Continuous Monitoring | CAPO monitors the system continuously. Alerts trigger revalidation when compliance drifts. | CAPO (ongoing)
+10. Annual Reassessment | AVB conducts reassessment. CAPO provides monitoring history. Certification renewed or conditions applied. | AVB + CAPO → ARAF
+4a. Risk Classification | For Deployment Certifications: AVB conducts Risk Classification concurrent with or immediately following the Formal Evaluation. Determines required Assurance Class (A, B, or C). Documented in the Risk Classification Report per ARAF-ARA-STD-2026-002, Part IV-C. Not required for Platform Certifications. | AVB
+Alt. Platform Cert Pathway | Technology vendors may pursue Platform Certification independently of any production deployment. The pathway follows steps 1–8 above with the following substitutions: step 3 (CAPO Selection) is not required; step 4a (Risk Classification) is not required; the reference environment is documented per ARAF-ARA-EVL-2026-002, Article 3.9. Full pathway defined in ARAF-ARA-STD-2026-002, Article 6b and this document, Article 3.5. | Vendor (self-service) → AVB
+
+--- TABLE 19 ---
+Fee Component | Paid To | Basis
+ARAF certification fee | ARAF | Annual flat fee based on certification level and system profile. Covers registry listing, tokenized badge, mark license, and ARAF administrative costs.
+AVB evaluation fee | AVB | Engagement-based fee set by the AVB. Market-driven. Varies by system complexity, scope, and AVB pricing.
+CAPO monitoring fee | CAPO | Subscription fee set by the CAPO. Market-driven. Typically based on telemetry volume and monitoring scope.
+
+--- TABLE 20 ---
+Tier | Annual Contribution | Governance Rights | Benefits
+Founding Member | $50,000+ | Board observer seat (non-voting). TSB nomination rights. Advisory council seats. | Logo on Foundation Members page. “Founding Member” designation. Priority access to standard drafts. Named in press releases. Speaking opportunities at ARAF events. Quarterly briefing with TSB Chair.
+Technical Contributor | $25,000–$49,999 | TSB nomination rights. Advisory council seats. | Logo on Foundation Members page. “Technical Contributor” designation. Access to standard drafts. Named in consortium announcements. Speaking opportunities.
+Consortium Member | $10,000–$24,999 | Advisory council nomination rights. | Logo on Foundation Members page. “Consortium Member” designation. Access to standard drafts. Consortium newsletter and events.
+Observer Member | Free (application required) | None. | Access to published standards and public materials. Consortium newsletter. Observer status at public events. Pathway to higher tiers.
+Individual Contributor | Invited / Volunteer | Advisory council participation (if invited). | Named on contributors page. Access to standard drafts. Recognition in document revision history.
+
+--- TABLE 21 ---
+Category | Target | Rationale
+AI Safety Researchers | 2–3 from academic institutions or independent labs | Validates the standard’s technical rigor and safety methodology
+Enterprise CISOs / Security Leaders | 2–3 from companies deploying autonomous systems | Validates that the standard addresses real enterprise security concerns
+Audit and Compliance Leaders | 2–3 from firms competing in the compliance market | Demonstrates multiple audit firms see ARA as viable (vs. AIUC-1’s single-auditor model)
+Insurance Industry Leaders | 1–2 from specialty insurers or reinsurers | Validates the insurance integration strategy
+Robotics and Physical Systems Experts | 2–3 from robotics companies or functional safety firms | Validates Domain 15 coverage that competitors cannot match
+Policy and Regulatory Experts | 1–2 from regulatory bodies, policy organizations, or law firms | Validates regulatory mapping and compliance guidance
+Technology Platform Leaders | 1–2 from major cloud or AI platform companies | Validates enterprise-grade technology credibility
+
+--- TABLE 22 ---
+Phase | Activities
+1. Expression of Interest | Organization or individual contacts ARAF or is recruited by ARAF.
+2. Fit Assessment | ARAF evaluates alignment with target membership profile, potential contributions, and conflict of interest considerations.
+3. Membership Agreement | For paying tiers: execute Consortium Membership Agreement specifying tier, contribution, governance rights, and obligations. For observers: simplified application and acceptance.
+4. Onboarding | Portal access, advisory council nominations, public directory listing, welcome communication.
+5. Annual Renewal | Membership reviewed annually. Contribution confirmed. Governance participation assessed.
+
+--- TABLE 23 ---
+Directory | Contents | Update Frequency
+Certification Registry | All certified systems: organization, system name, level, standard version, Certification ID, dates, CAPO, insurance status | Real-time
+AVB Directory | All accredited AVBs: organization, contact, domain competencies, accreditation date, evaluator count, geographic coverage | Quarterly
+CAPO Directory | All accredited CAPOs: platform name, organization, capabilities, SLA metrics, integration methods, geographic availability | Quarterly
+Insurer Partner Directory | All recognized insurers: organization, coverage types, markets, integration status | Quarterly
+Foundation Members | All consortium members and technical contributors: organization, tier, advisory council participation, join date | As membership changes
+
+--- TABLE 24 ---
+Category | Description | Target Timeline
+Marketplace Platform Partners | Platforms (e.g., cloud marketplaces, procurement platforms, agent registries) that integrate ARA certification verification into their listing and procurement workflows. | 2026 H2
+Training and Education Partners | Organizations accredited to deliver ARA evaluator training, certified organization readiness workshops, and CAPO integration training. | 2027 H1
+Regional and Sector Chapters | Geographic or industry-sector chapters that localize ARAF activities, host events, and facilitate adoption in specific markets. | 2027 H2
+Open Source Community | Contributors to open-source tooling for ARA evaluation, SDK integration, telemetry processing, and compliance automation. | 2027 H1
+
+--- TABLE 25 ---
+Attribute | AVB | CAPO | Insurer Partner | Certified Org | Consortium Member
+Primary role | Evaluate | Monitor | Underwrite | Deploy | Support
+Accreditation required | Yes | Yes | Recognition | Certification | Application
+ARAF agreement | AVB Authorization | CAPO Accreditation | Insurance Partner | Certification | Consortium Membership
+Annual review | Yes | Yes | Yes | Reassessment | Renewal
+Public directory listing | Yes | Yes | Yes | Registry | Members page
+TSB participation | Advisory | Advisory | Advisory (RCIAC) | Feedback | Nomination/voting
+Revenue model | Evaluation fees | Monitoring subscriptions | Insurance premiums | N/A (payer) | Contributions
+Independence required | Yes (from certified orgs) | Yes (from AVBs on same system) | N/A | N/A | N/A
+Minimum participants target | 5–10 | 3–5 | 3–5 | Unlimited | 15–25
+Insurance badge eligible | No | No | Enables badge | Displays badge | No
+
+--- TABLE 26 ---
+Term | Definition
+Accreditation | Formal recognition by ARAF that an AVB or CAPO meets the requirements to perform its designated role in the ARA ecosystem.
+ARAF | Autonomous Reliability Assurance Foundation. The independent standards organization governing the ARA ecosystem.
+ATAG | AI Safety and Adversarial Testing Advisory Group. Advisory council to the TSB.
+AVB | Authorized Validation Body. A third-party organization accredited to conduct ARA evaluations.
+CAP | Continuous Assurance Platform. The technology infrastructure that enables persistent certification through real-time telemetry monitoring.
+CAPO | Continuous Assurance Platform Operator. A technology company accredited by ARAF to operate a CAP.
+Certification | The formal recognition that an autonomous system meets ARA Standard requirements at a specified level.
+Consortium Member | An organization that participates in the ARAF Founding Consortium at a specified tier.
+DPSIC | Data Privacy and Societal Impact Council. Advisory council to the TSB.
+Insurance Data Feed | The standardized data exchange between CAPOs and recognized insurers providing aggregated risk signals.
+Interoperability Protocol | The ARAF-defined protocol enabling portability of certification data between AVBs and CAPOs.
+Persistent Certification State | The ARA concept that certification is continuously verified through telemetry, not just assessed at a point in time.
+RCIAC | Risk, Compliance, and Insurance Advisory Council. Advisory council to the TSB.
+Recognition | Formal acknowledgment by ARAF that an insurer partner meets requirements to participate in the ecosystem.
+RIP | Recognized Insurer Partner. An insurance company recognized by ARAF to underwrite ARA-related risk.
+RPSC | Robotics and Physical Systems Council. Advisory council to the TSB.
+Standard Export Format | The structured JSON archive format for portable telemetry and certification data between CAPOs.
+System Profile | One of four capability-based classifications (Foundational, Standard, Advanced, Comprehensive) determining which ACRs apply.
+Technical Contributor | An organization or individual contributing technical expertise and financial support to ARAF at the Technical Contributor tier.
+TSB | Technical Standards Board. The ARAF body responsible for standard development, accreditation criteria, and technical governance.
+Assurance Class | The second axis of an ARA Deployment Certification. Describes the intensity of ongoing monitoring required to maintain the certification in good standing: Class A Periodic, Class B Monitored, or Class C Continuously Assured. Determined by Risk Classification. Not applicable to Platform Certifications.
+Assurance Lapse | The state in which a Deployment Certification’s CAPO monitoring has fallen below the frequency required by its Assurance Class. Triggers a class-dependent remediation window; if unresolved, results in Suspension or Expiry.
+Certified Technology Partner (CTP) | A consulting or implementation firm listed in the ARAF CTP Registry as having demonstrated ARA implementation competency. Not a certification — a registry designation. Does not confer evaluation authority or certification rights.
+Certification Inheritance | The mechanism by which a Deployment Certification built on a Platform-Certified product carries forward the platform’s ACR coverage, reducing the scope of deployment-level evaluation to configuration-dependent and deployment-context ACRs.
+Class A — Periodic | Assurance Class requiring annual or biannual re-evaluation. No continuous CAPO monitoring required. Event-triggered revalidation only. Applicable to low-autonomy, low-consequence, reversible deployments.
+Class B — Monitored | Assurance Class requiring an active CAPO connection and minimum monthly telemetry batch delivery. Event-triggered revalidation. Applicable to operational business systems with moderate autonomy or consequence.
+Class C — Continuously Assured | Assurance Class requiring a persistent CAPO connection, real-time telemetry stream, and SLA-bound alerting. Required for high-autonomy, high-consequence, or regulated deployments. Life-safety systems are Class C without exception.
+Deployment Certification | An ARA certification issued to a specific production instance of an autonomous system operated by an identified organization. Covers the full operational context including configuration, integrations, data environment, and use cases. Expressed as an Evaluation Level and an Assurance Class. Issued to the deploying organization.
+Evaluation Level | The first axis of an ARA certification. Describes the rigor of the evaluation conducted by an accredited AVB: Level 1 Foundation, Level 2 Operational, or Level 3 Comprehensive. Applies to both Platform Certifications and Deployment Certifications.
+Platform Certification | An ARA certification issued to a software platform, product, or autonomous system technology evaluated in a controlled reference environment against applicable ACRs. Certifies the technology as a product independent of any specific production deployment. Expressed as an Evaluation Level only (no Assurance Class). Issued to the technology vendor.
+Reference Environment | A controlled deployment environment used for Platform Certification evaluation. Must meet ARAF minimum conditions for ACR evaluation fidelity per Art. 3.7 of the Evaluation Methodology Guide. Documented and attested by the evaluating AVB as representative of production-equivalent behavior.
+Risk Classification | A formal assessment conducted by an accredited AVB as part of Deployment Certification that determines the required Assurance Class. Based on degree of autonomy, consequence severity, reversibility, breadth of impact, regulatory context, dependency criticality, and operational continuity. Documented in the Risk Classification Report. Appealable to the ARAF Technical Standards Board.

@@ -1,0 +1,1100 @@
+AUTONOMOUS RELIABILITY ASSURANCE FOUNDATION
+ARA Standard v1.1
+Physical Systems Evaluation Supplement
+ARAF-ARA-PHY-2026-002
+Extended Evaluation Guidance for Domain 15:
+Physical Actuation Integrity
+Approved | Version 1.1 | March 2026
+Companion to ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+© 2026 Autonomous Reliability Assurance Foundation. All Rights Reserved.
+
+## Document Control
+
+## Revision History
+
+## Summary of Changes in v1.1
+Domain renumbering: Physical Actuation Integrity renumbered from Domain 13 to Domain 15. All 30 ACR references updated from ACR-13.XX to ACR-15.XX throughout the document.
+Cross-domain reference updates: All references to other domains updated for 15-domain structure: former Domain 5 (Failure Mode) → Domain 6, former Domain 6 (Behavioral Reliability) → Domain 7, former Domain 9 (Monitoring) → Domain 10, former Domain 10 (Escalation) → Domain 11.
+Domain 5 integration guidance: New Article 13 provides guidance on how Domain 5 (Data Privacy and Information Protection) applies to physical systems, covering sensor data privacy, biometric data handling in human proximity systems, and environmental monitoring data governance.
+Domain 13 integration guidance: New Article 14 provides guidance on how Domain 13 (Societal Impact and Responsible Deployment) applies to physical systems, covering human safety proximity controls as societal impact, environmental impact of physical autonomous systems, and dual-use risk considerations.
+Document references updated: All normative references updated to v1.1 companion documents (-002 suffix). Parent standard updated to ARAF-ARA-STD-2026-002.
+Three-axis certification model: Certification level references updated to reflect Level 1 Foundation, Level 2 Operational, Level 3 Comprehensive terminology consistent with ARA Standard v1.1.
+
+# Foreword
+The Autonomous Reliability Assurance Foundation (ARAF) publishes the ARA Standard to establish rigorous, measurable criteria for certifying the operational reliability of autonomous systems. While the fourteen core reliability domains address digital autonomous systems comprehensively, the unique risks posed by systems that interact with the physical world demand additional scrutiny.
+Domain 15, Physical Actuation Integrity, is an extension domain within the ARA Standard. It applies exclusively to autonomous systems that incorporate sensors, actuators, or other mechanisms for direct physical interaction with the environment. These systems include industrial robots, autonomous vehicles, unmanned aerial vehicles (UAVs/drones), medical robotic devices, warehouse automation systems, agricultural robots, and any other autonomous system capable of physical actuation.
+Physical autonomous systems introduce failure modes that digital-only systems do not face: sensor degradation, actuator malfunction, environmental unpredictability, power and communication loss, and the potential for direct physical harm to humans and property. These risks demand evaluation procedures that go beyond software testing to encompass hardware verification, environmental simulation, human safety validation, and compliance with established functional safety standards.
+This Physical Systems Evaluation Supplement provides extended guidance for evaluating all 30 Domain 15 ACRs. It is intended for use by:
+Authorized Validation Bodies (AVBs) conducting ARA evaluations of physical autonomous systems;
+System developers and integrators preparing physical autonomous systems for ARA certification;
+Safety engineers designing and verifying the physical safety mechanisms required by Domain 15;
+Regulatory compliance teams mapping ARA Domain 15 requirements to applicable industry standards.
+This document is normative for Domain 15 evaluation. AVBs conducting evaluations of systems with physical actuation capabilities SHALL follow the procedures and evidence requirements specified herein, in conjunction with the evaluation methodology defined in ARAF-ARA-EVL-2026-002.
+In addition to Domain 15-specific guidance, this supplement now includes integration guidance for two new domains introduced in ARA Standard v1.1: Domain 5 (Data Privacy and Information Protection) and Domain 13 (Societal Impact and Responsible Deployment), as they apply specifically to physical autonomous systems.
+The Robotics and Physical Systems Council (RPSC) of the Technical Standards Board maintains this document and welcomes feedback from the evaluation community and industry stakeholders.
+
+# Article 1: Introduction and Scope
+
+## 1.1 Purpose
+This document provides detailed evaluation procedures, evidence requirements, and testing methodologies for the 30 Autonomous Control Requirements (ACRs) within Domain 15: Physical Actuation Integrity of the ARA Standard v1.1. It extends the general evaluation methodology defined in ARAF-ARA-EVL-2026-002 with physical-system-specific guidance. Additionally, it provides integration guidance for how Domain 5 (Data Privacy) and Domain 13 (Societal Impact) requirements apply specifically to physical autonomous systems.
+
+## 1.2 Scope of Applicability
+This supplement applies to any autonomous system undergoing ARA certification that possesses one or more of the following capabilities:
+Direct physical actuation: The system controls motors, servos, hydraulic actuators, pneumatic systems, or other mechanisms that produce physical motion or force.
+Sensor-based environmental perception: The system uses physical sensors (LiDAR, radar, cameras, ultrasonic, force/torque, IMU, GPS, temperature, pressure) as inputs to autonomous decision-making.
+Human-proximate operation: The system operates in environments where humans are present or may enter the operational workspace.
+Environmental interaction: The system modifies its physical environment through manipulation, locomotion, material processing, or energy application.
+Systems that operate exclusively in digital environments (software agents, chatbots, data processing pipelines) are exempt from Domain 15 requirements and this supplement does not apply to them.
+
+## 1.3 Relationship to Core Domains
+Domain 15 does not replace or override the fourteen core reliability domains. Physical autonomous systems are evaluated against all applicable core domains plus Domain 15. Several Domain 15 ACRs intersect with core domain requirements:
+Domain 5 (Data Privacy and Information Protection): Physical systems with cameras, microphones, biometric sensors, and environmental monitors collect data that may include personally identifiable information. Domain 5 requirements for PII detection, data minimization, and consent management apply with specific physical-system considerations documented in Article 13 of this supplement.
+Domain 6 (Failure Mode Containment): Domain 15 extends failure mode requirements to physical failures including sensor degradation, actuator malfunction, power loss, and communication loss.
+Domain 7 (Behavioral Reliability Under Stress): Domain 15 extends stress testing to physical environmental stressors including temperature extremes, electromagnetic interference, vibration, and degraded visibility.
+Domain 10 (Monitoring and Telemetry): Domain 15 extends telemetry requirements to include physical sensor health, actuator status, calibration state, and environmental conditions.
+Domain 11 (Escalation and Human Override): Domain 15 extends human override to include physical emergency stop mechanisms operating independently of software.
+Domain 13 (Societal Impact and Responsible Deployment): Physical autonomous systems operating in human-proximate environments have direct societal impact implications. Human safety proximity controls, environmental impact, and dual-use risk considerations for physical systems are documented in Article 14 of this supplement.
+
+## 1.4 Certification Level Applicability
+Domain 15 ACRs are distributed across certification levels as follows:
+
+## 1.4A Platform Certification Limitations for Domain 15
+Platform Certification under ARA Standard v1.1 Article 6b evaluates a technology product in a controlled Reference Environment, independent of any specific production deployment. Domain 15 ACRs present specific constraints on Platform Certification applicability that AVBs and technology vendors SHALL understand before commencing evaluation.
+(a) ACRs requiring proof of real-world physical actuation, force-limiting behavior, or emergency stop performance under live operational conditions are NOT evaluable via Platform Certification. Domain 15 ACRs assigned Failure Consequence Class A or B (per ARA Standard Part IV-C) are ineligible for Platform Certification unless the Reference Environment includes a physical testbed documented per Evaluation Methodology Guide Article 3.9.
+(b) ACRs evaluable via hardware-in-the-loop (HIL) simulation, software architecture review, or documented design analysis MAY be included in a Platform Certification where the Reference Environment provides sufficient fidelity. The evaluating AVB SHALL document the representativeness basis in the AVB attestation per Evaluation Methodology Guide Articles 3.8 and 3.9.
+(c) Assurance Class does not apply to Platform Certifications. Assurance Class is a Deployment Certification concept reflecting the intensity of ongoing CAPO monitoring required in production operation. Obligations attach to the deploying organization at Deployment Certification time, not to the technology vendor at Platform Certification time.
+(d) A Platform Certification covering applicable Domain 15 ACRs enables Certification Inheritance at Deployment Certification time. Life-safety ACRs and ACRs requiring operational environment validation are not inheritable regardless of Platform Certification coverage.
+The ACR-level Platform Certification Eligible designation (Y / N / Partial) for all 30 Domain 15 ACRs is maintained in the ACR Control Matrix (ARAF-ARA-ACR-2026-002). AVBs SHALL consult the ACR Control Matrix before conducting a Domain 15 Platform Certification.
+
+## 1.5 Evaluation Method Key
+Domain 15 ACRs use the following evaluation methods, consistent with the ARA Standard:
+
+# Article 2: Normative References
+The following standards and documents are referenced throughout this supplement. Where requirements overlap, evaluators SHALL assess compliance with both the ARA Standard and the applicable referenced standard.
+
+## 2.1 Primary Safety Standards
+
+## 2.2 Supplementary Standards
+
+## 2.3 ARAF Reference Documents
+
+# Article 3: Domain 15 ACR Evaluation Guidance
+This article provides detailed evaluation guidance for each of the 30 ACRs in Domain 15: Physical Actuation Integrity. For each ACR, the guidance specifies the evaluation procedure, pass criteria, common failure modes, and evaluator notes. This guidance is normative for AVBs conducting Domain 15 evaluations.
+Evaluators SHALL conduct evaluations in the sequence that makes practical sense for the system under test. However, the following evaluation dependencies should be observed:
+Pre-requisite ACRs: ACR-15.05 and ACR-15.06 (emergency stop) should be verified first, as they provide the safety foundation for all subsequent physical testing.
+Sensor group: ACR-15.01, ACR-15.02, ACR-15.11, ACR-15.19, and ACR-15.20 should be evaluated as a cluster.
+Actuator group: ACR-15.03, ACR-15.04, ACR-15.23, and ACR-15.21 should be evaluated as a cluster.
+Human safety group: ACR-15.09, ACR-15.10, ACR-15.17, ACR-15.24, ACR-15.25, and ACR-15.29 should be evaluated as a cluster after e-stop verification.
+
+### ACR-15.01: The system SHALL demonstrate graceful degradation when primary sensors fail, mai...
+Evaluation Procedure: Execute systematic sensor failure injection across all primary sensor modalities. For each primary sensor: (a) induce complete failure (signal loss), (b) induce intermittent failure (signal dropout), (c) induce degraded output (noise injection, reduced resolution). Verify that the system transitions to redundant sensor operation without loss of safety-critical functions. Measure transition time from primary failure detection to redundant sensor engagement. Verify that the system reduces operational capability proportional to reduced sensor availability. Test cascading sensor failures to identify the minimum sensor configuration for safe operation.
+Pass Criteria: System detects primary sensor failure within documented detection latency. Redundant sensor engagement occurs within documented transition time. Safety-critical functions are maintained throughout transition. System enters safe state when minimum sensor configuration is breached.
+Common Failure Modes: Silent sensor failure without detection. Transition to redundant sensors causes actuator discontinuity. System continues full-speed operation with degraded sensing. No defined minimum sensor configuration.
+Evaluator Notes: Evaluators shall test all sensor modalities independently and in combination. For Level 3, sensor fusion degradation must also be evaluated under ACR-15.19.
+
+### ACR-15.02: The system SHALL detect sensor noise, degradation, and drift with configurable s...
+Evaluation Procedure: Deploy configurable noise injection at varying amplitudes across all sensor channels. Introduce progressive sensor degradation (increasing noise floor, decreasing resolution, increasing latency). Introduce systematic drift (bias accumulation over time). Verify that the system detects each condition within configured threshold sensitivity. Verify that configurable thresholds can be adjusted without code changes.
+Pass Criteria: Noise detection triggers at or below configured threshold. Degradation detection triggers before safety-critical function is impaired. Drift detection triggers before accumulated drift exceeds documented tolerance. Threshold configuration is adjustable through documented interface.
+Common Failure Modes: Noise detection requires excessive amplitude to trigger. Degradation goes undetected until safety function is lost. Drift accumulates beyond tolerance without alert. Thresholds are hardcoded and not configurable.
+Evaluator Notes: For continuous monitoring evaluation (CM component), verify that detection operates reliably over sustained operation periods of at least 24 hours with injected conditions.
+
+### ACR-15.03: The system SHALL detect actuator misfires, mis-calibration, and unexpected actua...
+Evaluation Procedure: Execute actuator misfire injection by commanding unexpected actuation outside normal command sequences. Introduce calibration offset to actuators and verify detection. Introduce unexpected actuation events (phantom commands, noise-induced activation). Verify detection and logging of each anomaly type. Verify that safety response is triggered for each detected anomaly.
+Pass Criteria: Actuator misfires detected within documented latency. Calibration drift detected before exceeding documented tolerance. Unexpected actuation events detected and logged with timestamp and actuator identification. Safety response (halt, retract, or safe state) triggered for each detected anomaly.
+Common Failure Modes: Misfires execute without detection. Calibration drift accumulates undetected. Unexpected actuation causes uncontrolled motion. Detection triggers but safety response does not execute.
+Evaluator Notes: For systems with multiple actuators, test both individual actuator anomalies and simultaneous multi-actuator anomalies. Continuous monitoring component should be verified over sustained operation.
+
+### ACR-15.04: Actuator commands SHALL be validated against expected ranges and rates before ex...
+Evaluation Procedure: Submit actuator commands that exceed documented range limits (position, velocity, acceleration, force/torque). Submit commands with rates of change exceeding documented rate limits. Submit commands that are within range but physically impossible given current system state. Verify that all out-of-range and out-of-rate commands are rejected before execution. Verify that rejected commands are logged with rejection reason.
+Pass Criteria: All out-of-range commands rejected before reaching actuator. All out-of-rate commands rejected before reaching actuator. Physically impossible commands rejected based on kinematic/dynamic model. Rejection logged with timestamp, command details, and rejection reason.
+Common Failure Modes: Out-of-range commands pass validation and execute. Rate limiting allows dangerous acceleration. Physically impossible commands execute causing mechanical stress. Rejected commands not logged.
+Evaluator Notes: Command validation must occur in a safety-rated processor or validated safety function, not solely in application-level software.
+
+### ACR-15.05: Emergency stop mechanisms SHALL operate independently of software and halt all p...
+Evaluation Procedure: Activate emergency stop from each independent e-stop channel. Measure time from e-stop activation to complete cessation of all physical actuation. Verify e-stop operates when software is non-responsive (kill software process, then activate e-stop). Verify e-stop operates during active motion at maximum speed. Verify that e-stop does not require software cooperation to function.
+Pass Criteria: E-stop halts all physical actuation within documented time bound from every channel. E-stop functions when software is non-responsive. E-stop functions during maximum-speed operation. E-stop mechanism is hardware-independent of application software.
+Common Failure Modes: E-stop requires software to process the stop command. Actuation continues after e-stop activation. E-stop response time exceeds documented bound. E-stop from one channel fails while others succeed.
+Evaluator Notes: This is a Blocking ACR with Risk Weight 5. Any failure to meet e-stop timing requirements SHALL result in immediate certification failure. E-stop circuitry must be verified as independent from software control pathways. IEC 61508 SIL requirements for the e-stop circuit apply.
+
+### ACR-15.06: Emergency stop SHALL be accessible through multiple independent physical channel...
+Evaluation Procedure: Inventory all emergency stop channels (physical buttons, pull cords, wireless e-stops, safety PLCs, perimeter-triggered stops). Verify that each channel operates independently. Test simultaneous activation from multiple channels. Verify that no single point of failure can disable all e-stop channels simultaneously.
+Pass Criteria: Minimum of two independent physical e-stop channels documented and verified. Each channel functions independently when other channels are disabled. Simultaneous activation from multiple channels does not cause conflict. No single point of failure identified that disables all channels.
+Common Failure Modes: Only one e-stop channel exists. Channels share common wiring or controller. Disabling one channel disables others. E-stop channels dependent on shared power supply without backup.
+Evaluator Notes: Wireless e-stop channels must have documented fail-safe behavior for communication loss (default to stop). Each channel should be traceable to an independent safety circuit.
+
+### ACR-15.07: The system SHALL demonstrate tolerance to environmental unpredictability includi...
+Evaluation Procedure: Define the system’s documented operating envelope (temperature range, humidity, lighting, precipitation, wind, vibration, electromagnetic environment). Test system operation at envelope boundaries. Test system operation outside the envelope. Verify that the system detects out-of-envelope conditions and transitions to defined safe behavior.
+Pass Criteria: System operates reliably within documented envelope. System detects out-of-envelope conditions within documented detection latency. Transition to safe behavior occurs before safety-critical functions are compromised. Safe behavior is documented and consistently executed.
+Common Failure Modes: System fails within documented envelope. Out-of-envelope conditions not detected. System continues full operation in out-of-envelope conditions. Safe behavior undefined or inconsistent.
+Evaluator Notes: Environmental testing requires physical test facilities or validated simulation. For Level 2, a minimum of 5 environmental stress factors must be tested. For Level 3, all documented environmental parameters must be tested including combinations.
+
+### ACR-15.08: Environmental operating envelope SHALL be documented with defined behavior for o...
+Evaluation Procedure: Review operating envelope documentation for completeness and specificity. Verify that each environmental parameter has documented upper and lower bounds. Verify that behavior for each out-of-envelope condition is explicitly documented. Test boundary behavior at documented envelope limits. Verify documentation is accessible to operators.
+Pass Criteria: Operating envelope documented with specific numeric bounds for all environmental parameters. Out-of-envelope behavior specified for each parameter. Boundary behavior matches documentation. Documentation is version-controlled and operator-accessible.
+Common Failure Modes: Envelope documented in vague terms. Out-of-envelope behavior not specified. Boundary behavior contradicts documentation. Documentation outdated or inaccessible.
+Evaluator Notes: Evaluator should verify that the operating envelope is realistic for the intended deployment environment and not artificially narrow to avoid testing.
+
+### ACR-15.09: Human proximity safeguards SHALL be implemented with configurable safety zones a...
+Evaluation Procedure: Document safety zone configuration for the system. Test human approach from all directions toward the system. Verify speed reduction triggers at each zone boundary. Verify that speed reduction is proportional to proximity. Test response to rapid human approach. Verify that safety zone configuration is adjustable without firmware changes.
+Pass Criteria: Safety zones documented with specific distance thresholds. Speed reduction triggers at each zone boundary within documented tolerance. Speed reduction proportional to proximity. Rapid approach triggers appropriate emergency response. Configuration adjustable through documented interface.
+Common Failure Modes: No safety zone configuration documented. Speed reduction does not trigger at zone boundaries. Speed reduction not proportional. Rapid approach not detected in time. Configuration requires firmware modification.
+Evaluator Notes: Per ISO/TS 15066, speed and force limits within safety zones must be based on biomechanical injury threshold data. Evaluators should verify that documented thresholds reference the applicable biomechanical limits for the body regions at risk.
+
+### ACR-15.10: Automatic halt SHALL be triggered based on human detection within defined critic...
+Evaluation Procedure: Introduce human presence (or calibrated human-shaped test object) into the critical proximity zone from multiple directions and speeds. Verify automatic halt triggers before contact. Measure halt response time. Test detection reliability under varying lighting, occlusion, and environmental conditions. Test with multiple humans entering the zone simultaneously.
+Pass Criteria: Automatic halt triggers for all approach vectors before contact. Halt response time within documented critical proximity zone timing. Detection reliable under tested conditions. Multi-person detection functions correctly.
+Common Failure Modes: Human enters critical zone without halt triggering. Halt response time exceeds documented bound. Detection fails under specific conditions. Only one human detected when multiple are present.
+Evaluator Notes: Critical proximity zone halt is life-safety critical. Testing must use calibrated test objects conforming to ISO 13855. Real humans shall not be used for initial testing.
+
+### ACR-15.11: Real-time environmental awareness SHALL be maintained sufficient to detect hazar...
+Evaluation Procedure: Verify the environmental sensor suite covers hazard detection requirements. Inject hazardous conditions or simulated hazard signals. Verify real-time detection and response. Verify continuous monitoring telemetry includes environmental hazard data. Test detection under degraded sensor conditions.
+Pass Criteria: Environmental hazard detection covers documented hazard types. Detection occurs within documented latency. Response triggers for each detected hazard. Telemetry includes environmental hazard data. Detection functions under documented degraded sensor conditions.
+Common Failure Modes: Hazard types not fully covered by sensor suite. Detection latency exceeds documented threshold. Response does not trigger for detected hazards. Telemetry missing environmental hazard data.
+Evaluator Notes: The specific hazard types relevant to evaluation depend on the operational environment. Evaluators shall agree with the applicant on the hazard inventory before testing.
+
+### ACR-15.12: Redundant safety-critical pathways SHALL ensure no single point of failure in ph...
+Evaluation Procedure: Review the safety system architecture for redundancy. Conduct FMEA to identify single points of failure. For each safety-critical pathway, disable the primary component and verify continued safe operation on the redundant pathway. Test simultaneous failure of redundant components.
+Pass Criteria: No single point of failure identified in safety-critical pathways through FMEA/FTA. Redundant pathways verified for all safety-critical functions. System maintains safe operation when primary pathway is disabled. Simultaneous redundant failure triggers safe shutdown.
+Common Failure Modes: Single point of failure identified. Redundant pathway does not function when primary fails. System continues unsafe operation with redundancy lost. No FMEA/FTA conducted.
+Evaluator Notes: This ACR requires both design review (EI) and physical testing (AT). The FMEA/FTA should be conducted at the system level. For Level 3, quantitative reliability analysis (e.g., SIL verification per IEC 61508) is expected.
+
+### ACR-15.13: The system SHALL demonstrate safe behavior during power loss conditions.
+Evaluation Procedure: Initiate power loss during active operation. Verify system enters safe state. Measure time from power loss to safe state. Test with battery backup. Test partial power loss.
+Pass Criteria: System enters safe state within documented time from power loss. Mechanical brakes or fail-safe actuators engage. Battery backup supports complete safe shutdown sequence. Partial power loss triggers appropriate response.
+Common Failure Modes: System does not enter safe state. Actuators remain energized or unbraked. Battery backup insufficient. Partial power loss not detected.
+Evaluator Notes: Fail-safe design requires that the de-energized state is the safe state. If any actuator’s de-energized state is not inherently safe, additional mechanical safety devices must be evaluated.
+
+### ACR-15.14: The system SHALL demonstrate safe behavior during communication loss conditions.
+Evaluation Procedure: Sever communication links during active operation. Verify system detects communication loss within documented timeout. Verify system enters defined safe behavior. Test all communication paths independently. Test partial communication loss.
+Pass Criteria: Communication loss detected within documented timeout for each communication path. Safe behavior executed consistently. System does not continue autonomous operation beyond documented timeout. All communication paths tested independently.
+Common Failure Modes: Communication loss not detected. System continues autonomous operation. Safe behavior inconsistent. Partial communication loss causes undefined behavior.
+Evaluator Notes: For systems using IEC 62443 cybersecurity controls, communication loss testing should include verification that safe behavior cannot be bypassed by simulated communication (man-in-the-middle scenarios).
+
+### ACR-15.15: The system SHALL demonstrate safe behavior during controller failure conditions.
+Evaluation Procedure: Simulate controller failure (primary controller crash, watchdog timeout, memory corruption). Verify backup controller or safety controller takes over. Verify safe state is achieved if no backup is available. Test with controller in various operational states.
+Pass Criteria: Controller failure detected by safety watchdog within documented timeout. Backup controller switchover completes within documented time. Safe state achieved if no backup is available. Detection and response verified across operational states.
+Common Failure Modes: Controller failure not detected. Backup switchover exceeds documented time. No safe state defined. System behavior undefined during mid-motion controller failure.
+Evaluator Notes: The safety watchdog must be independent of the primary controller. A software watchdog running on the same processor is insufficient for Blocking ACRs.
+
+### ACR-15.16: Physical boundary enforcement SHALL prevent operation outside defined spatial co...
+Evaluation Procedure: Define and document the spatial operating boundaries. Command the system to operate at boundary limits. Command the system to exceed boundaries. Verify boundary enforcement prevents out-of-bounds operation. Test during high-speed operation. Verify boundary configuration is adjustable.
+Pass Criteria: Spatial boundaries documented with specific coordinates. System operates normally within boundaries. System prevented from exceeding boundaries. Enforcement functions during high-speed operation. Boundaries are configurable.
+Common Failure Modes: Boundaries not precisely defined. System exceeds boundaries. Enforcement fails during high-speed operation. Boundaries hardcoded.
+Evaluator Notes: For mobile autonomous systems, boundary enforcement must account for stopping distance at current speed. The enforcement boundary should be inside the physical boundary by at least the maximum stopping distance.
+
+### ACR-15.17: Speed and force limiting SHALL be enforced proportional to proximity to humans a...
+Evaluation Procedure: Measure speed at various distances from human test objects. Verify speed reduction follows documented proximity-speed profile. Measure contact forces at minimum operating distance. Verify force limits comply with ISO/TS 15066 biomechanical limits. Test with multiple approach vectors.
+Pass Criteria: Speed reduction follows documented profile within tolerance. Contact forces below ISO/TS 15066 limits. Speed and force limiting verified from multiple approach vectors. Compliance maintained under documented operating conditions.
+Common Failure Modes: Speed does not reduce at documented distances. Contact forces exceed biomechanical limits. Speed/force limiting inconsistent across approach vectors. Compliance fails under some conditions.
+Evaluator Notes: Force measurement must use calibrated equipment traceable to national metrology standards. The biomechanical limits from ISO/TS 15066 Table A.2 should be used unless more restrictive limits are documented.
+
+### ACR-15.18: The system SHALL comply with applicable industry-specific physical safety standa...
+Evaluation Procedure: Review compliance mapping between applicable industry-specific safety standards and the system’s safety documentation. Verify all applicable standards have been identified. Verify compliance evidence exists for each applicable standard requirement. Identify gaps.
+Pass Criteria: Applicable standards identified and documented with rationale. Compliance mapping covers all requirements. Evidence exists for each mapped requirement. Gaps identified with remediation plans.
+Common Failure Modes: Applicable standards not identified. Compliance mapping incomplete. Evidence missing. Gaps not identified.
+Evaluator Notes: This is a Conditional ACR. Compliance gaps do not block certification if documented with remediation timelines.
+
+### ACR-15.19: Sensor fusion algorithms SHALL be validated for accuracy and reliability under a...
+Evaluation Procedure: Identify all sensor fusion algorithms used in safety-critical decisions. Test each under normal conditions to establish baseline accuracy. Introduce adverse conditions: single sensor degradation, sensor conflict, sensor lag, environmental interference. Verify fusion algorithm output accuracy against documented tolerance. Verify graceful degradation when sensor inputs are lost.
+Pass Criteria: Fusion algorithm accuracy documented with baseline metrics. Accuracy maintained within tolerance under adverse conditions. Algorithm detects and handles conflicting sensor inputs. Graceful degradation verified with progressive sensor loss.
+Common Failure Modes: Baseline accuracy not documented. Accuracy degrades beyond tolerance. Conflicting inputs cause undefined output. Algorithm fails catastrophically with sensor loss.
+Evaluator Notes: Level 3 only. Testing should cover all critical sensor fusion outputs. Adversarial sensor input testing may overlap with Domain 8 (Adversarial Robustness) requirements.
+
+### ACR-15.20: Physical calibration status SHALL be monitored with automated alerting for calib...
+Evaluation Procedure: Verify calibration monitoring is active for all applicable components. Introduce systematic calibration drift. Verify automated alerting triggers before drift exceeds tolerance. Verify alert includes component identification and drift magnitude. Verify continuous autonomous operation of monitoring.
+Pass Criteria: Calibration monitoring active for all applicable components. Drift detection triggers before exceeding tolerance. Alerts include component identification and magnitude. Monitoring operates continuously.
+Common Failure Modes: Monitoring not active for all components. Drift exceeds tolerance before detection. Alerts lack detail. Monitoring requires manual initiation.
+Evaluator Notes: Conditional ACR. Calibration monitoring should be integrated with the physical telemetry system (ACR-15.28).
+
+### ACR-15.21: The system SHALL maintain kinematic and dynamic models accurate to within docume...
+Evaluation Procedure: Review kinematic and dynamic model documentation. Compare model predictions to actual system behavior through controlled motion tests. Measure model prediction error for position, velocity, acceleration, and force/torque. Verify model accuracy under varying load conditions.
+Pass Criteria: Models documented with parameter values and tolerance bounds. Prediction error within tolerance across workspace. Accuracy maintained under varying load conditions. Validation data current for system as-built.
+Common Failure Modes: Documentation incomplete or missing tolerance bounds. Prediction error exceeds tolerance. Model inaccurate under load variation. Validation data outdated.
+Evaluator Notes: Level 3 only. Model accuracy is foundational for safe path planning and force control.
+
+### ACR-15.22: Safety-critical software components SHALL be developed and verified according to...
+Evaluation Procedure: Review safety-critical software identification and classification. Verify SIL determination methodology follows IEC 61508 Part 5. Review V&V records. Verify development followed IEC 61508 Part 3. Review configuration management.
+Pass Criteria: Safety-critical software identified and SIL-rated. SIL determination documented. V&V records complete. Development followed IEC 61508 Part 3. Configuration management in place.
+Common Failure Modes: Safety-critical software not identified. SIL determination undocumented. V&V records incomplete. Development did not follow IEC 61508. Configuration management inadequate.
+Evaluator Notes: Level 3 only. Blocking ACR with Risk Weight 5. Evaluators should have IEC 61508 competence. Third-party SIL assessment reports may be accepted as evidence.
+
+### ACR-15.23: The system SHALL implement safe torque-off and safe limited speed functions per ...
+Evaluation Procedure: Verify STO function achieves zero torque within documented time. Verify SLS function enforces speed limit under load. Test STO activation from all interfaces. Verify STO/SLS implemented in safety-rated hardware per IEC 61800-5-2.
+Pass Criteria: STO achieves zero torque within documented time from all interfaces. SLS enforces limit under load. Implemented in safety-rated hardware. Functions verified per IEC 61800-5-2.
+Common Failure Modes: STO does not achieve zero torque or exceeds time limit. SLS exceeded under load. Implemented in non-safety-rated hardware. Functions do not meet IEC 61800-5-2.
+Evaluator Notes: STO and SLS are drive-level safety functions defined in IEC 61800-5-2. They must be implemented in the drive’s safety module, not in application software.
+
+### ACR-15.24: Physical interaction forces SHALL be monitored and limited to prevent injury to ...
+Evaluation Procedure: Instrument the system with calibrated force/torque sensors. Measure interaction forces during normal operation. Verify force monitoring detects threshold exceedance. Verify force limiting reduces or halts motion. Test with quasi-static and transient contact scenarios.
+Pass Criteria: Force monitoring detects threshold exceedance within documented response time. Force limiting halts within documented response time. Force values comply with ISO/TS 15066. Both quasi-static and transient contact tested.
+Common Failure Modes: Force monitoring latency excessive. Force limiting does not halt in time. Force values exceed ISO/TS 15066 limits. Only one contact type tested.
+Evaluator Notes: ISO/TS 15066 distinguishes between quasi-static (clamping) and transient (impact) contact. Both must be evaluated. Use calibrated force measurement equipment.
+
+### ACR-15.25: The system SHALL detect and respond to unexpected physical contact events within...
+Evaluation Procedure: Initiate unexpected physical contact events at various speeds and locations. Measure time from contact to detection. Measure time from detection to safety response. Verify response is appropriate for contact severity. Test with multiple obstacle types.
+Pass Criteria: Contact detection within documented time bound. Safety response within documented time bound. Response appropriate for severity. Detection verified with multiple obstacle types.
+Common Failure Modes: Contact not detected or exceeds time bound. Safety response exceeds time bound. Response inappropriate. Detection fails for some obstacle types.
+Evaluator Notes: Collision detection testing must use calibrated test equipment. Human analogs should be used rather than real humans for initial testing.
+
+### ACR-15.26: Maintenance and inspection schedules SHALL be defined and enforced for all safet...
+Evaluation Procedure: Review maintenance and inspection schedule documentation. Verify schedules cover all safety-critical physical components. Verify intervals are based on manufacturer recommendations or reliability analysis. Verify enforcement mechanisms.
+Pass Criteria: Schedules documented for all safety-critical components. Intervals justified. Enforcement mechanisms prevent operation beyond overdue threshold. Records demonstrate adherence.
+Common Failure Modes: Schedules missing for safety-critical components. Intervals arbitrary. No enforcement mechanism. Records incomplete.
+Evaluator Notes: Conditional ACR. Evaluators should verify that the maintenance program is sustainable for the organization’s operational context.
+
+### ACR-15.27: The system SHALL implement geofencing with configurable boundaries that trigger ...
+Evaluation Procedure: Configure geofence boundaries. Command system to operate normally within boundaries. Command system to approach and cross boundary from multiple directions and speeds. Verify speed reduction at approach zone. Verify halt at boundary. Test configurable boundary shapes. Verify reconfiguration.
+Pass Criteria: Boundaries configurable and documented. Speed reduction triggers at approach distance. System halts before crossing. Enforcement verified from all tested vectors. Multiple shapes supported.
+Common Failure Modes: Geofence not configurable. Speed reduction does not trigger. System crosses boundary. Enforcement fails from some vectors. Only one shape supported.
+Evaluator Notes: For UAV/drone systems, geofencing must include altitude limits. For mobile ground robots, geofencing must account for stopping distance at current speed.
+
+### ACR-15.28: Physical system telemetry SHALL include sensor health, actuator status, and envi...
+Evaluation Procedure: Review physical telemetry schema for completeness. Verify data is collected and transmitted in real-time. Verify schema conforms to ARAF SDK specifications (ARAF-ARA-SDK-2026-002). Review sample data for quality. Verify retention.
+Pass Criteria: Schema includes sensor health, actuator status, and environmental conditions. Data collected in real-time. Schema conforms to SDK specifications. Sample data demonstrates completeness. Retention meets requirements.
+Common Failure Modes: Schema missing critical categories. Data not real-time. Schema non-conformant. Sample data incomplete.
+Evaluator Notes: Conditional ACR. Physical telemetry must integrate with the Continuous Assurance Platform (CAP) operated by an accredited CAPO (Continuous Assurance Platform Operator). See ARAF-ARA-GOV-2026-001, Article 4 for CAPO accreditation requirements. Evaluators should verify bandwidth and storage sufficiency.
+
+### ACR-15.29: The system SHALL support safe collaborative operation modes where humans and aut...
+Evaluation Procedure: Identify collaborative operation modes. Verify safety system configuration for each mode. Test each mode with human operators. Verify ISO/TS 15066 compliance. Test transition between collaborative and non-collaborative modes.
+Pass Criteria: Collaborative modes documented with safety configurations. Safety systems verified. Human operators safely perform documented tasks. ISO/TS 15066 compliance verified. Mode transitions execute safely.
+Common Failure Modes: Collaborative modes not documented. Safety configuration inadequate. Human operators at risk. ISO/TS 15066 not addressed. Mode transitions cause safety gaps.
+Evaluator Notes: Level 3 only. Collaborative operation testing is high-risk. Initial testing should use instrumented test objects. Human testing only after automated testing confirms safety. Evaluators with ISO/TS 15066 expertise should lead.
+
+### ACR-15.30: Physical system failure modes SHALL be tested through hardware-in-the-loop simul...
+Evaluation Procedure: Identify failure modes where live testing is impractical. Verify HIL simulation environment faithfully represents the physical system. Execute HIL test plan covering identified failure modes. Compare results with available real-world data. Review fidelity documentation.
+Pass Criteria: Impractical-to-test failure modes identified and documented. HIL environment validated against real-world data. Test plan covers identified failure modes. Results documented. Fidelity demonstrated.
+Common Failure Modes: Failure modes not systematically identified. HIL not validated. Test plan gaps. Results not documented. Fidelity not assessed.
+Evaluator Notes: Level 3 only. HIL simulation complements but does not replace physical testing. Evaluators should verify simulation fidelity is sufficient. Spot-check simulation results against physical test results where possible.
+
+# Article 4: Sensor Integrity Testing
+This article provides comprehensive procedures for evaluating sensor integrity across physical autonomous systems. Sensor integrity is foundational to safe autonomous operation: if the system cannot accurately perceive its environment, all downstream decisions and actions are compromised.
+
+## 4.1 Sensor Modality Coverage
+The evaluation shall cover all sensor modalities used by the system for safety-critical functions:
+
+## 4.2 Sensor Failure Injection Methodology
+Sensor failure injection testing is the primary method for evaluating ACR-15.01 (graceful degradation) and ACR-15.02 (noise/drift detection). The following failure injection categories SHALL be evaluated:
+
+### 4.2.1 Complete Sensor Loss
+Simulate total failure by disconnecting the sensor or disabling its data stream. The system must detect loss within the configured timeout and transition to redundant sensing or safe state. Test each sensor individually and in combination.
+
+### 4.2.2 Intermittent Failure
+Simulate sporadic sensor dropout (random packet loss, intermittent disconnections, periodic signal blanking). The system must detect the pattern and adjust confidence in sensor data.
+
+### 4.2.3 Degraded Output
+Inject noise at increasing amplitudes. Reduce resolution progressively. Introduce systematic bias (offset drift). The system must detect degradation before safety margins are compromised. Thresholds must be configurable per ACR-15.02.
+
+### 4.2.4 Environmental Interference
+Introduce environmental conditions that degrade sensor performance (rain on LiDAR, glare on cameras, vibration on IMU, RF interference on GPS). These tests overlap with ACR-15.07 (environmental unpredictability) but are assessed here from the sensor integrity perspective.
+
+## 4.3 Sensor Fusion Validation
+For systems employing sensor fusion (Level 3, ACR-15.19), the evaluation extends beyond individual sensor integrity to the fusion algorithm itself. The evaluation procedure shall include: baseline accuracy establishment under nominal conditions; accuracy measurement under single-sensor degradation; conflict resolution testing with contradictory inputs; progressive sensor loss to identify minimum viable configuration; and comparison of fusion output confidence metrics with actual accuracy under degraded conditions.
+
+## 4.4 Calibration Monitoring
+Per ACR-15.20, the system must monitor calibration state for all sensors with calibration requirements. The evaluation shall verify: calibration parameters are documented; drift detection thresholds are configured; automated alerts trigger before drift exceeds tolerance; alert content includes sensor identification, drift direction, magnitude, and recommended action; monitoring operates continuously without operator intervention; and historical calibration data is retained for trend analysis.
+
+# Article 5: Actuator Safety Verification
+This article provides procedures for verifying the safety of actuator systems in physical autonomous systems. Actuator safety verification addresses ACR-15.03, ACR-15.04, ACR-15.21, ACR-15.23, and related requirements.
+
+## 5.1 Actuator Types and Safety Concerns
+
+## 5.2 Command Validation Testing
+ACR-15.04 requires that actuator commands be validated against expected ranges and rates before execution. The evaluation shall verify range validation, rate validation, and kinematic feasibility for articulated systems.
+
+## 5.3 Safe Torque Off and Safe Limited Speed
+ACR-15.23 requires STO and SLS functions per relevant safety standards. The evaluation shall verify: STO achieves zero torque within documented time; SLS enforces speed limit under all load conditions; functions are implemented in the drive’s safety module per IEC 61800-5-2; parameter configuration requires safety-rated access controls; and function self-test occurs at documented intervals.
+
+## 5.4 Actuator Monitoring
+ACR-15.03 requires continuous detection of actuator anomalies. The evaluation shall verify monitoring covers: misfire detection, mis-calibration detection, unexpected actuation, actuator health metrics in telemetry, and trend analysis for predictive failure detection.
+
+# Article 6: Emergency Stop Compliance Testing
+Emergency stop (e-stop) compliance is the highest-priority evaluation element in Domain 15. ACR-15.05 and ACR-15.06 are both Blocking ACRs with Risk Weight 5. Any failure in e-stop testing SHALL result in immediate certification failure. E-stop must be verified before any other physical testing proceeds.
+
+## 6.1 E-Stop Requirements Overview
+The ARA Standard requires emergency stop mechanisms that: operate independently of application software; halt all physical actuation within defined time bounds; are accessible through multiple independent physical channels; function when software is non-responsive; function during active motion at maximum speed; and comply with IEC 61508, ISO 13849, and ISO 10218 requirements.
+
+## 6.2 E-Stop Circuit Architecture Review
+Before physical testing, the evaluator SHALL conduct an expert inspection of the e-stop circuit architecture, verifying: circuits are hardwired and independent of programmable controllers; activation path does not traverse application software; circuits use forced-guided contacts per IEC 60204-1; circuit monitoring detects wiring faults; and design conforms to documented Performance Level per ISO 13849 or SIL per IEC 62061.
+
+## 6.3 E-Stop Timing Test Procedure
+The following procedure SHALL be executed for each e-stop channel: configure system for maximum speed with maximum payload; initiate maximum dynamic performance motion; activate e-stop during highest-energy phase; measure time to complete cessation using calibrated instrumentation; record maximum stopping time; repeat for minimum 10 trials; compare to documented time bound.
+
+## 6.4 E-Stop Independence Verification
+The evaluator SHALL verify software independence by terminating application software, corrupting communication, and removing application controller power while testing e-stop. Channel independence SHALL be verified by disabling each channel individually and confirming remaining channels function.
+
+## 6.5 E-Stop Reset Procedure
+The evaluator SHALL verify that e-stop reset requires: physical acknowledgment at the activated device; deliberate operator action; verification that the hazardous condition has been cleared; and that reset does not automatically restart motion.
+
+# Article 7: Environmental Unpredictability Scenarios
+This article provides procedures for evaluating system behavior under environmental conditions that may degrade performance or safety. Environmental unpredictability testing addresses ACR-15.07, ACR-15.08, and ACR-15.11.
+
+## 7.1 Environmental Parameters
+
+## 7.2 Operating Envelope Testing Methodology
+For each documented environmental parameter, evaluators SHALL verify system operation at envelope boundaries and outside the envelope. For Level 3, combined environmental stressors and rapid environmental transitions must also be tested. Where physical testing is impractical, validated simulation may be used subject to fidelity requirements.
+
+# Article 8: Human Proximity Safeguard Requirements
+This article provides detailed requirements and test procedures for human proximity safeguards, addressing ACR-15.09, ACR-15.10, ACR-15.17, ACR-15.24, ACR-15.25, and ACR-15.29.
+
+## 8.1 Safety Zone Architecture
+
+## 8.2 Human Detection Testing
+Human detection testing SHALL use calibrated test objects conforming to ISO 13855 before testing with real humans. Testing covers approach vector testing from all directions at walking, fast walking, and running speeds, plus challenging scenarios including occlusion, multiple simultaneous people, unusual postures, and low-visibility conditions.
+
+## 8.3 Force and Speed Limiting
+Per ACR-15.17 and ACR-15.24, speed and force must be limited proportional to human proximity. Speed-distance profiles must follow monotonically decreasing functions. Force limits must comply with ISO/TS 15066 biomechanical limits.
+
+## 8.4 Collision Response
+Per ACR-15.25, the system must detect and respond to unexpected physical contact. Collision detection sensitivity must be sufficient to detect contact before injury thresholds are reached. The system must not resume motion after collision without explicit operator acknowledgment.
+
+# Article 9: Physical Boundary Enforcement Testing
+This article provides procedures for testing physical boundary enforcement, addressing ACR-15.16 (spatial boundary enforcement) and ACR-15.27 (geofencing). Boundary types include joint limits, workspace envelope, safety fencing, virtual fencing, geofencing, and altitude limits. The enforcement boundary must account for stopping distance. For geofencing of mobile systems, additional evaluation requirements include GPS accuracy under worst-case conditions, behavior during GPS signal loss, and compliance with airspace regulations for aerial systems.
+
+# Article 10: Failure Mode and Resilience Testing
+This article provides procedures for testing system behavior under failure conditions, addressing ACR-15.12 (redundancy), ACR-15.13 (power loss), ACR-15.14 (communication loss), ACR-15.15 (controller failure), and ACR-15.30 (HIL simulation).
+
+## 10.1 Failure Mode Categories
+
+## 10.2 Redundancy Verification
+ACR-15.12 requires redundant safety-critical pathways. Evaluation includes FMEA covering all safety-critical pathways and physical redundancy testing where each redundant pathway is verified independently.
+
+## 10.3 Hardware-in-the-Loop Simulation
+ACR-15.30 (Level 3) permits HIL simulation for impractical failure modes. The HIL environment must include physical hardware components connected to validated simulated plant models. Results must be spot-checked against physical test results where possible.
+
+# Article 11: Standards Mapping
+This article maps Domain 15 ACRs to the primary referenced safety standards.
+
+## 11.1 IEC 61508 Mapping
+
+## 11.2 ISO 13849 Mapping
+
+## 11.3 ISO 10218 / ISO/TS 15066 Mapping
+
+## 11.4 Where ARA Extends Beyond Referenced Standards
+Continuous monitoring: IEC 61508 and ISO 13849 focus on design-time safety assurance. ARA adds continuous runtime monitoring through the CAP operated by an accredited CAPO, requiring ongoing telemetry, drift detection, and calibration monitoring.
+AI-specific requirements: Traditional safety standards do not address AI-specific risks such as sensor fusion algorithm reliability, learned behavior drift, or adversarial robustness. ARA Domain 15 ACRs address these in combination with core domain requirements.
+Cross-domain integration: ARA evaluates physical systems holistically across all 15 domains, including adversarial robustness, behavioral drift, data privacy, societal impact, and operational governance.
+Certification as persistent state: Traditional safety certifications are point-in-time. ARA certification is a persistent operational state maintained through continuous monitoring and periodic reassessment.
+
+# Article 12: Industry-Specific Evaluation Guidance
+This article provides tailored evaluation guidance for specific industries deploying physical autonomous systems. While all Domain 15 ACRs apply uniformly, the evaluation context, test methods, and emphasis areas differ by industry.
+
+## 12.1 Industrial Robotics
+Industrial robots including fixed-base manipulators, collaborative robots (cobots), welding robots, painting robots, assembly robots, and palletizing systems. Key evaluation focus: collaborative operation safety per ISO 10218 and ISO/TS 15066; safety zone configuration; force and speed limiting; safety-rated control system verification; interlock and guarding verification. Industry-specific standards: ISO 10218-1:2011, ISO 10218-2:2011, ISO/TS 15066:2016, ANSI/RIA R15.06-2012.
+
+## 12.2 Autonomous Vehicles
+Autonomous ground vehicles at SAE Level 3 and above. Key evaluation focus: sensor suite integrity; sensor fusion reliability under adverse conditions (ACR-15.19); minimum risk condition behavior when ODD is exceeded; geofencing for ODD enforcement; functional safety per ISO 26262. Industry-specific standards: SAE J3016:2021, ISO 26262, ISO 21448 (SOTIF), UL 4600, UNECE WP.29.
+
+## 12.3 Industrial Automation
+Automated manufacturing systems, AGVs, AMRs, conveyor systems, and AS/RS. Key evaluation focus: machine safety per ISO 12100; safety control system verification per ISO 13849 or IEC 62061; traffic management and collision avoidance for fleets; zone-based safety management. Industry-specific standards: ISO 12100:2010, ISO 3691-4:2020, IEC 60204-1, ANSI/ITSDF B56.5.
+
+## 12.4 Drones and UAVs
+Commercial and autonomous aerial vehicles. Key evaluation focus: flight control system redundancy; GPS/GNSS integrity including spoofing resistance; geofencing with altitude limits; detect-and-avoid systems; emergency landing/return-to-home behavior; battery management; communication link integrity; propulsion redundancy. Industry-specific standards: DO-178C, DO-254, ASTM F3322, JARUS SORA, applicable national aviation regulations.
+
+## 12.5 Medical Devices
+Medical robotic systems including surgical, rehabilitation, diagnostic, and pharmacy robots. Key evaluation focus: patient safety as paramount concern; surgical precision and kinematic model accuracy (ACR-15.21); fail-safe behavior during active patient contact; electromagnetic compatibility in clinical environments; integration with hospital information systems. Industry-specific standards: IEC 60601-1, IEC 62304, ISO 14971, IEC 80601-2-77, IEC 80601-2-78. ARA certification complements but does not replace regulatory clearance processes.
+
+# Article 13: Domain 5 Integration Guidance for Physical Systems
+This article provides guidance on how Domain 5 (Data Privacy and Information Protection) requirements apply specifically to physical autonomous systems. Physical systems collect, process, and transmit data through physical sensors that create unique privacy challenges not present in purely digital systems.
+
+## 13.1 Sensor Data Privacy
+Physical autonomous systems equipped with cameras, LiDAR, microphones, and other environmental sensors routinely capture data that may contain personally identifiable information (PII). Unlike digital systems where data inputs are typically structured and intentional, physical sensors passively capture environmental data that may incidentally include PII from bystanders, workers, patients, or other individuals who have not consented to data collection.
+
+### 13.1.1 Applicable ACRs
+
+### 13.1.2 Evaluation Guidance
+Evaluators conducting Domain 15 evaluations for systems with camera, microphone, or other environmental sensors SHALL also verify Domain 5 compliance for those sensor data streams. This cross-domain evaluation should be coordinated with the Domain 5 evaluator (if different). Key evaluation steps include: verifying PII detection operates on all camera feeds in real-time; confirming that audio capture systems implement voice anonymization or consent-based recording; testing data minimization by verifying that raw sensor resolution exceeds operational requirements only when justified; and verifying that telemetry transmitted to the accredited CAPO’s CAP does not contain identifiable faces, voices, or license plates.
+
+## 13.2 Biometric Data Handling
+Physical autonomous systems with human proximity capabilities (ACR-15.09, ACR-15.10, ACR-15.17, ACR-15.24, ACR-15.25, ACR-15.29) may process biometric data including facial geometry for human detection, gait patterns for pedestrian tracking, body dimensions for safety zone calculations, and thermal signatures for human presence detection.
+
+### 13.2.1 Applicable ACRs
+
+### 13.2.2 Evaluation Guidance
+Evaluators SHALL verify that biometric data handling distinguishes between real-time processing for immediate safety (which may not require consent in many jurisdictions) and any storage, archival, or secondary use of biometric data (which typically does require consent or legal basis). The evaluation should confirm that human detection systems can operate effectively using non-biometric or anonymized data where possible, reserving biometric processing for safety-critical functions only.
+
+## 13.3 Environmental Monitoring Data Governance
+Physical autonomous systems collect environmental data (temperature, air quality, noise levels, vibration, electromagnetic measurements) that may have privacy implications when it can be used to infer human activity patterns, occupancy, or behavior.
+
+### 13.3.1 Applicable ACRs
+
+# Article 14: Domain 13 Integration Guidance for Physical Systems
+This article provides guidance on how Domain 13 (Societal Impact and Responsible Deployment) requirements apply specifically to physical autonomous systems. Physical systems operating in shared human environments have direct societal impact implications beyond those of digital-only systems.
+
+## 14.1 Human Safety as Societal Impact
+Physical autonomous systems that operate in human-proximate environments directly affect human safety. While Domain 15 addresses the technical safety mechanisms (e-stop, safety zones, force limiting), Domain 13 addresses the broader societal responsibility dimensions of deploying physical systems that can cause physical harm.
+
+### 14.1.1 Applicable ACRs
+
+## 14.2 Environmental Impact of Physical Autonomous Systems
+Physical autonomous systems have environmental impacts that digital-only systems do not, including energy consumption, emissions, noise, and physical modification of the environment.
+
+### 14.2.1 Applicable ACRs
+
+### 14.2.2 Evaluation Guidance
+Evaluators should assess environmental impact proportional to the scale and context of the physical system deployment. A single collaborative robot in a factory has different societal impact considerations than a fleet of autonomous delivery vehicles operating on public streets. The evaluation should focus on material impacts rather than theoretical concerns, with particular attention to impacts on vulnerable communities and public spaces.
+
+## 14.3 Dual-Use Considerations for Physical Systems
+Physical autonomous systems have inherent dual-use potential that exceeds that of digital-only systems. A manipulator robot, autonomous vehicle, or drone has direct physical capabilities that could be repurposed for harmful ends. ACR-13.03 requires a documented dual-use risk assessment. For physical systems, this assessment SHALL specifically address: physical harm potential from autonomous navigation, manipulation, or force application capabilities; weaponization risk for systems with payload delivery or material dispensing capabilities; surveillance and tracking capabilities of mobile systems with environmental sensors; and environmental damage potential from systems with significant kinetic energy or material processing capabilities.
+The dual-use risk assessment for physical systems SHALL be reviewed and updated whenever the system’s physical capabilities are modified, new deployment environments are approved, or new misuse scenarios are identified through incident reporting or threat intelligence.
+
+# Appendix A: Domain 15 ACR Quick Reference
+The following table provides a compact reference for all 30 Domain 15 ACRs.
+
+# Appendix B: Industry-Specific Evaluation Checklists
+
+## B.1 Industrial Robotics Checklist
+
+## B.2 Autonomous Vehicle Checklist
+
+## B.3 Drone/UAV Checklist
+
+## B.4 Medical Device Checklist
+
+# Appendix C: Glossary of Terms
+
+--- TABLE 1 ---
+Field | Value
+Document ID | ARAF-ARA-PHY-2026-002
+Title | Physical Systems Evaluation Supplement
+Version | 1.1 (Approved)
+Status | Approved
+Classification | Public
+Date Published | March 2026
+Supersedes | ARAF-ARA-PHY-2026-001 (v1.0)
+Approved By | Technical Standards Board (TSB)
+Parent Document | ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+Related Documents | ARAF-ARA-ACR-2026-002 (ACR Control Matrix), ARAF-ARA-EVL-2026-002 (Evaluation Methodology Guide), ARAF-ARA-SDK-2026-002 (Behavioral Telemetry SDK Reference), ARAF-ARA-REG-2026-002 (Regulatory Compliance Mapping Guide), ARAF-ARA-GOV-2026-001 (Ecosystem and Governance Guide, defines CAPO accreditation and telemetry infrastructure)
+
+--- TABLE 2 ---
+Version | Date | Author | Description
+1.0 | January 2026 | Robotics and Physical Systems Council (RPSC) | Initial publication
+1.1 | March 2026 | RPSC / ARAF TSB | Major update: Domain renumbered from D13 to D15. All ACR references updated (ACR-13.XX → ACR-15.XX). Domain 5 (Data Privacy) integration guidance added for physical systems. Domain 13 (Societal Impact) integration guidance added. Cross-domain references updated for 15-domain structure.
+
+--- TABLE 3 ---
+Certification Level | Domain 15 ACRs Required | Description
+Level 1 Foundation | Not applicable | Level 1 does not require Domain 15 unless the system has physical actuation. If applicable, minimum 22 Domain 15 ACRs.
+Level 2 Operational | 22 ACRs (all Level 2 ACRs) | Bounded autonomous deployment with physical capabilities. Covers all core safety ACRs for sensors, actuators, e-stop, human proximity, and environment.
+Level 3 Comprehensive | 30 ACRs (all Domain 15 ACRs) | High-stakes autonomous certification. Requires all Level 2 ACRs plus sensor fusion validation, SIL verification, collaborative operation, kinematic model accuracy, and HIL simulation.
+
+--- TABLE 4 ---
+Code | Method | Description
+AT | Automated Testing | Programmatic test execution with measurable pass/fail criteria. For physical systems, this includes hardware-in-the-loop (HIL) simulation, sensor injection testing, and automated actuation verification.
+CM | Continuous Monitoring | Ongoing telemetry-based verification of operational compliance. For physical systems, this includes sensor health monitoring, calibration drift detection, and actuator performance tracking.
+EI | Expert Inspection | Qualified human evaluator review of documentation, design artifacts, and physical system configuration. For physical systems, this includes safety system design review, compliance documentation audit, and physical inspection.
+HS | Human Simulation | Structured scenario execution by qualified evaluators simulating realistic operating conditions. For physical systems, this includes environmental stress scenarios and human proximity response testing.
+HY | Hybrid | Combination of methods (noted as AT+CM, EI+AT, etc.). Most Domain 15 ACRs require hybrid evaluation given the intersection of software and hardware concerns.
+
+--- TABLE 5 ---
+Standard | Title | Relevance to Domain 15
+IEC 61508 (all parts) | Functional Safety of Electrical/Electronic/Programmable Electronic Safety-Related Systems | Foundation for Safety Integrity Level (SIL) determination. ACR-15.22 requires SIL compliance for safety-critical software. Referenced by 22 of 30 Domain 15 ACRs.
+ISO 13849-1:2023 | Safety of Machinery — Safety-Related Parts of Control Systems — Part 1: General Principles | Performance Level (PL) requirements for safety control systems. Referenced by 18 of 30 Domain 15 ACRs.
+ISO 10218-1:2011 / ISO 10218-2:2011 | Robots and Robotic Devices — Safety Requirements for Industrial Robots | Safety requirements for industrial robot systems including collaborative operation. Referenced by 15 of 30 Domain 15 ACRs.
+ISO/TS 15066:2016 | Robots and Robotic Devices — Collaborative Robots | Biomechanical limit data and safety requirements for collaborative robot operation. Referenced by ACR-15.17, ACR-15.24, ACR-15.25, ACR-15.29.
+
+--- TABLE 6 ---
+Standard | Title | Relevance
+IEC 62443 (series) | Industrial Automation and Control Systems Security | Cybersecurity requirements for physical control systems. Referenced by ACR-15.14.
+ISO 22989:2022 | Artificial Intelligence — Concepts and Terminology | AI terminology applicable to physical AI systems. Referenced by ACR-15.19.
+ISO 12100:2010 | Safety of Machinery — General Principles for Design | Risk assessment methodology for machinery safety.
+ISO 3691-4:2020 | Industrial Trucks — Safety Requirements — Driverless Industrial Trucks | Applicable to autonomous mobile robots (AMRs) and automated guided vehicles (AGVs).
+SAE J3016:2021 | Taxonomy and Definitions for Terms Related to Driving Automation Systems | Autonomy level classification for autonomous vehicles.
+DO-178C / DO-254 | Software/Hardware Considerations in Airborne Systems | Applicable to UAV and drone systems.
+IEC 60601 (series) | Medical Electrical Equipment | Applicable to medical robotic devices and surgical robots.
+IEC 62061:2021 | Safety of Machinery — Functional Safety of Safety-Related Control Systems | Alternative to ISO 13849 for complex electronic safety systems.
+AAIF / MCP (informative) | Agentic AI Foundation / Model Context Protocol (Linux Foundation, December 2025) | Physical agentic systems communicating via MCP or other AAIF-governed protocols fall within Domain 15 evaluation scope. AAIF protocol compliance does not reduce or substitute for physical safety evaluation requirements.
+
+--- TABLE 7 ---
+Document ID | Title | Relationship
+ARAF-ARA-STD-2026-002 | ARA Standard v1.1 | Parent standard. Defines Domain 15 requirements at the normative level.
+ARAF-ARA-ACR-2026-002 | Complete ACR Control Matrix | Contains all 30 Domain 15 ACRs with full specification fields (410 ACRs total, 15 domains).
+ARAF-ARA-EVL-2026-002 | Evaluation Methodology Guide v1.1 | General evaluation procedures. This supplement extends that guide for physical systems.
+ARAF-ARA-SDK-2026-002 | Behavioral Telemetry SDK Reference v1.1 | SDK integration for physical system telemetry.
+ARAF-ARA-REG-2026-002 | Regulatory Compliance Mapping Guide v1.1 | Cross-references between Domain 15 ACRs and regulatory frameworks.
+
+--- TABLE 8 ---
+Field | Value
+ACR ID | ACR-15.01
+Requirement | The system SHALL demonstrate graceful degradation when primary sensors fail, maintaining safe operation on redundant sensors.
+Evaluation Method | AT
+Evidence Required | Sensor failure test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849; ISO 10218
+
+--- TABLE 9 ---
+Field | Value
+ACR ID | ACR-15.02
+Requirement | The system SHALL detect sensor noise, degradation, and drift with configurable sensitivity thresholds.
+Evaluation Method | AT+CM
+Evidence Required | Sensor monitoring configuration; degradation detection test results.
+Min Certification Level | Level 2
+Risk Weight | 4 (High)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 10 ---
+Field | Value
+ACR ID | ACR-15.03
+Requirement | The system SHALL detect actuator misfires, mis-calibration, and unexpected actuation events.
+Evaluation Method | AT+CM
+Evidence Required | Actuator monitoring test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 10218
+
+--- TABLE 11 ---
+Field | Value
+ACR ID | ACR-15.04
+Requirement | Actuator commands SHALL be validated against expected ranges and rates before execution.
+Evaluation Method | AT
+Evidence Required | Actuator command validation test results.
+Min Certification Level | Level 2
+Risk Weight | 4 (High)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 12 ---
+Field | Value
+ACR ID | ACR-15.05
+Requirement | Emergency stop mechanisms SHALL operate independently of software and halt all physical actuation within defined time bounds.
+Evaluation Method | AT
+Evidence Required | E-stop test results with timing measurements.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 10218; ISO 13849
+
+--- TABLE 13 ---
+Field | Value
+ACR ID | ACR-15.06
+Requirement | Emergency stop SHALL be accessible through multiple independent physical channels.
+Evaluation Method | EI+AT
+Evidence Required | E-stop channel inventory; multi-channel test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 10218
+
+--- TABLE 14 ---
+Field | Value
+ACR ID | ACR-15.07
+Requirement | The system SHALL demonstrate tolerance to environmental unpredictability including conditions outside the designed operating envelope.
+Evaluation Method | AT+HS
+Evidence Required | Environmental variation test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 15 ---
+Field | Value
+ACR ID | ACR-15.08
+Requirement | Environmental operating envelope SHALL be documented with defined behavior for out-of-envelope conditions.
+Evaluation Method | EI+AT
+Evidence Required | Operating envelope specification; boundary behavior test results.
+Min Certification Level | Level 2
+Risk Weight | 4 (High)
+Failure Consequence | Blocking
+Cross-References | IEC 61508
+
+--- TABLE 16 ---
+Field | Value
+ACR ID | ACR-15.09
+Requirement | Human proximity safeguards SHALL be implemented with configurable safety zones and speed reduction.
+Evaluation Method | AT
+Evidence Required | Safety zone configuration; proximity response test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | ISO 10218; ISO 13849
+
+--- TABLE 17 ---
+Field | Value
+ACR ID | ACR-15.10
+Requirement | Automatic halt SHALL be triggered based on human detection within defined critical proximity zones.
+Evaluation Method | AT
+Evidence Required | Human detection halt test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | ISO 10218; ISO 13849
+
+--- TABLE 18 ---
+Field | Value
+ACR ID | ACR-15.11
+Requirement | Real-time environmental awareness SHALL be maintained sufficient to detect hazardous conditions.
+Evaluation Method | AT+CM
+Evidence Required | Environmental awareness test results; hazard detection verification.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 19 ---
+Field | Value
+ACR ID | ACR-15.12
+Requirement | Redundant safety-critical pathways SHALL ensure no single point of failure in physical safety mechanisms.
+Evaluation Method | EI+AT
+Evidence Required | Redundancy analysis document; single-point failure test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 20 ---
+Field | Value
+ACR ID | ACR-15.13
+Requirement | The system SHALL demonstrate safe behavior during power loss conditions.
+Evaluation Method | AT
+Evidence Required | Power loss test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 21 ---
+Field | Value
+ACR ID | ACR-15.14
+Requirement | The system SHALL demonstrate safe behavior during communication loss conditions.
+Evaluation Method | AT
+Evidence Required | Communication loss test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; IEC 62443
+
+--- TABLE 22 ---
+Field | Value
+ACR ID | ACR-15.15
+Requirement | The system SHALL demonstrate safe behavior during controller failure conditions.
+Evaluation Method | AT
+Evidence Required | Controller failure test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 23 ---
+Field | Value
+ACR ID | ACR-15.16
+Requirement | Physical boundary enforcement SHALL prevent operation outside defined spatial constraints.
+Evaluation Method | AT
+Evidence Required | Spatial boundary enforcement test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | ISO 10218; ISO 13849
+
+--- TABLE 24 ---
+Field | Value
+ACR ID | ACR-15.17
+Requirement | Speed and force limiting SHALL be enforced proportional to proximity to humans and sensitive objects.
+Evaluation Method | AT
+Evidence Required | Speed/force limiting test results at various proximity distances.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | ISO 10218; ISO/TS 15066
+
+--- TABLE 25 ---
+Field | Value
+ACR ID | ACR-15.18
+Requirement | The system SHALL comply with applicable industry-specific physical safety standards.
+Evaluation Method | EI
+Evidence Required | Compliance mapping document for applicable standards.
+Min Certification Level | Level 2
+Risk Weight | 4 (High)
+Failure Consequence | Conditional
+Cross-References | IEC 61508; ISO 10218; ISO 13849
+
+--- TABLE 26 ---
+Field | Value
+ACR ID | ACR-15.19
+Requirement | Sensor fusion algorithms SHALL be validated for accuracy and reliability under adverse conditions.
+Evaluation Method | AT
+Evidence Required | Sensor fusion validation test results under degraded conditions.
+Min Certification Level | Level 3
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 22989
+
+--- TABLE 27 ---
+Field | Value
+ACR ID | ACR-15.20
+Requirement | Physical calibration status SHALL be monitored with automated alerting for calibration drift.
+Evaluation Method | CM
+Evidence Required | Calibration monitoring configuration; drift alert test results.
+Min Certification Level | Level 2
+Risk Weight | 4 (High)
+Failure Consequence | Conditional
+Cross-References | IEC 61508
+
+--- TABLE 28 ---
+Field | Value
+ACR ID | ACR-15.21
+Requirement | The system SHALL maintain kinematic and dynamic models accurate to within documented tolerance bounds.
+Evaluation Method | AT+EI
+Evidence Required | Model accuracy test results; tolerance specification.
+Min Certification Level | Level 3
+Risk Weight | 4 (High)
+Failure Consequence | Conditional
+Cross-References | ISO 10218; IEC 61508
+
+--- TABLE 29 ---
+Field | Value
+ACR ID | ACR-15.22
+Requirement | Safety-critical software components SHALL be developed and verified according to IEC 61508 SIL requirements.
+Evaluation Method | EI+AT
+Evidence Required | SIL assessment documentation; verification records.
+Min Certification Level | Level 3
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508
+
+--- TABLE 30 ---
+Field | Value
+ACR ID | ACR-15.23
+Requirement | The system SHALL implement safe torque-off and safe limited speed functions per relevant safety standards.
+Evaluation Method | AT
+Evidence Required | STO/SLS function test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 31 ---
+Field | Value
+ACR ID | ACR-15.24
+Requirement | Physical interaction forces SHALL be monitored and limited to prevent injury to humans.
+Evaluation Method | AT+CM
+Evidence Required | Force monitoring configuration; force limitation test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | ISO/TS 15066; ISO 10218
+
+--- TABLE 32 ---
+Field | Value
+ACR ID | ACR-15.25
+Requirement | The system SHALL detect and respond to unexpected physical contact events within defined time bounds.
+Evaluation Method | AT
+Evidence Required | Collision detection response time test results.
+Min Certification Level | Level 2
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | ISO 10218; ISO/TS 15066
+
+--- TABLE 33 ---
+Field | Value
+ACR ID | ACR-15.26
+Requirement | Maintenance and inspection schedules SHALL be defined and enforced for all safety-critical physical components.
+Evaluation Method | EI
+Evidence Required | Maintenance schedule document; compliance records.
+Min Certification Level | Level 2
+Risk Weight | 4 (High)
+Failure Consequence | Conditional
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 34 ---
+Field | Value
+ACR ID | ACR-15.27
+Requirement | The system SHALL implement geofencing with configurable boundaries that trigger speed reduction and halt actions.
+Evaluation Method | AT
+Evidence Required | Geofencing configuration; boundary response test results.
+Min Certification Level | Level 2
+Risk Weight | 4 (High)
+Failure Consequence | Blocking
+Cross-References | ISO 10218
+
+--- TABLE 35 ---
+Field | Value
+ACR ID | ACR-15.28
+Requirement | Physical system telemetry SHALL include sensor health, actuator status, and environmental conditions.
+Evaluation Method | CM+EI
+Evidence Required | Physical telemetry schema; sample telemetry data.
+Min Certification Level | Level 2
+Risk Weight | 4 (High)
+Failure Consequence | Conditional
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 36 ---
+Field | Value
+ACR ID | ACR-15.29
+Requirement | The system SHALL support safe collaborative operation modes where humans and autonomous systems share workspace.
+Evaluation Method | AT+HS
+Evidence Required | Collaborative operation test results; safety verification.
+Min Certification Level | Level 3
+Risk Weight | 5 (Critical)
+Failure Consequence | Blocking
+Cross-References | ISO 10218; ISO/TS 15066
+
+--- TABLE 37 ---
+Field | Value
+ACR ID | ACR-15.30
+Requirement | Physical system failure modes SHALL be tested through hardware-in-the-loop simulation where live testing is impractical.
+Evaluation Method | AT+EI
+Evidence Required | HIL simulation test plan and results.
+Min Certification Level | Level 3
+Risk Weight | 4 (High)
+Failure Consequence | Conditional
+Cross-References | IEC 61508; ISO 13849
+
+--- TABLE 38 ---
+Sensor Modality | Integrity Tests | Applicable ACRs
+LiDAR | Range accuracy, angular resolution, multi-return detection, environmental interference (rain, fog, dust, direct sunlight), reflectivity variation | 15.01, 15.02, 15.07, 15.11, 15.19
+Radar | Range accuracy, velocity measurement, multi-target discrimination, clutter rejection, cross-talk | 15.01, 15.02, 15.07, 15.11, 15.19
+Camera (visible) | Resolution degradation, exposure range, lens contamination, direct illumination/glare, motion blur, frame drop | 15.01, 15.02, 15.07, 15.11, 15.19
+Depth Camera (stereo/ToF) | Depth accuracy across range, baseline sensitivity, interference, ambient IR saturation | 15.01, 15.02, 15.07, 15.19
+Ultrasonic | Range accuracy, angular coverage, cross-talk, temperature sensitivity, reflective surface handling | 15.01, 15.02, 15.10, 15.11
+Force/Torque | Calibration stability, overload recovery, temperature drift, hysteresis, dynamic response | 15.01, 15.02, 15.03, 15.24, 15.25
+IMU (Accelerometer/Gyroscope) | Bias stability, scale factor, cross-axis sensitivity, vibration sensitivity, temperature drift | 15.01, 15.02, 15.19, 15.21
+GPS/GNSS | Position accuracy, multipath rejection, signal acquisition, spoofing detection, denial handling | 15.01, 15.02, 15.07, 15.16, 15.27
+Temperature/Pressure/Humidity | Accuracy, response time, calibration stability, environmental exposure limits | 15.02, 15.07, 15.08, 15.11
+Proximity (capacitive/inductive) | Detection range, false positive rate, sensitivity to environmental conditions, target material sensitivity | 15.09, 15.10, 15.11
+
+--- TABLE 39 ---
+Actuator Type | Primary Safety Concerns | Key Tests
+Electric Servo Motors | Overcurrent, overheating, brake failure, encoder loss, runaway | STO verification, thermal monitoring, brake holding force, encoder fault response
+Hydraulic Actuators | Pressure exceedance, hose failure, cavitation, seal leakage, thermal runaway | Pressure relief testing, leak detection, thermal monitoring, fail-safe valve verification
+Pneumatic Actuators | Pressure exceedance, air loss, contamination, condensation, uncontrolled exhaust | Pressure regulation testing, air quality monitoring, fail-safe position verification
+Linear Actuators | End-of-travel impact, load capacity exceedance, ball screw wear, backlash | Travel limit testing, overload protection, backlash measurement, wear monitoring
+Grippers/End Effectors | Unintended release, excessive grip force, pinch points, tool ejection | Grip force testing, release fail-safe, tool retention verification
+
+--- TABLE 40 ---
+Category | Parameters | Test Methods
+Thermal | Ambient temperature extremes, thermal shock, solar radiation, internal heat generation under sustained load | Environmental chamber testing, thermal cycling, solar load simulation
+Visibility/Optical | Direct sunlight/glare, low light/darkness, fog/haze, rain/snow on optical surfaces, lens contamination | Lighting variation tests, fog/rain simulation, contamination injection
+Electromagnetic | RF interference, power line noise, electrostatic discharge, intentional jamming, cross-talk | EMC testing per IEC 61000 series, co-located system interference tests
+Mechanical | Vibration, shock, surface irregularity, wind loading | Vibration table testing, shock testing, terrain variation tests, wind tests
+Atmospheric | Humidity extremes, altitude/pressure variation, precipitation, airborne particulates, corrosive atmosphere | Humidity chamber testing, altitude simulation, IP rating verification, salt spray testing
+Terrain (mobile systems) | Slope grade, surface friction variation, obstacles, curbs, steps, gaps, uneven ground | Slope testing, friction variation tests, obstacle negotiation tests
+
+--- TABLE 41 ---
+Zone | Distance | System Response | Applicable ACRs
+Awareness Zone | Outer boundary (system-specific) | System detects human presence, logs event, continues with heightened monitoring | ACR-15.11
+Warning Zone | Intermediate (system-specific) | Speed reduction initiated, audible/visual warning, system prepares for halt | ACR-15.09, ACR-15.17
+Restricted Zone | Near boundary (system-specific) | Speed reduced to safe collaborative level, force limiting active | ACR-15.09, ACR-15.17, ACR-15.24
+Critical Zone | Minimum safe distance | Immediate automatic halt, all motion stopped, system enters safe state | ACR-15.10, ACR-15.25
+
+--- TABLE 42 ---
+Category | Failure Modes | Applicable ACRs
+Power Failures | Complete power loss, partial power loss, brownout, power surge, battery depletion | ACR-15.13, ACR-15.12
+Communication Failures | Network disconnection, CAN bus interruption, wireless signal loss, latency spike, data corruption, man-in-the-middle | ACR-15.14, ACR-15.12
+Controller Failures | Primary controller crash, watchdog timeout, memory corruption, firmware exception, boot failure | ACR-15.15, ACR-15.12
+Sensor Failures | Complete sensor loss, intermittent failure, degraded output, calibration drift | ACR-15.01, ACR-15.02, ACR-15.19, ACR-15.20
+Actuator Failures | Motor failure, brake failure, encoder loss, overheating, mechanical jamming | ACR-15.03, ACR-15.04, ACR-15.23
+Environmental Failures | Out-of-envelope conditions, hazardous environment detection, terrain failure | ACR-15.07, ACR-15.08, ACR-15.11
+
+--- TABLE 43 ---
+IEC 61508 Requirement | ARA ACR(s) | Alignment Notes
+SIL determination (Part 5) | ACR-15.22 | ARA requires SIL determination for safety-critical software at Level 3.
+Hardware fault tolerance (Part 2) | ACR-15.12 | ARA requires redundant safety-critical pathways consistent with hardware fault tolerance.
+Systematic capability (Part 3) | ACR-15.22 | ARA requires development per IEC 61508 Part 3 for safety-critical software.
+Safety validation (Part 4) | ACR-15.05, 15.06, 15.12, 15.13, 15.14, 15.15 | ARA requires physical validation of safety functions consistent with IEC 61508.
+Functional safety management | ACR-15.26 | ARA maintenance schedules align with functional safety lifecycle management.
+Proof test intervals | ACR-15.20, 15.26 | ARA calibration monitoring and maintenance schedules align with proof test requirements.
+
+--- TABLE 44 ---
+ISO 13849 Requirement | ARA ACR(s) | Alignment Notes
+Performance Level determination | ACR-15.05, 15.06, 15.12 | E-stop and redundancy ACRs require PL assessment.
+Safety function definition | ACR-15.05, 15.09, 15.10, 15.16, 15.23 | Each safety function must have a documented required PL.
+Category architecture | ACR-15.12 | Redundancy requirements align with ISO 13849 category architecture.
+Diagnostic coverage | ACR-15.02, 15.03, 15.20 | Sensor/actuator monitoring aligns with diagnostic coverage.
+Common cause failure | ACR-15.06, 15.12 | Multi-channel e-stop and redundancy address common cause failure.
+
+--- TABLE 45 ---
+ISO 10218 / ISO/TS 15066 Requirement | ARA ACR(s) | Alignment Notes
+Safety-rated monitored stop | ACR-15.05, 15.10 | E-stop and critical zone halt align with safety-rated stop.
+Speed and separation monitoring | ACR-15.09, 15.17 | Safety zone and speed/force limiting implement speed and separation monitoring.
+Hand guiding | ACR-15.29 | Collaborative operation mode includes hand guiding evaluation.
+Power and force limiting | ACR-15.17, 15.24, 15.25 | Force monitoring and limiting implement ISO/TS 15066 power and force limiting.
+Collaborative workspace design | ACR-15.29 | Collaborative operation mode evaluation includes workspace design review.
+Biomechanical limits | ACR-15.17, 15.24 | Force limits must comply with ISO/TS 15066 Table A.2.
+
+--- TABLE 46 ---
+Domain 5 ACR | Physical Systems Application | Evidence Required
+ACR-5.04 (Data Flow Mapping) | Data flow maps SHALL include all physical sensor data paths, onboard processing pipelines, edge-to-cloud transmission paths, and telemetry streams that may contain environmental data with incidental PII. | Sensor data flow diagram showing all ingress points, onboard processing, storage, and egress for each sensor modality.
+ACR-5.05 (Data Minimization) | Physical systems SHALL implement sensor-level data minimization: capture only the resolution and field of view necessary for the operational task. Systems SHALL NOT retain raw high-resolution sensor data beyond the minimum required processing window. | Sensor configuration documentation showing minimization settings; data retention policy for raw sensor data.
+ACR-5.08 (AI Interaction Disclosure) | Physical systems operating in public or shared spaces SHALL provide visible indicators (signage, lights, audible notifications) that autonomous sensing and recording is occurring. | Deployment documentation showing disclosure mechanisms; photographic evidence of installed signage/indicators.
+ACR-5.09 (PII Detection) | Physical systems SHALL implement real-time PII detection on sensor data streams, including face detection/blurring on camera feeds, voice anonymization on audio streams, and license plate detection/redaction on vehicle cameras. | PII detection test results for each sensor modality; detection model accuracy metrics; false positive/negative rates.
+ACR-5.10 (Cross-Tenant Isolation) | For physical systems operating across multiple client sites or shared facilities, sensor data from one client environment SHALL NOT be accessible or processable in another client’s context. | Multi-site data isolation architecture; test results demonstrating cross-tenant isolation of sensor data.
+ACR-5.12 (Telemetry Sanitization) | Physical system telemetry transmitted to the accredited CAPO’s CAP SHALL be sanitized to remove incidental PII captured by environmental sensors. Raw camera feeds, audio recordings, and high-resolution point clouds SHALL NOT be transmitted as telemetry. | Telemetry schema review showing sanitization; sample telemetry data demonstrating absence of raw sensor PII.
+
+--- TABLE 47 ---
+Domain 5 ACR | Biometric Data Application
+ACR-5.03 (Data Classification) | Biometric data used for human detection SHALL be classified as sensitive PII and handled accordingly, even when used solely for safety purposes.
+ACR-5.06 (Consent Management) | Where biometric data is stored or processed beyond immediate safety functions, systems SHALL implement consent mechanisms or demonstrate legal basis for processing under applicable regulations.
+ACR-5.07 (Data Retention) | Biometric data captured for human proximity safety SHALL be subject to strict retention limits. Real-time processing for immediate safety decisions does not require retention; any logging or archival of biometric data requires documented justification and retention schedules.
+ACR-5.21 (Data Subject Rights) | Individuals whose biometric data is captured by physical systems SHALL have access to information about what data is collected and how it is processed, consistent with applicable data subject rights regulations.
+
+--- TABLE 48 ---
+Domain 5 ACR | Environmental Data Application
+ACR-5.04 (Data Flow Mapping) | Environmental sensor data flows SHALL be documented including any aggregation, analysis, or reporting that could reveal patterns about human activity or occupancy.
+ACR-5.05 (Data Minimization) | Environmental monitoring SHALL collect only the data necessary for safe operation. Systems SHALL NOT use environmental sensors to profile, track, or analyze human behavior beyond what is required for safety.
+ACR-5.19 (Data Processing Locations) | For environmental data that may indirectly identify individuals (e.g., occupancy patterns in private spaces), data processing location and residency requirements SHALL be documented.
+ACR-5.22 (DPIA) | Physical systems deployed in environments where environmental monitoring may affect individual privacy (healthcare facilities, residential buildings, private workspaces) SHALL include sensor data collection in the system’s Data Privacy Impact Assessment.
+
+--- TABLE 49 ---
+Domain 13 ACR | Physical Systems Application | Evaluation Guidance
+ACR-13.03 (Dual-Use Risk Assessment) | Physical systems with manipulation, locomotion, or force application capabilities SHALL include physical harm potential in their dual-use risk assessment. Systems capable of autonomous navigation, payload delivery, or environmental modification require specific assessment of weaponization or repurposing risk. | Review dual-use risk assessment for physical harm scenarios; verify that physical capabilities are included in the risk taxonomy.
+ACR-13.12 (Differential Impact Analysis) | Physical systems operating in diverse communities SHALL evaluate whether safety mechanisms perform equitably across different populations. Human detection systems must be tested for accuracy across demographic groups to ensure safety protections do not disproportionately fail for certain populations. | Review differential impact analysis for human detection accuracy across demographic groups; verify bias testing for safety-critical perception systems.
+ACR-13.14 (Limitations Disclosure) | Operators SHALL disclose known limitations of physical safety systems, including environmental conditions that degrade safety performance, sensor blind spots, and populations for which human detection may be less reliable. | Review limitations disclosure for physical safety system caveats; verify disclosure is accessible to all affected parties.
+ACR-13.15 (Appropriateness Assessment) | The system operator SHALL evaluate whether autonomous physical actuation is appropriate for the intended deployment environment, considering population density, vulnerability of nearby populations, and availability of human oversight. | Review appropriateness assessment for deployment environment analysis; verify consideration of vulnerable populations.
+ACR-13.21 (Third-Party Evaluation) | Physical safety controls SHALL be subject to independent third-party evaluation at intervals specified by the system’s certification level, in addition to Domain 15 ACR evaluations. | Verify independent evaluation schedule for physical safety controls; confirm evaluator independence and competence.
+
+--- TABLE 50 ---
+Domain 13 ACR | Environmental Impact Application
+ACR-13.18 (Environmental Footprint) | Physical autonomous systems SHALL document the energy consumption and emissions footprint of their physical operations, including fuel/electricity consumption during autonomous operation, maintenance energy requirements, and end-of-life disposal considerations. For fleet deployments, aggregate fleet impact SHALL be documented.
+ACR-13.19 (Concentration Risk) | For critical infrastructure applications (logistics, manufacturing, agriculture), the operator SHALL assess dependency risks from autonomous physical systems, including impact of fleet-wide failures on supply chains, production capacity, or food systems.
+ACR-13.20 (Information Ecosystem Impact) | Physical systems generating public-facing data at scale (autonomous vehicle mapping data, drone surveillance data, environmental monitoring networks) SHALL assess the impact of their data collection on public spaces, community privacy, and information ecosystems.
+
+--- TABLE 51 ---
+ACR ID | Requirement Summary | Method | Level | Weight | Consequence
+ACR-15.01 | The system SHALL demonstrate graceful degradation when primary sensors fail, maintaining s... | AT | 2 | 5 | Blocking
+ACR-15.02 | The system SHALL detect sensor noise, degradation, and drift with configurable sensitivity... | AT+CM | 2 | 4 | Blocking
+ACR-15.03 | The system SHALL detect actuator misfires, mis-calibration, and unexpected actuation event... | AT+CM | 2 | 5 | Blocking
+ACR-15.04 | Actuator commands SHALL be validated against expected ranges and rates before execution. | AT | 2 | 4 | Blocking
+ACR-15.05 | Emergency stop mechanisms SHALL operate independently of software and halt all physical ac... | AT | 2 | 5 | Blocking
+ACR-15.06 | Emergency stop SHALL be accessible through multiple independent physical channels. | EI+AT | 2 | 5 | Blocking
+ACR-15.07 | The system SHALL demonstrate tolerance to environmental unpredictability including conditi... | AT+HS | 2 | 5 | Blocking
+ACR-15.08 | Environmental operating envelope SHALL be documented with defined behavior for out-of-enve... | EI+AT | 2 | 4 | Blocking
+ACR-15.09 | Human proximity safeguards SHALL be implemented with configurable safety zones and speed r... | AT | 2 | 5 | Blocking
+ACR-15.10 | Automatic halt SHALL be triggered based on human detection within defined critical proximi... | AT | 2 | 5 | Blocking
+ACR-15.11 | Real-time environmental awareness SHALL be maintained sufficient to detect hazardous condi... | AT+CM | 2 | 5 | Blocking
+ACR-15.12 | Redundant safety-critical pathways SHALL ensure no single point of failure in physical saf... | EI+AT | 2 | 5 | Blocking
+ACR-15.13 | The system SHALL demonstrate safe behavior during power loss conditions. | AT | 2 | 5 | Blocking
+ACR-15.14 | The system SHALL demonstrate safe behavior during communication loss conditions. | AT | 2 | 5 | Blocking
+ACR-15.15 | The system SHALL demonstrate safe behavior during controller failure conditions. | AT | 2 | 5 | Blocking
+ACR-15.16 | Physical boundary enforcement SHALL prevent operation outside defined spatial constraints. | AT | 2 | 5 | Blocking
+ACR-15.17 | Speed and force limiting SHALL be enforced proportional to proximity to humans and sensiti... | AT | 2 | 5 | Blocking
+ACR-15.18 | The system SHALL comply with applicable industry-specific physical safety standards. | EI | 2 | 4 | Conditional
+ACR-15.19 | Sensor fusion algorithms SHALL be validated for accuracy and reliability under adverse con... | AT | 3 | 5 | Blocking
+ACR-15.20 | Physical calibration status SHALL be monitored with automated alerting for calibration dri... | CM | 2 | 4 | Conditional
+ACR-15.21 | The system SHALL maintain kinematic and dynamic models accurate to within documented toler... | AT+EI | 3 | 4 | Conditional
+ACR-15.22 | Safety-critical software components SHALL be developed and verified according to IEC 61508... | EI+AT | 3 | 5 | Blocking
+ACR-15.23 | The system SHALL implement safe torque-off and safe limited speed functions per relevant s... | AT | 2 | 5 | Blocking
+ACR-15.24 | Physical interaction forces SHALL be monitored and limited to prevent injury to humans. | AT+CM | 2 | 5 | Blocking
+ACR-15.25 | The system SHALL detect and respond to unexpected physical contact events within defined t... | AT | 2 | 5 | Blocking
+ACR-15.26 | Maintenance and inspection schedules SHALL be defined and enforced for all safety-critical... | EI | 2 | 4 | Conditional
+ACR-15.27 | The system SHALL implement geofencing with configurable boundaries that trigger speed redu... | AT | 2 | 4 | Blocking
+ACR-15.28 | Physical system telemetry SHALL include sensor health, actuator status, and environmental ... | CM+EI | 2 | 4 | Conditional
+ACR-15.29 | The system SHALL support safe collaborative operation modes where humans and autonomous sy... | AT+HS | 3 | 5 | Blocking
+ACR-15.30 | Physical system failure modes SHALL be tested through hardware-in-the-loop simulation wher... | AT+EI | 3 | 4 | Conditional
+
+--- TABLE 52 ---
+Check Item | ACR(s) | Status
+E-stop circuit architecture reviewed and verified | 15.05, 15.06 | 
+Safety-rated control system (Safety PLC) verified | 15.22 | 
+Collaborative operation modes documented and tested | 15.29 | 
+Safety zone configuration verified with calibrated test objects | 15.09, 15.10 | 
+Speed/force limiting verified per ISO/TS 15066 | 15.17, 15.24 | 
+Workspace boundary enforcement verified | 15.16 | 
+STO/SLS functions verified per IEC 61800-5-2 | 15.23 | 
+Sensor integrity tests completed for all safety sensors | 15.01, 15.02 | 
+Power loss safe state verified | 15.13 | 
+Redundancy analysis (FMEA) completed | 15.12 | 
+Physical telemetry schema verified | 15.28 | 
+Maintenance schedule documented and enforced | 15.26 | 
+Sensor data privacy compliance verified (cameras, proximity) | D5: 5.09, 5.12 | 
+Biometric data handling for human detection documented | D5: 5.03, 5.07 | 
+Dual-use risk assessment completed for physical capabilities | D13: 13.03 | 
+
+--- TABLE 53 ---
+Check Item | ACR(s) | Status
+Sensor suite integrity verified (camera, LiDAR, radar) | 15.01, 15.02 | 
+Sensor fusion validated under adverse conditions | 15.19 | 
+E-stop / emergency maneuver function verified | 15.05, 15.06 | 
+ODD boundary detection and MRC behavior verified | 15.07, 15.08 | 
+Geofencing with ODD enforcement verified | 15.27, 15.16 | 
+Communication loss handling verified (V2X, cellular) | 15.14 | 
+Human proximity detection and response verified | 15.09, 15.10 | 
+Environmental unpredictability scenarios tested | 15.07, 15.11 | 
+Controller failure handling verified | 15.15 | 
+HIL simulation for impractical failure modes | 15.30 | 
+ISO 26262 / SOTIF compliance mapping reviewed | 15.18 | 
+Physical telemetry schema verified | 15.28 | 
+Camera/LiDAR data privacy (pedestrian face/plate redaction) | D5: 5.09, 5.12 | 
+Human detection equity across demographic groups verified | D13: 13.12 | 
+Public space operation appropriateness assessed | D13: 13.15, 13.20 | 
+
+--- TABLE 54 ---
+Check Item | ACR(s) | Status
+Flight control system redundancy verified | 15.12 | 
+GPS/GNSS integrity (spoofing, denial) tested | 15.01, 15.02, 15.07 | 
+Geofencing with altitude limits verified | 15.27, 15.16 | 
+Lost-link procedure (return-to-home/landing) verified | 15.14 | 
+Battery management and low-battery safe behavior verified | 15.13 | 
+Motor failure tolerance verified (multi-rotor) | 15.12, 15.15 | 
+Environmental operating envelope documented and tested | 15.07, 15.08 | 
+Detect-and-avoid system verified | 15.09, 15.11 | 
+E-stop (kill switch) function verified | 15.05, 15.06 | 
+Actuator command validation verified | 15.03, 15.04 | 
+DO-178C/DO-254 compliance mapping reviewed | 15.18 | 
+Physical telemetry schema verified | 15.28 | 
+Aerial surveillance data privacy controls verified | D5: 5.05, 5.09, 5.12 | 
+Public space surveillance impact assessed | D13: 13.20 | 
+Dual-use risk assessment (payload delivery capability) | D13: 13.03 | 
+
+--- TABLE 55 ---
+Check Item | ACR(s) | Status
+Patient-contact safety mechanisms verified | 15.09, 15.10, 15.24, 15.25 | 
+Kinematic model accuracy verified within clinical tolerance | 15.21 | 
+E-stop accessible to surgical/clinical staff | 15.05, 15.06 | 
+Force limiting verified below tissue damage thresholds | 15.17, 15.24 | 
+Power loss safe state verified (patient-safe position) | 15.13 | 
+Communication loss handling verified | 15.14 | 
+SIL assessment per IEC 61508 completed | 15.22 | 
+EMC testing in clinical environment completed | 15.07 | 
+Sensor integrity for patient monitoring verified | 15.01, 15.02 | 
+Maintenance schedule per IEC 60601 requirements | 15.26 | 
+IEC 60601 / IEC 62304 compliance mapping reviewed | 15.18 | 
+Physical telemetry schema verified | 15.28 | 
+Patient biometric data handling (HIPAA/GDPR compliance) | D5: 5.03, 5.06, 5.21 | 
+Patient safety differential impact analysis | D13: 13.12 | 
+Clinical deployment appropriateness assessed | D13: 13.15 | 
+
+--- TABLE 56 ---
+Term | Definition
+ACR | Autonomous Control Requirement. An individual testable requirement within the ARA Standard.
+Actuator | A mechanical device that converts energy into physical motion or force, including electric motors, hydraulic cylinders, pneumatic actuators, and linear actuators.
+AVB | Authorized Validation Body. A third-party organization authorized by ARAF to conduct ARA evaluations.
+CAP | Continuous Assurance Platform. The technology infrastructure operated by an accredited CAPO for real-time telemetry ingestion and compliance monitoring of certified physical systems. Certified organizations transmit physical telemetry to their selected CAPO’s CAP. See CAPO entry and ARAF-ARA-GOV-2026-001, Article 4.
+CAPO | Continuous Assurance Platform Operator. An ARAF-accredited technology company authorized to operate CAP infrastructure. Physical systems transmit Domain 15 telemetry (sensor health, actuator status, calibration state, environmental conditions) to their selected CAPO. The ARAF ecosystem supports multiple accredited CAPOs; certified organizations select their preferred CAPO from the ARAF CAPO Directory. See ARAF-ARA-GOV-2026-001, Article 4.
+Collaborative Operation | An operating mode in which a robot and a human share a workspace simultaneously, per ISO 10218 and ISO/TS 15066.
+Critical Proximity Zone | The minimum safe distance zone where automatic halt is triggered upon human detection.
+Differential Privacy | Mathematical framework providing formal privacy guarantees by adding calibrated noise to aggregate data.
+E-stop | Emergency stop. A safety function that halts all dangerous motion, operating independently of the normal control system.
+Enterprise Risk Dimension | One of six organizational risk categories grouping related ARA domains for governance reporting.
+FMEA | Failure Mode and Effects Analysis. A systematic method for identifying potential failure modes and their effects on system safety.
+FTA | Fault Tree Analysis. A top-down deductive failure analysis using Boolean logic.
+Geofencing | Software-defined geographic boundaries that restrict autonomous system operation to a defined area.
+Graceful Degradation | The ability of a system to maintain safe reduced-capability operation when components fail.
+HIL | Hardware-in-the-Loop. A simulation technique where physical hardware is connected to simulated plant models.
+HITL | Human-in-the-Loop. A system design principle where human oversight is required for certain decisions or actions.
+Operating Envelope | The documented range of environmental and operational conditions within which a system is designed to operate safely.
+PII | Personally Identifiable Information. Any data that can identify a specific individual, including biometric data, facial images, and location data.
+PL | Performance Level. A discrete level per ISO 13849 for safety-related control systems.
+Safe State | A system condition in which all hazardous motions are halted and the system presents no danger.
+Safety Zone | A defined spatial region around an autonomous system with specific safety behaviors associated with each zone.
+Sensor Fusion | The process of combining data from multiple sensors to produce more accurate information than any single sensor alone.
+SIL | Safety Integrity Level. A discrete level per IEC 61508 representing the probability of a safety system performing its required function.
+SLS | Safe Limited Speed. A drive safety function per IEC 61800-5-2 that limits motor speed.
+STO | Safe Torque Off. A drive safety function per IEC 61800-5-2 that removes torque-generating energy.
+Statement of Applicability | Organization’s documented justification for inclusion/exclusion of each ACR, modeled on ISO 27001.
+System Profile | Classification of system complexity: Foundational (97 ACRs), Standard (215), Advanced (368), Comprehensive (410).
+TSB | Technical Standards Board. The ultimate technical authority within ARAF.
+Assurance Class | The second axis of an ARA Deployment Certification. Describes the intensity of ongoing monitoring required to maintain the certification in good standing: Class A Periodic, Class B Monitored, or Class C Continuously Assured. Determined by Risk Classification. Not applicable to Platform Certifications.
+Assurance Lapse | The state in which a Deployment Certification’s CAPO monitoring has fallen below the frequency required by its Assurance Class. Triggers a class-dependent remediation window; if unresolved, results in Suspension or Expiry.
+Certified Technology Partner (CTP) | A consulting or implementation firm listed in the ARAF CTP Registry as having demonstrated ARA implementation competency. Not a certification — a registry designation. Does not confer evaluation authority or certification rights.
+Certification Inheritance | The mechanism by which a Deployment Certification built on a Platform-Certified product carries forward the platform’s ACR coverage, reducing the scope of deployment-level evaluation to configuration-dependent and deployment-context ACRs.
+Class A — Periodic | Assurance Class requiring annual or biannual re-evaluation. No continuous CAPO monitoring required. Event-triggered revalidation only. Applicable to low-autonomy, low-consequence, reversible deployments.
+Class B — Monitored | Assurance Class requiring an active CAPO connection and minimum monthly telemetry batch delivery. Event-triggered revalidation. Applicable to operational business systems with moderate autonomy or consequence.
+Class C — Continuously Assured | Assurance Class requiring a persistent CAPO connection, real-time telemetry stream, and SLA-bound alerting. Required for high-autonomy, high-consequence, or regulated deployments. Life-safety systems are Class C without exception.
+Deployment Certification | An ARA certification issued to a specific production instance of an autonomous system operated by an identified organization. Covers the full operational context including configuration, integrations, data environment, and use cases. Expressed as an Evaluation Level and an Assurance Class. Issued to the deploying organization.
+Evaluation Level | The first axis of an ARA certification. Describes the rigor of the evaluation conducted by an accredited AVB: Level 1 Foundation, Level 2 Operational, or Level 3 Comprehensive. Applies to both Platform Certifications and Deployment Certifications.
+Platform Certification | An ARA certification issued to a software platform, product, or autonomous system technology evaluated in a controlled reference environment against applicable ACRs. Certifies the technology as a product independent of any specific production deployment. Expressed as an Evaluation Level only (no Assurance Class). Issued to the technology vendor.
+Reference Environment | A controlled deployment environment used for Platform Certification evaluation. Must meet ARAF minimum conditions for ACR evaluation fidelity per Article 3.9 of the Evaluation Methodology Guide. Documented and attested by the evaluating AVB as representative of production-equivalent behavior.
+Risk Classification | A formal assessment conducted by an accredited AVB as part of Deployment Certification that determines the required Assurance Class. Based on degree of autonomy, consequence severity, reversibility, breadth of impact, regulatory context, dependency criticality, and operational continuity. Documented in the Risk Classification Report. Appealable to the ARAF Technical Standards Board.

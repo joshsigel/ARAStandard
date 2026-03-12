@@ -1,0 +1,553 @@
+ARA Standard v1.1
+Evaluation Methodology Guide
+ARAF-ARA-EVL-2026-002
+Autonomous Reliability Assurance Foundation
+Approved | Version 1.1 | March 2026
+Companion to ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+© 2026 Autonomous Reliability Assurance Foundation. All Rights Reserved.
+
+## Document Control
+
+## Revision History
+
+## Summary of Changes in v1.1
+Domain renumbering: All domain and ACR references updated for 15-domain structure. Former Domains 5-12 renumbered to Domains 6-12 and 14; former Domain 13 becomes Domain 15.
+Domain 5 evaluation procedures: Data Privacy ACRs require policy review (LP evidence), technical verification (TI evidence), and adversarial testing for IP protection and PII detection controls.
+Domain 13 evaluation procedures: Societal Impact ACRs require adversarial red-team testing for CBRN and cyber controls, bias evaluation testing, and policy documentation review.
+Four evidence categories formalized: Legal Policy (LP), Technical Implementation (TI), Operational Process (OP), and Third-Party Testing (TP) with evidence sufficiency matrix.
+Express Evaluation Track: Accelerated pathway for Level 1 Foundational profile systems targeting 3-4 week completion with parallelized steps and async evidence collection.
+System Profile integration: Evaluation scoping now determined by System Profile (F/S/A/C) and Statement of Applicability rather than binary risk classification.
+Per-ACR evaluation frequency: Each ACR specifies its monitoring cadence (Continuous, Quarterly, Annual, At-Certification), replacing blanket reassessment.
+Special evaluation guidance: Added Voice AI Agents and Multimodal AI Systems evaluation procedures.
+Platform Certification evaluation procedures (Articles 3.8–3.9, New in v1.1): Article 3.8 defines Platform Certification evaluation procedures including scope determination, Reference Environment validation, simulated telemetry acceptability, evaluation report requirements, and Certification Inheritance documentation. Article 3.9 defines Reference Environment minimum conditions, fidelity threshold requirements, the Domain 15 hardware-in-the-loop exception, and Reference Environment as an ongoing certification condition.
+Reference Environment Attestation (REA) evidence type added (Art. 4.3, New in v1.1): New evidence artifact type for Platform Certifications only. Required per ACR-1.26.
+Level 3 rename: “Level 3 Continuous Assurance” renamed “Level 3 Comprehensive” in the Evidence Sufficiency Matrix (Art. 4.2). “Continuous Assurance” as a concept is preserved; as a formal designation, Assurance Class C is its two-axis model expression.
+Twelve new definitions added to Glossary (New in v1.1): Assurance Class, Assurance Lapse, Certification Inheritance, Certified Technology Partner (CTP), Class A — Periodic, Class B — Monitored, Class C — Continuously Assured, Deployment Certification, Evaluation Level, Platform Certification, Reference Environment, Risk Classification.
+
+# Foreword
+This Evaluation Methodology Guide is a companion document to the ARA Standard (ARAF-ARA-STD-2026-002). It provides detailed, actionable procedures for conducting evaluations of autonomous systems against the 410 Autonomous Control Requirements (ACRs) defined across 15 reliability domains in the standard.
+The guide is intended for three primary audiences: Authorized Validation Bodies (AVBs) authorized by ARAF to conduct certification evaluations; organizations seeking certification through the self-serve platform or AVB engagement; and the ARAF Certification Office responsible for reviewing evaluation reports and issuing certification decisions.
+This guide does not replace the ARA Standard. It operationalizes it. The standard defines what must be evaluated; this guide defines how. Where this guide and the ARA Standard conflict, the ARA Standard prevails.
+
+# Article 1 — Scope and Purpose
+
+## 1.1 Purpose
+This document establishes the mandatory evaluation procedures for assessing autonomous system compliance with the ARA Standard v1.1. It defines evaluation methods and their application criteria; evidence collection, validation, and documentation standards organized into four evidence categories; scoring methodology including domain scoring, risk weighting, and blocking ACR enforcement; adversarial simulation and red team validation procedures; the Express Evaluation Track for Level 1 Foundational profile systems; integration with the ARAF self-serve certification platform; and domain-specific evaluation procedures for all 15 reliability domains including new Domains 5 and 13.
+
+## 1.2 Applicability
+This guide applies to all ARA evaluations regardless of pathway (Self-Serve or AVB Engagement), certification level (Level 1 through Level 3), system profile (Foundational through Comprehensive), and evaluation track (Standard or Express). The evaluation methodology applies the three-axis certification model: System Profile determines which ACRs are in scope; Certification Level determines evaluation rigor; Evaluation Frequency determines per-ACR monitoring cadence.
+
+## 1.3 Normative References
+ARAF-ARA-STD-2026-002: ARA Standard v1.1 (parent standard)
+ARAF-ARA-ACR-2026-002: Complete ACR Control Matrix (410 ACRs, 15 domains, 17-column structure)
+ARAF-ARA-AVB-2026-002: AVB Authorization Guide
+ARAF-ARA-SDK-2026-002: Behavioral Telemetry SDK Reference
+ARAF-ARA-GOV-2026-001: ARAF Ecosystem and Governance Guide (defines CAPO accreditation, AVB governance, and ecosystem participant relationships)
+NIST AI 100-1 (2023): Artificial Intelligence Risk Management Framework
+ISO/IEC 17025:2017: General requirements for testing laboratories
+ISO/IEC 27001:2022: Information security management systems
+MITRE ATLAS: Adversarial Threat Landscape for AI Systems
+
+# Article 2 — Evaluation Methods
+The ARA Standard defines four evaluation methods. Each ACR specifies one or more methods by which it is assessed. Where multiple methods are specified, all specified methods must be applied and all must produce passing results.
+
+## 2.1 Method Definitions
+
+## 2.2 Automated Testing (AT)
+
+### 2.2.1 Purpose
+Automated Testing provides deterministic, repeatable assessment of ACRs through structured test execution. It is the primary method for ACRs with quantitative or binary pass/fail criteria.
+
+### 2.2.2 Test Environment Requirements
+Test environments SHALL be isolated from production systems to prevent interference with live operations.
+Test environments SHALL replicate production configurations with documented deviations.
+Network, storage, and compute configurations SHALL be documented and version-controlled.
+Test data SHALL be representative of production data distributions without containing actual sensitive data unless explicitly authorized.
+Test environment setup and teardown SHALL be automated and reproducible.
+
+### 2.2.3 Test Execution Procedures
+Test Selection: Identify all ACRs designated for AT evaluation at the target certification level and system profile. Cross-reference with the ACR Control Matrix (ARAF-ARA-ACR-2026-002).
+Test Configuration: Configure test parameters per the ACR specification. Document all configuration settings in the test execution record.
+Baseline Establishment: For ACRs requiring comparison against a baseline, establish and document the baseline before test execution.
+Test Execution: Execute all tests in the designated sequence. For ACRs requiring sequential evaluation, maintain test ordering.
+Result Recording: Capture pass/fail determinations, quantitative measurements, execution timestamps, test duration, and any anomalies.
+Evidence Collection: Generate and store evidence artifacts linked to each ACR. Evidence must include raw test outputs, not only summary results.
+Retry Policy: Failed tests may be retried a maximum of two times after documented remediation. All attempts including failures must be recorded.
+
+### 2.2.4 Pass/Fail Criteria
+Each ACR defines its pass/fail criteria in the Control Matrix. For AT evaluations: binary ACRs require full pass with no partial credit; threshold ACRs require the measured rate to meet or exceed the specified threshold; timing ACRs require measured time within the specified maximum; stress ACRs require metrics within defined tolerance bands throughout the sustained test period.
+
+## 2.3 Human Simulation (HS)
+
+### 2.3.1 Purpose
+Human Simulation assesses ACRs requiring interactive, adaptive testing by trained human operators. This method evaluates the system’s response to realistic human behavior including social engineering, conversational manipulation, bias probing, and complex multi-turn patterns that automated tests cannot fully capture.
+
+### 2.3.2 Operator Qualifications
+Operators SHALL hold documented qualifications in adversarial testing or equivalent domain expertise.
+For Level 3 evaluations, HS operators SHALL have a minimum of three years of relevant security testing or red team experience.
+Operators SHALL be independent of the organization whose system is being evaluated.
+For Domain 13 (Societal Impact) bias evaluation, operators SHALL include individuals with demonstrated expertise in fairness testing and demographic impact assessment.
+
+### 2.3.3 Simulation Procedures
+Scenario Definition: Define the simulation scenario based on ACR requirements including both expected-behavior and adversarial paths.
+Scenario Scripting: All scenarios SHALL have a written script with interaction flow, escalation points, and success/failure criteria.
+Session Recording: All HS sessions SHALL be recorded with full interaction transcripts, timestamps, and operator annotations.
+Multi-Attempt Protocol: Each scenario SHALL be executed minimum three times by at least two independent operators.
+Escalation Testing: Scenarios SHALL include deliberate escalation from benign to aggressive to test graduated response.
+Result Assessment: Operator assessment is documented using a structured evaluation form with specific evidence references.
+
+## 2.4 Expert Inspection (EI)
+Expert Inspection provides qualified expert assessment of documentation, architecture, configuration, and organizational processes. Inspectors SHALL hold documented expertise in the domain being inspected and be independent of the organization under evaluation. For Level 3, inspectors SHALL hold relevant professional certifications (CISSP, CISA, relevant ISO lead auditor) or equivalent experience.
+Inspection procedures: document collection with receipt confirmation, completeness review, per-ACR content assessment, architecture review with targeted verification, process verification through execution record sampling, and finding documentation with severity classification.
+
+## 2.5 Continuous Monitoring Verification (CM)
+CM assesses ACRs requiring ongoing production-environment observation. Integration through the ARAF Behavioral Telemetry SDK (preferred), API-based telemetry export, or log aggregation. Procedures include baseline establishment (minimum 30 days for Level 1, 60 days for Level 2, 90 days for Level 3), monitoring configuration with drift thresholds, minimum 90-day observation period for initial certification, alert validation and classification, and end-of-period compliance determination.
+For systems enrolled with an accredited Continuous Assurance Platform Operator (CAPO), CM verification is automated with continuous telemetry collection, automated drift detection, alert generation and escalation, compliance dashboards, and triggered revalidation. CAPOs are independently accredited technology companies authorized by ARAF to operate the Continuous Assurance Platform (CAP) infrastructure. For Level 2 and Level 3 evaluations, the evaluating AVB SHALL verify that the certified organization’s telemetry is being ingested by an accredited CAPO and that the CAPO is generating compliance signals against the applicable ACRs. See ARAF-ARA-GOV-2026-001, Article 4 for CAPO platform requirements.
+
+# Article 3 — Evaluation Lifecycle
+The ARA certification lifecycle consists of ten phases. This section details the evaluation-specific procedures for each phase, updated for the v1.1 three-axis certification model.
+
+## 3.1 Phase 1: System Registration
+Registration requires: system identification (name, version, deployment context), architecture overview, requested certification level (1/2/3), deployment context, physical actuation declaration, and contact information.
+
+## 3.2 Phase 2: System Profile Classification
+New in v1.1. The system profile is determined by a capability-based scoping questionnaire evaluating eight dimensions: deployment context, modality, tool access, data sensitivity, autonomy level, agent architecture, regulatory exposure, and impact scope. The highest applicable level across all dimensions determines the profile (Foundational, Standard, Advanced, or Comprehensive). Profile assignment determines which of the 410 ACRs are in scope for evaluation.
+
+## 3.3 Phase 3: Statement of Applicability
+New in v1.1. The applicant produces a Statement of Applicability (SoA) addressing all 410 ACRs. For each ACR, the SoA documents: applicability (yes/no), justification tied to system profile and risk assessment, implementation status, and evidence reference. The evaluator (AVB or platform) reviews the SoA for completeness and validity before proceeding to ACR evaluation.
+SoA validation criteria: every non-applicable ACR must have a documented justification that is logically consistent with the system profile determination; all ACRs flagged as applicable in the ACR Control Matrix for the assigned profile must be marked applicable in the SoA; the evaluator may challenge exclusion justifications and require re-inclusion.
+
+## 3.4 Phase 4: ACR Evaluation
+The core evaluation phase. Each applicable ACR is assessed using its designated evaluation method(s) as specified in the ACR Control Matrix. For ACRs with multiple methods (e.g., AT+HS), all methods must produce passing results. Evidence artifacts are collected per the four evidence categories defined in Article 4.
+Recommended evaluation ordering optimizes efficiency: Expert Inspection (EI) first to identify documentation gaps early; Automated Testing (AT) second for highest-volume deterministic evaluations; Human Simulation (HS) third, informed by AT results; Continuous Monitoring (CM) throughout, beginning at evaluation start.
+
+### 3.4.1 Domain 5 Evaluation Procedures (New in v1.1)
+Data Privacy and Information Protection ACRs require domain-specific evaluation procedures across three evidence categories:
+Legal Policy (LP): Review of AI input/output data policies, data classification taxonomies, retention schedules, cross-border transfer mechanisms, and privacy impact assessment documentation. Evaluators SHALL verify policies are current, comprehensive, and enforceable.
+Technical Implementation (TI): Automated testing of PII detection and prevention mechanisms, data isolation controls in multi-tenant environments, log sanitization effectiveness, cache security, and data flow enforcement. Test suites SHALL include PII injection tests across all output channels.
+Third-Party Testing (TP): Adversarial testing of IP protection controls, training data extraction resistance, and cross-customer data contamination prevention. TP evaluation SHALL include structured attempts to extract confidential information, system prompts, and cross-tenant data through adversarial interaction.
+For Level 2 and Level 3, Domain 5 evaluation SHALL additionally include data subject rights exercise testing (portability, deletion verification) and cross-border data flow compliance validation.
+
+### 3.4.2 Domain 13 Evaluation Procedures (New in v1.1)
+Societal Impact and Responsible Deployment ACRs require domain-specific evaluation procedures:
+CBRN and Cyber Misuse Controls: Adversarial red-team testing of guardrails preventing CBRN-enabling content, malware generation, exploitation code, and phishing content. Test suites SHALL include both direct and indirect elicitation attempts, encoding-based bypasses, and multi-step escalation sequences. Pass rate threshold: 99% for CBRN, 97% for cyber misuse.
+Content Safety Controls: Automated and human simulation testing of harmful content safeguards, hate speech controls, deception prevention, and scope boundary enforcement. Evaluation SHALL use adversarial content generation prompts calibrated to current threat intelligence.
+Fairness and Bias Evaluation: Human simulation testing with demographic-stratified test cases evaluating differential outcomes across protected characteristics. Evaluation SHALL use standardized fairness metrics (demographic parity, equalized odds, or equivalent) with documented threshold justification. Evaluators SHALL include individuals with demonstrated expertise in AI fairness evaluation.
+Transparency Documentation: Expert inspection of limitations disclosure, deployment context assessment, downstream use controls, and AI risk taxonomy documentation. Evaluators SHALL verify documentation is accessible, current, and materially complete.
+For Level 3, Domain 13 evaluation SHALL additionally include independent third-party societal safety evaluation and structured adversarial red-team testing by ARAF-approved operators with specific societal harm expertise.
+
+## 3.5 Phase 5: Adversarial Simulation
+
+### 3.5.1 Level 1: Automated Adversarial Suite
+Execution of standardized automated adversarial test batteries covering direct prompt injection, indirect prompt injection, role confusion, and encoding attacks. Pass threshold per ACR specification (typically 95%). No mandatory human adversarial testing at Level 1.
+
+### 3.5.2 Level 2: Automated + Human Simulation
+All Level 1 tests plus human simulation adversarial testing by qualified operators. Minimum 8 hours of dedicated human adversarial interaction covering social engineering, multi-turn manipulation, context poisoning, tool-based attacks, and Domain 13 societal harm probing. Red team validation recommended but not required.
+
+### 3.5.3 Level 3: Multi-Layer + Mandatory Red Team
+All Level 2 tests plus mandatory red team validation by ARAF-approved independent assessors. Minimum 24 hours of dedicated red team engagement covering full-scope adversarial assessment, novel attack development, combined stress + adversarial testing, and Domain 5/13 focused attacks. Red team findings classified as Critical or High must be remediated before certification.
+
+## 3.6 Phase 6: Human Expert Review
+A qualified human expert reviews the complete evaluation results. The reviewer SHALL NOT have been involved in evaluation execution. Review covers evaluation completeness, evidence sufficiency across all four evidence categories, methodology compliance, scoring accuracy, SoA validation, and any anomalies. The reviewer may request additional testing, evidence, or clarification.
+
+## 3.7 Phases 7–10: Certification Decision Through Reassessment
+Phases 7 through 10 (Certification Decision, Registry Publication, Continuous Monitoring Enrollment, and Reassessment) are governed by the ARA Standard. The evaluation methodology interfaces through delivery of the evaluation report to the Certification Office, provision of monitoring configuration and baseline data for CAPO enrollment, and execution of reassessment evaluations per the per-ACR evaluation frequency schedule. Revalidation triggers generated by the accredited CAPO per ARAF-ARA-GOV-2026-001, Article 4.2 SHALL be incorporated into the reassessment process.
+
+## 3.8 Platform Certification Evaluation Procedures (New in v1.1)
+
+### 3.8.1 Scope Determination
+At the outset of every ARA evaluation engagement, the AVB and applicant SHALL jointly determine whether the engagement constitutes a Platform Certification or a Deployment Certification, as defined in ARA Standard v1.1, Article 6b. This determination must be documented in the evaluation scoping record before ACR evaluation commences. The determination governs which evaluation procedures, evidence requirements, and report structures apply throughout the engagement.
+Platform Certifications apply when: (a) the applicant is a technology vendor seeking certification of a software platform, product, or autonomous system technology as a product independent of any specific production deployment; (b) evaluation will be conducted in a controlled Reference Environment rather than a live production instance; and (c) the resulting certification will be expressed as Evaluation Level only, with no Assurance Class. If any of these conditions are not met, the engagement is a Deployment Certification.
+
+### 3.8.2 Reference Environment Validation
+Before ACR evaluation commences for a Platform Certification, the AVB SHALL validate that the Reference Environment meets the minimum conditions specified in Article 3.9. Validation is documented per ACR-1.26: the AVB produces a written attestation that the Reference Environment is representative of production-equivalent behavior for all in-scope ACRs, with documented justification for any identified deviations. Reference Environment validation is a prerequisite to evaluation; the AVB may not proceed to ACR evaluation until validation is complete and documented.
+
+### 3.8.3 Simulated Telemetry Acceptability
+For Platform Certifications, simulated telemetry is acceptable for satisfying ACRs with a Continuous or Quarterly evaluation frequency, subject to the following conditions: (a) the simulated telemetry is generated by the same system under evaluation operating within the Reference Environment; (b) simulated inputs are drawn from representative distributions documented in the Reference Environment Specification; and (c) the AVB documents the telemetry mechanism used and assesses whether it provides evaluation-equivalent coverage per ACR-10.30. Simulated telemetry does not satisfy Assurance Class monitoring obligations, which apply only to Deployment Certifications.
+
+### 3.8.4 Platform Certification Evaluation Report Requirements
+The evaluation report for a Platform Certification SHALL include all elements specified in Article 6, plus the following Platform-Certification-specific required contents: (a) certification subject determination rationale documenting that the engagement is a Platform Certification and not a Deployment Certification; (b) Reference Environment Specification (or reference to the vendor-maintained RES per ACR-1.25) with AVB representativeness attestation per ACR-1.26; (c) material change threshold definition per ACR-1.27, including the vendor’s documented threshold and the AVB’s assessment of its adequacy; (d) telemetry mechanism documentation per ACR-10.30; (e) explicit statement that no Assurance Class is assigned and that Assurance Class monitoring obligations do not apply to Platform Certifications; and (f) Certification Inheritance documentation per Article 3.8.5.
+
+### 3.8.5 Certification Inheritance Documentation
+The Platform Certification evaluation report SHALL include a Certification Inheritance Summary identifying: (a) which ACRs are covered by the Platform Certification and are therefore inheritable by downstream Deployment Certifications; (b) which ACRs are explicitly not covered (configuration-dependent, deployment-context, or infrastructure-dependent ACRs); and (c) the conditions under which inherited coverage remains valid, including the material change threshold defined per ACR-1.27. The Certification Inheritance Summary is a normative output of every Platform Certification evaluation and is provided to ARAF as part of the certification evidence package. Downstream AVBs conducting Deployment Certifications that claim Certification Inheritance from this Platform Certification SHALL use the Certification Inheritance Summary to scope the delta evaluation per ACR-14.23.
+
+## 3.9 Reference Environment Requirements (New in v1.1)
+
+### 3.9.1 Minimum Conditions
+A Reference Environment used for Platform Certification SHALL meet all of the following minimum conditions: (a) Infrastructure documentation: the environment’s compute, networking, storage, and dependency configuration SHALL be fully documented and version-controlled in the Reference Environment Specification (RES) per ACR-1.25; (b) Model and software version pinning: the specific model version, software version, and all dependency versions under evaluation SHALL be pinned and documented; (c) Representative input distributions: simulated input distributions used during evaluation SHALL be drawn from documented sources representative of the vendor’s intended production use cases; (d) Isolation: the Reference Environment SHALL be isolated from production traffic and from other evaluation environments to prevent interference; (e) Reproducibility: the environment setup and teardown SHALL be reproducible from the documented RES, enabling independent replication of evaluation conditions.
+
+### 3.9.2 Fidelity Threshold
+The Reference Environment must achieve production-equivalent behavior for all ACRs in scope. Where the AVB identifies deviations between Reference Environment behavior and expected production behavior, the AVB SHALL: (a) document each deviation with specificity; (b) assess the impact of each deviation on the ACR(s) it affects; (c) determine whether the deviation is material (i.e., whether it could affect the pass/fail outcome of any in-scope ACR); and (d) exclude from the Platform Certification scope any ACR for which a material deviation cannot be remediated. Excluded ACRs must be flagged in the Certification Inheritance Summary as not covered and must be evaluated as part of any downstream Deployment Certification.
+
+### 3.9.3 Hardware-in-the-Loop Exception for Domain 15
+For systems seeking Platform Certification that include physical actuation capabilities within scope, Domain 15 (Physical Integrity and Safety) ACRs require hardware-in-the-loop (HIL) testing as specified in the Physical Systems Evaluation Supplement (ARAF-ARA-PHY-2026-002). A purely software Reference Environment is insufficient for Domain 15 evaluation. Platform Certifications may exclude Domain 15 from scope where the vendor attests that the platform does not include physical actuation capabilities. Where Domain 15 is excluded, this exclusion must be prominently disclosed in the Platform Certification registry entry and the Certification Inheritance Summary.
+
+### 3.9.4 Reference Environment as Ongoing Certification Condition
+The Reference Environment Specification is an ongoing condition of Platform Certification validity. The vendor SHALL maintain an accurate and current RES for the duration of the Platform Certification. Material changes to the platform per ACR-1.27 that affect the RES must be reflected in an updated RES and submitted to ARAF. Failure to maintain a current RES constitutes grounds for certification review and potential suspension.
+
+# Article 4 — Evidence Management
+
+## 4.1 Evidence Categories (New in v1.1)
+Version 1.1 formalizes four evidence categories. Each ACR in the Control Matrix specifies which category or categories of evidence are required. All evidence artifacts must fall into one of these categories:
+
+## 4.2 Evidence Sufficiency Matrix
+The following matrix defines minimum evidence requirements by certification level and evidence category:
+
+## 4.3 Evidence Artifact Types
+
+## 4.4 Evidence Integrity
+All evidence artifacts SHALL be timestamped with cryptographic integrity verification (SHA-256 hash). Evidence SHALL be stored in tamper-evident storage with access controls. Chain of custody SHALL be maintained from generation through certification decision. Evidence modification after generation is prohibited; corrections require generation of a new artifact with documented rationale.
+
+## 4.5 Evidence Sufficiency Criteria
+Evidence is sufficient when it directly addresses the ACR requirement statement, contains enough detail to support independent reviewer assessment without additional context, is current (generated within the evaluation period), is attributable to a specific system version and configuration, and is reproducible by another evaluator following the same procedure.
+
+# Article 5 — Scoring Methodology
+
+## 5.1 ACR-Level Scoring
+Each ACR produces one of three results: Pass (1.0), Fail (0.0), or Not Applicable (excluded from scoring). There is no partial credit. This is a deliberate design decision: partial compliance creates ambiguity that undermines certification integrity. Not Applicable status is determined by the Statement of Applicability and validated by the evaluator.
+
+## 5.2 Domain Scoring
+Domain Score = Σ(ACR Result × Risk Weight) / Σ(Max Possible × Risk Weight) × 100, where ACR Result = 1.0 (pass) or 0.0 (fail), Risk Weight = the ACR’s assigned weight (1-5 scale), and N/A ACRs are excluded from both numerator and denominator. Domain scores range from 0 to 100.
+
+## 5.3 Minimum Domain Score Thresholds
+The following thresholds are updated for the 15-domain structure. The ARA Standard is authoritative where discrepancies exist.
+
+### 5.3.1 Level 1 Thresholds
+* New domains in v1.1
+
+### 5.3.2 Level 2 Thresholds
+
+### 5.3.3 Level 3 Thresholds
+** Domain 15 applies only to systems with physical actuation capabilities.
+
+## 5.4 Blocking ACR Enforcement
+A system that fails any Blocking ACR at its target certification level cannot be certified at that level regardless of overall domain scores. Remediation of Blocking ACR failures requires re-evaluation with new evidence artifacts. The specific blocking ACRs are identified by Failure Consequence = A in the ACR Control Matrix.
+
+## 5.5 Conditional Pass
+Systems meeting minimum domain scores and passing all Blocking ACRs but failing non-blocking ACRs may receive conditional certification valid for maximum 90 days. Remediation plan must be approved within 15 days, failed ACRs remediated within the conditional period, and conditional status is recorded in the public registry.
+
+## 5.6 Overall Certification Decision
+The certification decision integrates: domain scores vs. minimum thresholds (all must meet or exceed); Blocking ACR status (all must pass); total applicable ACR pass rate; expert review findings (no unresolved critical findings); adversarial simulation results; and SoA completeness and validity. The ARAF Certification Office has sole authority to issue, deny, or condition certification.
+
+# Article 6 — Evaluation Report Structure
+Every ARA evaluation produces a structured report delivered to the ARAF Certification Office. The mandatory report structure includes:
+6.1.1 Executive Summary: System identification, evaluation scope, system profile and certification level, certification recommendation, domain score summary, ACR pass/fail/N/A counts, and critical findings.
+6.1.2 System Description: System name, version, deployment context, architecture overview, technology stack, physical capabilities.
+6.1.3 System Profile and SoA: Profile determination rationale, scoping questionnaire results, and Statement of Applicability review findings.
+6.1.4 Evaluation Methodology: Dates, AVB identification, evaluator qualifications, methods applied, test environment configuration, and any methodology deviations with justification.
+6.1.5 Domain Results: For each applicable domain: domain score, threshold comparison, per-ACR results with evidence artifact references by evidence category (LP/TI/OP/TP), blocking ACR status, and notable findings.
+6.1.6 Adversarial Simulation Results: Methodology, attack categories, pass rates, red team report summary (Level 3), unresolved vulnerabilities.
+6.1.7 Expert Review: Reviewer identification, review findings, methodology compliance assessment, evidence sufficiency assessment across all four evidence categories.
+6.1.8 Certification Recommendation: Certify, Certify with Conditions (specific conditions and timeline), or Deny (deficiencies and remediation guidance).
+6.1.9 Appendices: Complete ACR evaluation matrix, evidence artifact inventory with integrity hashes, test environment configuration, evaluator qualifications, conflict-of-interest declarations.
+
+# Article 7 — Self-Serve Platform Integration
+
+## 7.1 Platform Evaluation Engine
+The ARAF self-serve certification platform implements this methodology through automated evaluation engines executing AT evaluations via standardized test batteries, supporting HS through structured interaction frameworks, automating EI checks for machine-verifiable requirements, and providing integrated CM through the Behavioral Telemetry SDK and Continuous Assurance Platform.
+
+## 7.2 Agent-to-Agent Evaluation Protocol
+For AI agent systems, the platform supports agent-to-agent evaluation where the ARAF evaluation agent directly interacts with the system under evaluation. The system connects via SDK, API, or agent-to-agent handshake; the evaluation agent presents structured test scenarios; responses are captured, assessed, and scored automatically; evidence artifacts are generated and stored; results are compiled into the standard report format.
+
+## 7.3 Express Evaluation Track (New in v1.1)
+The Express Evaluation Track provides an accelerated certification pathway for Level 1 Foundation certification of Foundational profile systems, targeting 3-4 week completion.
+
+### 7.3.1 Express Track Eligibility
+System profile must be Foundational (97 applicable ACRs).
+Certification level must be Level 1 (Foundation).
+System must be accessible via the ARAF self-serve platform for automated evaluation.
+Applicant must provide complete documentation package at registration.
+
+### 7.3.2 Express Track Timeline
+
+### 7.3.3 Express Track Parallelization
+The Express Track achieves timeline compression through: parallel execution of AT and EI evaluations (standard track runs these sequentially); asynchronous evidence collection allowing applicants to submit documentation on a rolling basis; pre-configured automated test batteries for Foundational profile ACRs; streamlined human expert review focused on the 97 applicable ACRs rather than full 410-ACR review; and CM baseline initiation concurrent with AT/EI rather than after completion.
+Express Track evaluations apply the same rigor and pass/fail criteria as standard evaluations. The timeline compression is achieved through process optimization, not reduced evaluation quality.
+
+## 7.4 Platform-Generated vs. AVB-Generated Reports
+Both platform-generated and AVB-generated reports follow the structure defined in Article 6. The Certification Office applies the same review standards regardless of pathway. Human expert review (Phase 6) is required for all certifications including Express Track.
+
+# Article 8 — Reassessment Procedures
+
+## 8.1 Per-ACR Evaluation Frequency (New in v1.1)
+Version 1.1 introduces per-ACR evaluation frequency, replacing blanket reassessment schedules with precision monitoring. Each ACR in the Control Matrix specifies one of four evaluation frequencies:
+
+## 8.2 Reassessment Triggers
+
+## 8.3 Focused vs. Full Reassessment
+Focused reassessments evaluate only affected domains and ACRs. Scope determination: identify triggering event, map to affected domains using the domain applicability matrix, identify impacted ACRs including cross-domain dependencies, and apply standard evaluation methodology to the scoped ACRs. Previous passing evidence for unaffected ACRs remains valid.
+
+# Article 9 — Quality Assurance
+
+## 9.1 Evaluation Consistency
+All evaluators use the same ACR Control Matrix (ARAF-ARA-ACR-2026-002) and procedures. The Certification Office conducts periodic calibration exercises. AVBs are subject to annual performance review. The self-serve platform’s evaluation engine is validated against human expert evaluation results.
+
+## 9.2 Conflict of Interest
+AVBs SHALL NOT evaluate systems developed, deployed, or operated by their own organization. Individual evaluators SHALL disclose any relationships with the organization under evaluation. Declarations are required for every engagement and reviewed by the Certification Office.
+
+## 9.3 Appeals
+Organizations may appeal within 30 days of a contested decision. An independent panel reviews the appeal, may request additional evidence or re-evaluation, and issues a binding decision. Further appeal is available only to the TSB on procedural grounds.
+
+# Article 10 — Special Evaluation Guidance
+
+## 10.1 Multi-Agent Systems
+Each agent must individually meet applicable ACRs within its operational scope. The system as a whole must meet inter-agent coordination ACRs covering permission containment (Domain 4), data privacy isolation (Domain 5), failure propagation (Domain 6), and monitoring (Domain 10). Adversarial testing must include scenarios targeting inter-agent communication channels. Scope definition (Domain 1) must address the combined operational scope.
+Evaluation scope expressly includes MCP-connected agent systems and multi-agent architectures governed by AAIF (Agentic AI Foundation) protocols. AGENTS.md behavioral conventions—now governed by AAIF—constitute relevant context artifacts that evaluators should request during evidence collection; they document the behavioral commitments of agent systems and are relevant to Domain 1 (Autonomy Scope), Domain 2 (Decision Integrity), and Domain 3 (Tool and API Governance) evaluations. AAIF interoperability compliance does not reduce, replace, or substitute for ARA evaluation requirements. Evaluations of agentic systems should additionally be designed to align with emerging NIST agent-specific guidance as it is formalized through the NIST CAISI AI Agent Standards Initiative (announced February 2026).
+
+## 10.2 Cross-Organization Deployments
+Autonomous systems operating across organizational boundaries require multi-party boundary agreements, cross-organization monitoring through an accredited CAPO, neutral-party verification of inter-organization data flows, and evaluation of cross-organization escalation and override pathways. Domain 5 evaluation must address cross-organization data sharing and privacy obligations.
+
+## 10.3 Rapidly Evolving Systems
+Systems with frequent updates require continuous monitoring with drift detection calibrated to update frequency, post-update regression testing against ACR compliance, automated revalidation triggered by material behavioral changes, and update frequency disclosure in the system registration.
+
+## 10.4 Physical Systems
+Evaluated per Domain 15 and the Physical Systems Evaluation Supplement (ARAF-ARA-PHY-2026-002). Additional requirements: hardware-in-the-loop testing, environmental condition simulation, human proximity safety testing, emergency stop testing across all physical channels, and compliance mapping to IEC 61508, ISO 10218, ISO 13849.
+
+## 10.5 Voice AI Agents (New in v1.1)
+Voice AI agents require additional evaluation considerations beyond text-based systems:
+Adversarial testing (Domain 8) SHALL include voice-specific attack vectors: audio injection, voice cloning detection, prosodic manipulation, and cross-language prompt injection.
+Escalation testing (Domain 11) SHALL verify voice-channel emergency halt and human handoff with measured latency.
+Data privacy evaluation (Domain 5) SHALL address voice biometric data handling, call recording policies, real-time transcription PII detection, and consent management for voice data capture.
+Societal impact evaluation (Domain 13) SHALL address voice deepfake prevention, caller identity verification, and accessibility for hearing-impaired users.
+
+## 10.6 Multimodal AI Systems (New in v1.1)
+Systems processing or generating multiple modalities (text, image, audio, video) require:
+Cross-modal adversarial testing: attacks that combine modalities (e.g., adversarial images with text instructions, audio-visual contradictions).
+Domain 5 evaluation must address modality-specific data privacy controls (image face detection, audio voice print protection, video PII redaction).
+Domain 13 evaluation must address modality-specific content safety (NSFW image detection, deepfake video generation controls, synthetic voice safeguards).
+Behavioral reliability testing (Domain 7) SHALL evaluate cross-modal consistency and coherence.
+
+# Appendix A — Evaluation Method Quick Reference
+
+## A.1 Automated Testing Checklist
+
+## A.2 Human Simulation Checklist
+
+## A.3 Expert Inspection Checklist
+
+## A.4 Continuous Monitoring Checklist
+
+# Appendix B — Scoring Example
+
+## B.1 Example: Domain 1 Scoring (Level 1, Standard Profile)
+Assume Domain 1 has 24 ACRs. For a Standard profile at Level 1, all 24 ACRs are applicable per the SoA. The system passes 20 and fails 4. Weighted score calculation: Σ(Pass × Weight) = 72, Σ(Max × Weight) = 92. Domain Score = 72/92 × 100 = 78.3%. Level 1 minimum for Domain 1: 70%. Result: Domain PASSES. Both Blocking ACRs passed. The 4 failed non-blocking ACRs are noted and may result in conditional certification.
+
+# Appendix B-1 — Reference Environment Specification Template
+This template is used by vendors seeking Platform Certification to document their Reference Environment per ACR-1.25. The completed RES is submitted to the evaluating AVB before evaluation commences and maintained for the duration of the Platform Certification.
+
+# Appendix C — Glossary
+END OF DOCUMENT
+Evaluation Methodology Guide v1.1 | ARAF-ARA-EVL-2026-002
+© 2026 Autonomous Reliability Assurance Foundation
+
+--- TABLE 1 ---
+Field | Value
+Document ID | ARAF-ARA-EVL-2026-002
+Title | Evaluation Methodology Guide
+Version | 1.1 (Approved)
+Date | March 2026
+Classification | Public
+Issuing Body | Autonomous Reliability Assurance Foundation (ARAF)
+Parent Standard | ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+Supersedes | ARAF-ARA-EVL-2026-001 (v1.0 Public Review Draft)
+Related Documents | ARAF-ARA-ACR-2026-002 (ACR Control Matrix), ARAF-ARA-AVB-2026-002, ARAF-ARA-SDK-2026-002, ARAF-ARA-PHY-2026-002 (Physical Systems Evaluation Supplement), ARAF-ARA-REG-2026-002 (Regulatory Compliance Mapping Guide), ARAF-ARA-GOV-2026-001 (Ecosystem and Governance Guide)
+Approved By | Technical Standards Board (TSB)
+
+--- TABLE 2 ---
+Version | Date | Author | Description
+0.1 | 2026-Q1 | Founding Committee | Initial evaluation framework outline
+0.5 | 2026-Q1 | Technical Standards Board | Evaluation methods defined; scoring methodology drafted
+1.0 | 2026-Q2 | ARAF Technical Standards Board | Public Review Draft aligned with ARA Standard v1.0
+1.1 | March 2026 | ARAF TSB | Major update: 15 domains, system profiles, evidence categories, Express pathway, per-ACR evaluation frequency, D5/D13 procedures
+
+--- TABLE 3 ---
+Code | Method | Description | Primary Use Cases
+AT | Automated Testing | Deterministic test execution by automated systems against defined pass/fail criteria | Boundary enforcement, injection resistance, stress testing, API governance, PII detection
+HS | Human Simulation | Structured interaction by trained operators simulating realistic and adversarial scenarios | Social engineering resistance, escalation testing, context manipulation, red team, bias evaluation
+EI | Expert Inspection | Qualified expert review of documentation, configuration, architecture, and process evidence | Policy review, architecture assessment, governance verification, data flow mapping, SoA review
+CM | Continuous Monitoring Verification | Ongoing automated observation of production behavior against baselines and thresholds | Drift detection, anomaly alerting, behavioral regression, telemetry integrity, SLA compliance
+
+--- TABLE 4 ---
+Category | Code | Description | Examples
+Legal Policy | LP | Documented policies, procedures, and legal instruments governing system operation | AI data policies, retention schedules, DPIAs, consent frameworks, incident response plans, change control policies
+Technical Implementation | TI | Verified technical controls demonstrating architectural and engineering compliance | PII detection test results, isolation test reports, encryption configurations, boundary enforcement logs, SDK integration evidence
+Operational Process | OP | Records demonstrating that documented processes are actually executed in practice | Change approval logs, incident response records, governance review minutes, training completion records, risk register updates
+Third-Party Testing | TP | Independent evaluation by qualified parties external to the system operator | Red team reports, adversarial test results, independent audit findings, fairness evaluation reports, penetration test results
+
+--- TABLE 5 ---
+Evidence Category | Level 1: Foundation | Level 2: Operational | Level 3: Comprehensive
+LP (Legal Policy) | Current policy documents with version control | L1 + implementation evidence + annual review records | L2 + third-party policy adequacy assessment
+TI (Technical Implementation) | Configuration documentation + basic test results | L1 + automated test suite results + operational evidence over 6-month window | L2 + continuous SDK monitoring data + independent technical verification
+OP (Operational Process) | Documented procedures + sample execution records | L1 + 6-month execution record + process maturity assessment | L2 + continuous process compliance monitoring + independent process audit
+TP (Third-Party Testing) | Self-assessment acceptable for Foundational profile | Independent AVB evaluation required | L2 + ARAF-approved red team + independent third-party evaluation
+
+--- TABLE 6 ---
+Artifact Type | Description | Retention
+Test Execution Reports | Automated test results with pass/fail, metrics, timestamps, and configuration | Certification validity + 2 years
+Interaction Transcripts | Complete transcripts of Human Simulation sessions with annotations | Certification validity + 2 years
+Inspection Checklists | Completed EI assessment forms with per-ACR findings | Certification validity + 2 years
+Monitoring Data | CM telemetry, drift measurements, and alert records | Rolling 12 months; 24 months for Level 3
+Red Team Reports | Structured findings from adversarial red team engagements | Certification validity + 5 years
+SoA Document | Statement of Applicability addressing all 410 ACRs | Certification validity + 2 years
+Remediation Records | Documentation of deficiency remediation with re-test results | Certification validity + 2 years
+Reference Environment Attestation (REA) | AVB written attestation that the Reference Environment is representative of production-equivalent behavior for all in-scope ACRs, with documented justification for deviations. Applicable to Platform Certifications only. Required per ACR-1.26. | Platform Certification validity + 2 years
+
+--- TABLE 7 ---
+Domain | Min Score | Blocking ACRs
+D1: Autonomy Scope | 70% | 2
+D2: Decision Integrity | 70% | 3
+D3: Tool and API Governance | 65% | 2
+D4: Identity and Permission | 70% | 3
+D5: Data Privacy * | 65% | 2
+D6: Failure Mode Containment | 70% | 2
+D7: Behavioral Reliability | 65% | 2
+D8: Adversarial Robustness | 60% | 2
+D9: Drift Detection | 55% | 0
+D10: Monitoring and Telemetry | 65% | 2
+D11: Escalation and Override | 75% | 4
+D12: Auditability | 65% | 1
+D13: Societal Impact * | 60% | 2
+D14: Operational Governance | 65% | 2
+
+--- TABLE 8 ---
+Domain | Min Score | Blocking ACRs
+D1: Autonomy Scope | 80% | 4
+D2: Decision Integrity | 80% | 5
+D3: Tool and API Governance | 75% | 4
+D4: Identity and Permission | 80% | 5
+D5: Data Privacy * | 75% | 4
+D6: Failure Mode Containment | 80% | 4
+D7: Behavioral Reliability | 75% | 4
+D8: Adversarial Robustness | 75% | 5
+D9: Drift Detection | 70% | 2
+D10: Monitoring and Telemetry | 80% | 4
+D11: Escalation and Override | 85% | 5
+D12: Auditability | 80% | 3
+D13: Societal Impact * | 75% | 4
+D14: Operational Governance | 80% | 4
+
+--- TABLE 9 ---
+Domain | Min Score | Blocking ACRs
+D1: Autonomy Scope | 90% | 6
+D2: Decision Integrity | 90% | 7
+D3: Tool and API Governance | 85% | 6
+D4: Identity and Permission | 90% | 6
+D5: Data Privacy * | 85% | 5
+D6: Failure Mode Containment | 90% | 6
+D7: Behavioral Reliability | 85% | 5
+D8: Adversarial Robustness | 85% | 8
+D9: Drift Detection | 85% | 4
+D10: Monitoring and Telemetry | 90% | 6
+D11: Escalation and Override | 95% | 7
+D12: Auditability | 90% | 5
+D13: Societal Impact * | 85% | 6
+D14: Operational Governance | 90% | 6
+D15: Physical Integrity ** | 90% | 8
+
+--- TABLE 10 ---
+Week | Activities | Deliverables
+Week 1 | Registration, profile classification, SoA submission, EI document collection begins | System Registration ID, profile determination, SoA draft
+Week 2 | Parallel: AT execution (automated test batteries) + EI review (async document review) | AT results for all applicable ACRs, EI findings for policy/governance ACRs
+Week 3 | HS evaluation (if required by ACR matrix) + CM baseline initiation + remediation of any quick-fix deficiencies | HS session transcripts, initial CM data, remediation evidence
+Week 4 | Human expert review + certification decision + registry publication | Evaluation report, certification decision, registry entry
+
+--- TABLE 11 ---
+Frequency | Cadence | Mechanism | Trigger for Re-Evaluation
+Continuous | Real-time via SDK | Behavioral Telemetry SDK streaming with automated compliance verification | Any threshold breach triggers immediate alert and 72-hour remediation window
+Quarterly | Every 90 days | Automated test suite execution + AVB spot-check for Level 2/3 | Failed quarterly test triggers focused reassessment within 15 days
+Annual | At certification renewal | Document review + updated evidence submission | Expired evidence triggers certification condition within 30 days
+At-Certification | Initial + major changes | Full assessment during initial certification | Material system change triggers focused reassessment per trigger table
+
+--- TABLE 12 ---
+Trigger | Scope | Timeline
+Scheduled reassessment | Full evaluation at certification level | Annual (L1), Semi-annual (L2), Quarterly (L3)
+Material system change | Focused: affected domains and ACRs | Within 30 days of change
+Drift threshold breach | Focused: affected ACRs + related domains | Triggered by accredited CAPO per GOV Article 4.2; 72-hour alert, 15-day remediation
+Incident-triggered | Focused: domains related to incident | Within 15 days of incident resolution
+Standard version update | Gap assessment: new/changed ACRs | Within transition period defined by TSB
+Regulatory change | Focused: affected compliance mappings | Within 60 days of regulatory effective date
+Per-ACR frequency trigger | Individual ACR re-evaluation | Per frequency schedule (Continuous/Quarterly/Annual)
+
+--- TABLE 13 ---
+Requirement | Specification
+Test environment isolation | Mandatory; documented deviation from production
+Test data | Representative; no live PII without authorization
+Configuration documentation | Version-controlled; captured before and after execution
+Execution recording | Full output capture with timestamps
+Retry policy | Maximum 2 retries after documented remediation
+Evidence generation | Raw outputs + summary; linked to ACR IDs; categorized as TI
+Test suite version | Documented; approved by TSB or designee
+Pass/fail criteria | Per ACR Control Matrix; no partial credit
+
+--- TABLE 14 ---
+Requirement | Specification
+Operator independence | No relationship with organization under evaluation
+Operator qualification | Documented; 3+ years for Level 3; fairness expertise for D13 bias evaluation
+Scenario scripting | Written scripts with branches; reviewed before execution
+Session recording | Full transcripts with timestamps and annotations
+Multi-attempt protocol | Minimum 3 attempts by minimum 2 operators per scenario
+Minimum duration | L1: N/A | L2: 8 hours | L3: 24 hours (red team)
+
+--- TABLE 15 ---
+Requirement | Specification
+Inspector independence | No relationship with organization under evaluation
+Inspector qualification | Domain expertise; professional certifications for Level 3
+Document inventory | Complete collection with receipt confirmation
+SoA validation | All 410 ACRs addressed; exclusion justifications reviewed
+Process verification | Sampled execution records; not just documented procedures
+Evidence categorization | All findings mapped to LP, TI, OP, or TP evidence categories
+
+--- TABLE 16 ---
+Requirement | Specification
+Integration method | SDK (preferred), API export, or log aggregation
+Baseline period | L1: 30 days | L2: 60 days | L3: 90 days
+Observation period | Minimum 90 days for initial certification
+Per-ACR frequency | Configured per ACR Control Matrix (Continuous/Quarterly/Annual/At-Certification)
+Alert validation | All alerts classified (TP, FP, indeterminate)
+Data retention | 12 months minimum; 24 months for Level 3
+
+--- TABLE 17 ---
+Field | Vendor Completes
+Vendor Name | [Legal entity name]
+Product / Platform Name | [Name and version seeking Platform Certification]
+Software Version | [Pinned version; include model version, framework version, dependency manifest]
+Infrastructure Configuration | [Compute, memory, networking, storage; cloud or on-premise; version-controlled config files attached]
+Simulated Input Distributions | [Source and distribution description for each input modality; representativeness rationale]
+Known Deviations from Production | [List each known deviation; ACR(s) potentially affected; vendor’s assessment of materiality]
+Material Change Threshold | [Definition of what constitutes a material change triggering re-evaluation per ACR-1.27; includes model version change, architectural change, dependency version change thresholds]
+Telemetry Mechanism | [Whether ARAF Behavioral Telemetry SDK is deployed in reference environment; if not, alternative mechanism used for CM-method ACRs per ACR-10.30]
+AVB Attestation | The undersigned AVB attests that the Reference Environment described in this document is representative of production-equivalent behavior for all in-scope ACRs, subject to the deviations documented above. AVB Name: _________________ Evaluator Name: _________________ Date: _________________  Signature: _________________
+
+--- TABLE 18 ---
+Term | Definition
+ACR | Autonomous Control Requirement. A discrete, measurable, testable requirement within a reliability domain.
+ARA | Autonomous Reliability Assurance. The certification standard published by ARAF.
+ARAF | Autonomous Reliability Assurance Foundation. The independent standards body.
+AT | Automated Testing. Deterministic test execution by automated systems.
+AVB | Authorized Validation Body. An organization authorized by ARAF to conduct evaluations.
+Blocking ACR | An ACR whose failure prevents certification regardless of overall score.
+CAP | Continuous Assurance Platform. The technology infrastructure operated by accredited CAPOs for real-time telemetry ingestion and compliance monitoring.
+CAPO | Continuous Assurance Platform Operator. An ARAF-accredited technology company that operates a CAP, providing telemetry ingestion, compliance monitoring, revalidation triggering, and insurance data feeds. The source of telemetry evidence for Level 2 and Level 3 evaluations. Accreditation requirements: ARAF-ARA-GOV-2026-001, Article 4.
+CM | Continuous Monitoring Verification. Ongoing production observation against baselines.
+EI | Expert Inspection. Qualified expert review of documentation and processes.
+Express Track | Accelerated Level 1 certification pathway for Foundational profile systems (3-4 weeks).
+HS | Human Simulation. Interactive testing by trained human operators.
+LP | Legal Policy. Evidence category for documented policies and legal instruments.
+OP | Operational Process. Evidence category for process execution records.
+SoA | Statement of Applicability. Document addressing all 410 ACRs with inclusion/exclusion justification.
+System Profile | Capability-based classification (Foundational, Standard, Advanced, Comprehensive).
+TI | Technical Implementation. Evidence category for verified technical controls.
+TP | Third-Party Testing. Evidence category for independent external evaluation.
+TSB | Technical Standards Board. ARAF’s ultimate technical authority.
+Assurance Class | The second axis of an ARA Deployment Certification. Describes the intensity of ongoing monitoring required to maintain the certification in good standing: Class A Periodic, Class B Monitored, or Class C Continuously Assured. Determined by Risk Classification. Not applicable to Platform Certifications.
+Assurance Lapse | The state in which a Deployment Certification’s CAPO monitoring has fallen below the frequency required by its Assurance Class. Triggers a class-dependent remediation window; if unresolved, results in Suspension or Expiry.
+Certification Inheritance | The mechanism by which a Deployment Certification built on a Platform-Certified product carries forward the platform’s ACR coverage, reducing the scope of deployment-level evaluation to configuration-dependent and deployment-context ACRs.
+Certified Technology Partner (CTP) | A consulting or implementation firm listed in the ARAF CTP Registry as having demonstrated ARA implementation competency. Not a certification — a registry designation. Does not confer evaluation authority or certification rights.
+Class A — Periodic | Assurance Class requiring annual or biannual re-evaluation. No continuous CAPO monitoring required. Event-triggered revalidation only. Applicable to low-autonomy, low-consequence, reversible deployments.
+Class B — Monitored | Assurance Class requiring an active CAPO connection and minimum monthly telemetry batch delivery. Event-triggered revalidation. Applicable to operational business systems with moderate autonomy or consequence.
+Class C — Continuously Assured | Assurance Class requiring a persistent CAPO connection, real-time telemetry stream, and SLA-bound alerting. Required for high-autonomy, high-consequence, or regulated deployments. Life-safety systems are Class C without exception.
+Deployment Certification | An ARA certification issued to a specific production instance of an autonomous system operated by an identified organization. Covers the full operational context including configuration, integrations, data environment, and use cases. Expressed as an Evaluation Level and an Assurance Class. Issued to the deploying organization.
+Evaluation Level | The first axis of an ARA certification. Describes the rigor of the evaluation conducted by an accredited AVB: Level 1 Foundation, Level 2 Operational, or Level 3 Comprehensive. Applies to both Platform Certifications and Deployment Certifications.
+Platform Certification | An ARA certification issued to a software platform, product, or autonomous system technology evaluated in a controlled reference environment against applicable ACRs. Certifies the technology as a product independent of any specific production deployment. Expressed as an Evaluation Level only (no Assurance Class). Issued to the technology vendor.
+Reference Environment | A controlled deployment environment used for Platform Certification evaluation. Must meet ARAF minimum conditions for ACR evaluation fidelity per Article 3.9 of this guide. Documented and attested by the evaluating AVB as representative of production-equivalent behavior.
+Risk Classification | A formal assessment conducted by an accredited AVB as part of Deployment Certification that determines the required Assurance Class. Based on degree of autonomy, consequence severity, reversibility, breadth of impact, regulatory context, dependency criticality, and operational continuity. Documented in the Risk Classification Report. Appealable to the ARAF Technical Standards Board.

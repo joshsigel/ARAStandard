@@ -1,0 +1,928 @@
+ARA Standard v1.1
+Behavioral Telemetry SDK Reference
+ARAF-ARA-SDK-2026-002
+Autonomous Reliability Assurance Foundation
+Approved | Version 1.1 | March 2026
+Companion to ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+© 2026 Autonomous Reliability Assurance Foundation. All Rights Reserved.
+
+## Document Control
+
+## Revision History
+
+## Summary of Changes in v1.1
+Domain renumbering: All domain and ACR references updated for 15-domain structure. Former Domains 5–12 renumbered to Domains 6–12 and 14; former Domain 13 becomes Domain 15. New Domain 5 (Data Privacy) and Domain 13 (Societal Impact) inserted.
+Domain 5 telemetry hooks: New PII detection event streaming, data flow monitoring telemetry, cross-tenant isolation telemetry, consent event logging, and breach detection signal schemas added to Article 4 and Appendix C.
+Domain 13 telemetry hooks: New content safety violation events, bias/fairness metric streaming, CBRN guardrail trigger events, and hallucination detection signal schemas added to Article 4 and Appendix C.
+Privacy-preserving telemetry modes: New Article 7 section on data minimization settings, local-only processing options, and differential privacy for aggregate reporting.
+Insurance data feed specification: New Article 6 section defining schema and API for sharing real-time certification health signals with partner insurers, including risk-relevant event taxonomy and claims-relevant incident data fields.
+ACR-to-SDK mapping expanded: Appendix C updated with Domain 5 and Domain 13 ACR mappings to SDK telemetry capabilities.
+Three-axis certification model: All certification level references updated to reflect the three-axis model (System Profile, Certification Level, Evaluation Frequency).
+Level 3 rename: All references to “Level 3 Continuous Assurance” updated to “Level 3 Comprehensive” to align with the ARA Standard v1.1 three-axis certification model.
+Platform Certification telemetry scope note: New exception note added to section 1.2 clarifying that Platform Certifications evaluated within a Reference Environment may use simulated telemetry per ARAF-ARA-EVL-2026-002 Article 3.8.3; exception does not transfer to deployer systems.
+Assurance Class telemetry obligations: New section 7.8 added defining SDK integration requirements by Assurance Class: Class A (SDK optional, periodic mode), Class B (SDK mandatory, real-time telemetry required, drift detection events required), Class C (full SDK mandatory, all event types required, continuous check-in, anomaly emission within CAPO SLA latency threshold).
+Glossary additions: Twelve new terms added to Appendix D: Assurance Class, Assurance Lapse, Certification Inheritance, Certified Technology Partner (CTP), Class A — Periodic, Class B — Monitored, Class C — Continuously Assured, Deployment Certification, Evaluation Level, Platform Certification, Reference Environment, and Risk Classification.
+
+# Foreword
+This document is a companion to the Autonomous Reliability Assurance (ARA) Standard, ARAF-ARA-STD-2026-002. It provides the complete technical reference for the ARA Behavioral Telemetry SDK, the embeddable software component that instruments autonomous systems for runtime monitoring, continuous assurance data collection, and integration with the Continuous Assurance Platform (CAP) operated by an accredited Continuous Assurance Platform Operator (CAPO). The ARAF ecosystem supports multiple accredited CAPOs; certified organizations select their preferred CAPO from the ARAF CAPO Directory (see ARAF-ARA-GOV-2026-001, Article 4 for CAPO accreditation requirements). The SDK’s telemetry interface is identical regardless of which accredited CAPO receives the data.
+The Behavioral Telemetry SDK is not an optional monitoring add-on. It is the primary mechanism through which certified autonomous systems maintain their certification as a persistent operational state. The SDK provides the telemetry pipeline that feeds drift detection, anomaly alerting, policy compliance verification, and automated revalidation. Without this integration, certification degrades from a live signal to a stale credential.
+This reference is designed for three audiences: (1) platform engineers integrating the SDK into autonomous systems seeking or maintaining ARA certification; (2) Authorized Validation Bodies (AVBs) verifying that SDK integration meets ARA monitoring requirements; and (3) security and compliance teams evaluating the SDK’s data handling, access controls, and privacy characteristics.
+The SDK supports five integration methods: REST API, gRPC, and native language bindings for Python, Node.js, Java, Go, and Rust. All methods produce identical telemetry streams and are interchangeable from the platform’s perspective. Selection is a deployment decision, not a compliance decision.
+Design Philosophy: The SDK treats telemetry as a first-class operational concern, not an afterthought. An autonomous system that cannot be observed cannot be trusted. The SDK makes observation continuous, structured, and tamper-evident.
+
+# Article 1 — Scope and Purpose
+
+## 1.1 Purpose
+This document specifies the technical interface, data schemas, integration patterns, security requirements, and operational guidance for the ARA Behavioral Telemetry SDK. It establishes the normative requirements that SDK implementations SHALL satisfy to support ARA certification and continuous assurance monitoring.
+
+## 1.2 Applicability
+This reference applies to all autonomous systems seeking or maintaining ARA certification at any certification level (Level 1 Foundation, Level 2 Operational, Level 3 Comprehensive) and any system profile (Foundational, Standard, Advanced, Comprehensive). The SDK requirements apply equally to systems evaluated via the self-serve platform pathway and those evaluated through AVB engagement.
+The SDK is required for systems enrolling in the Continuous Assurance Program. Systems using equivalent monitoring integrations that satisfy the data schema, delivery, integrity, and security requirements specified in this document may petition the ARAF Technical Standards Board for equivalence determination.
+Platform Certification Telemetry Exception. Platform Certifications evaluated within a Reference Environment as defined in ARAF-ARA-EVL-2026-002 Article 3.8.3 may use simulated telemetry in lieu of live operational telemetry for the duration of the evaluation. The simulated telemetry mechanism SHALL be documented in the Reference Environment Specification (RES) and attested by the evaluating AVB or platform operator per ACR-1.26. Certified Platform Certifications that are subsequently integrated into deployer systems do not transfer this exception; deployer systems remain subject to all SDK telemetry requirements applicable to their Assurance Class and certification level.
+
+## 1.3 Normative References
+The following documents are referenced normatively throughout this specification:
+
+## 1.4 Conventions
+SHALL indicates a mandatory requirement.
+SHOULD indicates a strong recommendation.
+MAY indicates an optional capability.
+These terms are used in accordance with RFC 2119. Code examples use JSON for data schemas and are illustrative. Implementations MAY use equivalent serialization formats (Protocol Buffers, MessagePack, CBOR) provided the semantic content is preserved.
+
+# Article 2 — Architecture Overview
+
+## 2.1 System Context
+The Behavioral Telemetry SDK operates as an embedded component within the autonomous system’s runtime environment. It intercepts, structures, and transmits telemetry data to the accredited CAPO’s CAP for ingestion, analysis, and compliance evaluation. The SDK is positioned between the autonomous system’s operational logic and the ARA Continuous Assurance Platform.
+Agent-Side Components: The SDK library embedded in the autonomous system’s process space. Responsible for telemetry capture, local buffering, schema validation, and secure transmission.
+Platform-Side Components: The accredited CAPO’s platform telemetry ingestion endpoints, stream processors, and storage layer. Responsible for receiving, validating, storing, and routing telemetry to downstream analysis engines (Drift Detection, Scoring, Alerting). CAPOs are independently accredited by ARAF to operate this infrastructure. The SDK transmits telemetry to the certified organization’s selected CAPO; all accredited CAPOs implement the same ingestion interface specification defined in this document.
+
+## 2.2 Deployment Architecture
+The SDK supports three deployment patterns, each appropriate for different operational contexts:
+All three patterns produce identical telemetry streams from the platform’s perspective. The deployment pattern is a local engineering decision and does not affect certification evaluation.
+
+## 2.3 Data Flow Model
+Telemetry flows through the following stages:
+1. Capture: The SDK instruments the autonomous system to capture events at defined instrumentation points (action execution, decision evaluation, boundary checks, resource consumption). Events are captured with nanosecond-precision timestamps.
+2. Structuring: Captured events are structured into one of the seven canonical schemas (Action Trace, Decision Log, Boundary Event, Drift Signal, Resource Utilization, Privacy Event, Societal Impact Event) defined in Article 4.
+3. Validation: The SDK validates each event against its schema before transmission, rejecting malformed events locally and logging validation failures.
+4. Privacy Filtering: For systems with privacy-preserving telemetry modes enabled (see Article 7), the SDK applies PII detection, data minimization, and differential privacy transformations before buffering.
+5. Buffering: Events are buffered locally in a persistent queue to survive transient network failures. The buffer is configurable (see Article 8) with default capacity for 24 hours of telemetry at peak volume.
+6. Transmission: Buffered events are transmitted to the accredited CAPO’s CAP via the configured integration method (REST, gRPC, or native binding transport). All transmissions use TLS 1.3 encryption.
+7. Acknowledgment: The platform acknowledges receipt of each batch. Unacknowledged batches are retried with exponential backoff. Events are removed from the local buffer only after platform acknowledgment.
+
+## 2.4 Security Architecture
+The SDK’s security model operates on five principles:
+Zero Trust Transmission: All data in transit is encrypted with TLS 1.3. Mutual TLS (mTLS) is available and REQUIRED for Level 3 certifications.
+Tamper-Evident Storage: All telemetry data is hashed using SHA-256 at capture time. Hash chains link sequential events, making undetected modification computationally infeasible.
+Least-Privilege Access: SDK credentials grant write-only access to telemetry ingestion endpoints. The SDK cannot read, modify, or delete previously submitted telemetry.
+Credential Isolation: SDK authentication credentials are scoped to a single registered system and cannot be used to access telemetry from other systems.
+Privacy by Design: The SDK implements data minimization, PII detection, and configurable redaction at the point of capture, ensuring sensitive data is never transmitted when privacy-preserving modes are enabled.
+
+# Article 3 — Integration Methods
+The SDK provides five integration methods. All methods produce functionally identical telemetry streams. Selection is based on deployment environment, language ecosystem, and performance requirements.
+
+## 3.1 REST API
+The REST API provides a stateless, HTTP-based integration suitable for any environment capable of making HTTPS requests. It is the most universally compatible integration method.
+Base URL: https://telemetry.ara-platform.org/v1
+Authentication: All requests SHALL include an Authorization header with a Bearer token (JWT) issued during system registration. Tokens are scoped to a single registered system and have configurable expiration (default: 1 hour, renewable).
+
+### Core Endpoints
+
+### Batch Submission
+The /v1/batch endpoint accepts mixed-type telemetry payloads, reducing HTTP overhead for systems generating multiple event types simultaneously. Each batch SHALL contain no more than 1,000 events and SHALL NOT exceed 5 MB compressed.
+
+### Rate Limiting
+The REST API enforces rate limits based on certification level:
+
+### Response Codes
+
+## 3.2 gRPC Interface
+The gRPC interface provides high-throughput, low-latency streaming suitable for systems generating large volumes of telemetry. It supports both unary and bidirectional streaming RPCs.
+
+### Service Definition
+The ARAtelemetry gRPC service includes unary RPCs for batched submission of each event type (SubmitTraces, SubmitDecisions, SubmitBoundaries, SubmitDrift, SubmitResources, SubmitPrivacy, SubmitSocietal, CheckIn), client streaming RPCs for continuous telemetry (StreamTraces, StreamAll), and bidirectional streaming (Monitor) for simultaneous telemetry and platform directives.
+
+### Connection Management
+gRPC connections SHALL use TLS 1.3 with ALPN negotiation for HTTP/2. Clients SHALL implement automatic reconnection with exponential backoff (initial delay 100ms, maximum delay 30s, jitter factor 0.2). Channel credentials are provided via the same JWT mechanism used by the REST API, transmitted as gRPC metadata on each call.
+
+### Streaming Modes
+The bidirectional Monitor RPC is RECOMMENDED for Level 2 Operational and REQUIRED for Level 3 Comprehensive certifications, as it enables the platform to issue revalidation triggers and configuration directives in real time.
+
+## 3.3 Native Language Bindings
+The SDK provides idiomatic client libraries for five languages. Each binding wraps the gRPC or REST transport layer and provides language-native APIs for telemetry capture.
+
+## 3.4 Agent-to-Agent Handshake Protocol
+For autonomous AI agents capable of programmatic interaction, the SDK supports an agent-to-agent handshake protocol. This enables AI agents to autonomously initiate SDK integration, negotiate telemetry parameters, and begin streaming telemetry without human configuration.
+
+### Handshake Sequence
+1. Discovery: The agent queries the accredited CAPO’s CAP discovery endpoint (/.well-known/ara-telemetry) to obtain connection parameters, supported schemas, and authentication requirements.
+2. Registration: The agent presents its system registration credentials and requests telemetry channel provisioning.
+3. Capability Negotiation: The platform and agent negotiate telemetry parameters: schema version, transport protocol, compression, batch size, and streaming mode.
+4. Channel Establishment: A dedicated telemetry channel is provisioned with the negotiated parameters. The agent receives a channel token scoped to this session.
+5. Continuous Operation: The agent streams telemetry on the established channel. The platform streams directives (revalidation triggers, schema updates) back to the agent.
+This protocol is specifically designed for the ‘agents certifying agents’ paradigm described in the ARA Standard. It enables certified AI agents to maintain their own certification by autonomously managing their telemetry integration.
+
+### 3.4.1 AAIF/MCP Protocol Interoperability
+Behavioral telemetry collected via the ARA SDK is transport-agnostic and is designed to operate across AAIF-governed protocols, including systems implementing the Model Context Protocol (MCP). The Agentic AI Foundation (AAIF), a Linux Foundation initiative (founded December 2025), governs open interoperability standards for agentic AI systems at the connectivity layer. ARA SDK telemetry operates at the behavioral reliability layer; MCP operates at the connectivity and tool invocation layer. These layers are complementary and are designed to coexist without conflict. MCP-compliant deployments are encouraged to surface ARA telemetry endpoints within their tool registration schemas to enable continuous reliability monitoring alongside protocol-level interoperability. AAIF compliance does not reduce, replace, or substitute for ARA SDK telemetry requirements.
+
+## 3.5 Integration Selection Guide
+
+# Article 4 — Data Schemas
+The SDK defines seven canonical telemetry schemas. All telemetry submitted to an accredited CAPO’s CAP SHALL conform to one of these schemas. Schemas are versioned independently and the platform supports concurrent schema versions during migration periods.
+
+## 4.1 Action Trace Schema
+Action traces record individual actions taken by the autonomous system. Every autonomous action that affects external state, consumes resources, or exercises delegated authority SHALL be captured as an action trace.
+ACR Alignment: The action trace schema directly supports ACR-10.01 (action logging with type, timestamp, input context, rationale, and outcome), ACR-10.05 (tamper-evident logging via integrity_hash and chain_hash), and ACR-12.01 (decision log maintenance).
+
+## 4.2 Decision Log Schema
+Decision logs capture the decision-making process for autonomous decisions that select between alternatives, apply judgment, or exercise discretion. While action traces record what happened, decision logs record why.
+
+## 4.3 Boundary Event Schema
+Boundary events record when the autonomous system approaches, reaches, or violates its certified operational boundaries. These events are critical for drift detection and policy compliance monitoring.
+
+## 4.4 Drift Signal Schema
+Drift signals report changes in the autonomous system’s behavioral distribution relative to its certified baseline. The SDK’s embedded anomaly detection generates drift signals; the platform’s Drift Detection Engine performs deeper analysis.
+
+## 4.5 Resource Utilization Schema
+Resource utilization events track the autonomous system’s consumption of computational, API, and operational resources. These events support capacity planning, cost monitoring, and detection of resource-based anomalies.
+
+## 4.6 Privacy Event Schema (Domain 5)
+Privacy events capture data handling activities relevant to Domain 5 (Data Privacy and Information Protection). These events enable continuous monitoring of PII handling, consent management, cross-tenant isolation, and data breach detection. The privacy event schema provides the telemetry foundation for demonstrating compliance with ACRs 5.01 through 5.24.
+ACR Alignment: The privacy event schema directly supports ACR-5.09 (PII detection and prevention), ACR-5.06 (consent management), ACR-5.10 (cross-tenant isolation), ACR-5.12 (telemetry sanitization), ACR-5.24 (breach detection), and ACR-5.04 (data flow mapping).
+
+## 4.7 Societal Impact Event Schema (Domain 13)
+Societal impact events capture activities relevant to Domain 13 (Societal Impact and Responsible Deployment). These events enable continuous monitoring of content safety guardrails, bias and fairness metrics, CBRN/cyber safety controls, and hallucination detection. The societal impact event schema provides the telemetry foundation for demonstrating compliance with ACRs 13.01 through 13.22.
+ACR Alignment: The societal impact event schema directly supports ACR-13.01 (CBRN guardrails), ACR-13.02 (cyber guardrails), ACR-13.04 (harmful content safeguards), ACR-13.06 (hallucination detection), ACR-13.09 (hate speech controls), ACR-13.10 (bias monitoring), and ACR-13.08 (deepfake detection).
+
+## 4.8 Schema Versioning
+All schemas follow semantic versioning (MAJOR.MINOR). Major version changes indicate backward-incompatible changes requiring SDK upgrades. Minor version changes add optional fields and are backward-compatible. The platform SHALL support at least the two most recent major versions concurrently during migration periods (minimum 6 months overlap).
+Schema versions are declared per-event in the schema_version field. The SDK SHALL reject events with unrecognized schema versions and log validation errors locally.
+
+# Article 5 — Self-Serve Agent Check-In Protocol
+
+## 5.1 Protocol Overview
+The self-serve agent check-in protocol enables certified autonomous systems to proactively report their operational state to their accredited CAPO’s CAP. This shifts compliance from a model where humans chase evidence to one where systems demonstrate compliance continuously.
+Check-in is not a simple heartbeat. It is a structured assertion of operational state, configuration integrity, and behavioral compliance that the platform validates against the system’s certified baseline.
+
+## 5.2 Check-In Payload
+
+## 5.3 Check-In Modes
+
+## 5.4 Health Status Response
+
+## 5.5 Revalidation Triggers
+The platform MAY issue revalidation triggers in the check-in response when material changes are detected. Triggers specify which ACRs require re-evaluation and the deadline for completion.
+
+# Article 6 — Continuous Assurance Platform Integration
+
+## 6.1 Internal Integration
+Internal integration connects the SDK directly to the autonomous system’s runtime environment. This is the standard integration pattern for single-organization deployments.
+Connection Lifecycle: The SDK establishes a persistent connection to the accredited CAPO’s CAP upon system startup. This connection is maintained throughout the system’s operational lifetime. If the connection is interrupted, the SDK buffers events locally and reconnects automatically. The maximum buffer duration is configurable (default: 24 hours). Events exceeding the buffer duration are persisted to local storage with integrity hashes for later reconciliation.
+Telemetry Channels: Internal integration uses dedicated telemetry channels per event type (traces, decisions, boundaries, drift, resources, privacy, societal). Channels operate independently; failure on one channel does not affect others. Each channel maintains its own buffer, retry state, and acknowledgment tracking.
+Platform Directives: The accredited CAPO’s CAP sends directives to the SDK via a reverse channel (gRPC server-streaming or WebSocket for REST). Directives include revalidation triggers, configuration update requests, schema migration notices, and emergency halt commands. The SDK SHALL process all directives within 30 seconds of receipt.
+
+## 6.2 Multi-Party Integration
+Multi-party integration enables monitoring of autonomous systems operating across organizational boundaries. This is the integration pattern for settlement platforms, multi-agent orchestration, supply chain coordination, and cross-company exception resolution.
+In multi-party mode, each organization deploys its own SDK instance connected to its autonomous system. The accredited CAPO’s CAP provides a shared assurance layer that monitors the interaction boundary between parties without exposing proprietary operational data.
+Data Isolation: Each party’s internal telemetry is visible only to that party and the accredited CAPO’s compliance engine. No party can access another party’s raw telemetry.
+Interaction Boundary Monitoring: The accredited CAPO’s CAP monitors the shared interaction surface (API calls between parties, shared data exchanges, coordinated decisions) and generates cross-party compliance signals.
+Verified Compliance Signals: Each party receives verified compliance signals about their counterparties’ certification status, boundary adherence, and behavioral reliability. These signals are cryptographically signed by the accredited CAPO.
+
+## 6.3 Telemetry Ingestion Pipeline
+The accredited CAPO’s CAP ingestion pipeline processes telemetry through the following stages:
+1. Reception: Events arrive via REST or gRPC endpoints. Load balancers distribute across ingestion nodes. Each event is assigned a platform-side receipt timestamp.
+2. Validation: Schema validation, integrity hash verification, and duplicate detection. Invalid events are rejected with diagnostic error codes.
+3. Enrichment: Events are enriched with platform metadata: system certification context, applicable ACR mappings, domain classification, risk weight, and enterprise risk dimension assignment.
+4. Routing: Enriched events are routed to downstream consumers: Drift Detection Engine, Scoring Engine, Alerting System, Insurance Data Feed, and archival storage. Routing is event-type-aware.
+5. Storage: Events are stored in tamper-evident, append-only storage with retention periods aligned to CAPO SLA requirements (ARAF-ARA-GOV-2026-001, Article 4.5): minimum 13 months for telemetry data (compliance evidence), minimum 7 years for audit trail and certification-relevant events. The SDK buffers locally for up to the configured duration before reconciliation with the accredited CAPO’s storage layer.
+
+## 6.4 Real-Time Alerting
+The accredited CAPO’s CAP generates real-time alerts based on telemetry analysis. Alerts are classified by severity and routed to configured notification channels.
+
+## 6.5 Compliance Dashboard Data Feeds
+The SDK and CAP together provide data feeds for the real-time compliance dashboard. The dashboard is accessible to system operators, management, AVBs, and auditors (with role-based access controls).
+
+## 6.6 Insurance Data Feed Specification
+The insurance data feed provides a standardized interface for sharing real-time certification health signals with Recognized Insurer Partners (RIPs). RIPs are insurance companies formally recognized by ARAF under ARAF-ARA-GOV-2026-001, Article 5. Only accredited CAPOs may provision insurance data feed access; insurers connect to the feed through a CAPO that has completed ARAF integration testing with that insurer (GOV Article 5.3). This enables insurance providers to incorporate autonomous system reliability data into underwriting, continuous monitoring, and claims processing. Full integration specifications will be defined in ARAF-ARA-INS-2026-001 (forthcoming).
+
+### 6.6.1 Feed Architecture
+The insurance data feed operates as a read-only, pull-based API endpoint. Authorized insurance partners receive API credentials scoped exclusively to the insurance feed for their insured systems. The feed provides aggregated risk signals derived from telemetry analysis; raw telemetry data is never exposed to insurance partners.
+
+### 6.6.2 Insurance Event Taxonomy
+The insurance data feed classifies events into a standardized risk-relevant taxonomy:
+
+### 6.6.3 Claims-Relevant Incident Data
+When an insured system experiences an incident that may give rise to a claim, the insurance data feed provides enhanced incident detail:
+
+### 6.6.4 Insurance API Authentication
+Insurance partners authenticate using dedicated API credentials separate from system SDK credentials. Insurance credentials are issued by ARAF upon execution of an insurance data sharing agreement between the system operator and the insurance partner. Credentials are read-only, scoped to specific insured systems, and expire annually (renewable). All insurance API access is logged in the system’s audit trail.
+
+### 6.6.5 Standardized Export Format
+The insurance data feed supports two export formats:
+JSON API: Real-time pull-based API returning JSON responses conforming to the schemas above. Supports filtering by date range, event category, and severity.
+CSV Batch Export: Periodic batch export (daily, weekly, monthly) in CSV format for integration with insurance data warehouses and actuarial systems. Exports include all events within the specified period with full field coverage.
+Both formats include the system’s current certification snapshot (status, level, profile, compliance score, active issues) as header metadata.
+
+# Article 7 — Security and Access Controls
+
+## 7.1 Authentication
+The SDK authenticates to the accredited CAPO’s CAP using JSON Web Tokens (JWT) issued during system registration. Authentication requirements vary by certification level:
+
+## 7.2 Authorization Model
+SDK credentials are scoped to a single registered system with write-only permissions. The authorization model enforces the principle of least privilege:
+
+## 7.3 Encryption
+In Transit: All telemetry data SHALL be encrypted using TLS 1.3. The SDK SHALL reject connections that negotiate lower TLS versions. For gRPC, ALPN negotiation for HTTP/2 over TLS is mandatory. Cipher suites are restricted to AEAD constructions (AES-256-GCM, ChaCha20-Poly1305).
+At Rest: Telemetry stored in the platform’s archival layer is encrypted using AES-256-GCM with keys managed through the platform’s key management service. Encryption keys are rotated quarterly (minimum) and on-demand after security incidents.
+Local Buffer: The SDK’s local event buffer SHALL be encrypted at rest using a key derived from the system’s registration credentials. Buffer encryption uses AES-256-GCM. If the system terminates abnormally, the encrypted buffer persists and is reconciled on restart.
+
+## 7.4 Telemetry Data Integrity
+Every telemetry event includes two integrity fields:
+integrity_hash: SHA-256 hash computed over the event payload (excluding the integrity_hash and chain_hash fields themselves). This enables detection of individual event tampering.
+chain_hash: SHA-256 hash computed over the concatenation of the current event’s integrity_hash and the previous event’s chain_hash. This creates a sequential hash chain that makes insertion, deletion, or reordering of events detectable.
+The platform independently verifies both hashes upon ingestion. Hash verification failures are logged as security events and trigger immediate investigation. Systems with persistent hash verification failures will have their certification suspended.
+Data Redaction: Certain telemetry fields may contain sensitive information (PII, credentials, proprietary business logic). The SDK provides configurable redaction rules that hash or mask sensitive field values before transmission. Redaction is applied at capture time and is irreversible. Redaction rules SHALL be documented in the system’s certification evidence.
+
+## 7.5 Privacy-Preserving Telemetry Modes
+The SDK provides three privacy-preserving telemetry modes that enable organizations to maintain ARA compliance while meeting stringent data privacy requirements. These modes are configured per-system and can be combined. Accredited CAPOs are required to support all three privacy-preserving modes defined in this Article (ARAF-ARA-GOV-2026-001, Article 4.2). Organizations selecting a CAPO should verify that the CAPO’s platform supports the privacy modes required for their deployment context before finalizing their CAPO selection.
+
+### 7.5.1 Data Minimization Mode
+When enabled, the SDK automatically strips all optional fields from telemetry events, transmitting only the minimum required fields per schema. Input and output context objects are replaced with structural summaries (field counts, data types, size) rather than actual content. This mode reduces the risk of inadvertent sensitive data transmission while maintaining compliance with all mandatory ACR monitoring requirements.
+
+### 7.5.2 Local-Only Processing Mode
+Local-only processing mode enables the SDK to perform privacy-sensitive analysis (PII detection, content classification, bias evaluation) entirely within the autonomous system’s local environment. Only aggregate results and compliance signals are transmitted to the platform. Raw data never leaves the local environment.
+This mode is designed for systems processing highly sensitive data (healthcare, financial, government) where data residency requirements prohibit transmission of raw operational data to external platforms. The SDK’s local analysis engine performs PII detection using on-device NER models, content safety classification, and basic drift detection locally. Compliance signals derived from local analysis are cryptographically signed and transmitted as attestations rather than raw evidence.
+
+### 7.5.3 Differential Privacy Mode
+Differential privacy mode applies calibrated noise to aggregate telemetry metrics before transmission, providing formal privacy guarantees while maintaining statistical utility for compliance monitoring.
+Differential privacy mode is RECOMMENDED for systems that report aggregate metrics (drift signals, resource utilization trends, fairness metrics) where individual event privacy is a concern. It is NOT suitable for event-level telemetry required for Level 3 Comprehensive certifications.
+
+## 7.6 Key Management
+SDK authentication credentials SHALL be managed according to the following requirements:
+
+## 7.7 Audit Logging
+The SDK SHALL maintain a local audit log of all SDK operations independent of the telemetry stream. This audit log captures: SDK startup/shutdown, connection establishment and disconnection, authentication events, transmission failures and retries, configuration changes, schema validation failures, privacy mode changes, and security events. The audit log SHALL be retained for the same duration as telemetry data and SHALL be available for AVB inspection during evaluation.
+
+## 7.8 Assurance Class Telemetry Obligations
+The ARA three-axis certification model assigns each certified system to an Assurance Class that determines the intensity and continuity of runtime telemetry obligations. SDK integration requirements vary by Assurance Class as follows.
+Class A — Periodic. Continuous real-time telemetry is not required for Class A systems. SDK integration is optional but strongly recommended as the primary mechanism for automating periodic compliance reporting and as the preferred pathway for systems that may seek to upgrade to a higher Assurance Class in the future. Class A systems that deploy the SDK MAY operate in periodic or event-triggered check-in mode per section 5.3.
+Class B — Monitored. Real-time telemetry transmission is required for Class B systems. SDK integration is mandatory. Class B systems SHALL emit drift detection events per the DriftSignal schema (section 4.5) and SHALL operate in event-triggered or continuous check-in mode. The SDK SHALL be configured to transmit telemetry to an accredited CAPO’s CAP without requiring manual batch submission.
+Class C — Continuously Assured. Full SDK integration is mandatory for Class C systems. All seven telemetry event types defined in Article 4 are required. Class C systems SHALL operate in continuous check-in mode and SHALL emit anomaly events within the latency thresholds specified in the applicable CAPO SLA. Drift detection, boundary status, and all Domain 5 and Domain 13 telemetry hooks SHALL be active. SDK configuration SHALL enforce mTLS per section 7.1 and SHALL not disable any telemetry channel without an approved variance on file with ARAF.
+
+# Article 8 — Configuration Reference
+
+## 8.1 SDK Configuration Parameters
+
+## 8.2 Environment Variables
+All configuration parameters can be set via environment variables using the prefix ARA_SDK_. Environment variables override file-based configuration. Configuration precedence (highest to lowest): Environment variables, configuration file, constructor arguments, defaults.
+
+## 8.3 Runtime Tuning
+For high-throughput environments, the following tuning parameters are available:
+
+## 8.4 Logging Configuration
+The SDK’s internal logging is separate from the telemetry stream. SDK logs are structured (JSON) and include: timestamp, log level, component (buffer, transport, validator, auth, privacy, societal), message, and optional context fields. The SDK SHALL NOT log sensitive telemetry payload content at any log level. Debug-level logging MAY include event metadata (IDs, types, sizes) but SHALL NOT include event content.
+
+# Article 9 — Multi-Party Integration Specifications
+
+## 9.1 Cross-Organization Architecture
+Multi-party integration addresses the assurance challenges of autonomous systems that operate across organizational boundaries. In these deployments, reliability cannot be established by monitoring a single system in isolation; the interaction surface between parties creates its own reliability risks.
+The ARA multi-party architecture defines three roles:
+Participating Party: An organization operating a certified autonomous system that interacts with other parties’ systems. Each party deploys its own SDK instance and maintains its own certification.
+Interaction Boundary: The defined interface between parties’ systems (APIs, data exchanges, shared resources, coordinated decisions). The boundary is the object of cross-party monitoring.
+Neutral Assurance Layer: The ARA CAP operating as a trusted intermediary that monitors the interaction boundary and provides each party with verified compliance signals about their counterparties.
+
+## 9.2 Party Registration and Identity
+Each party in a multi-party deployment SHALL register independently with their accredited CAPO’s CAP. Party registration includes: organization identity verification, system registration for each participating autonomous system, interaction boundary definition (jointly declared by all parties), and data sharing agreements specifying what compliance signals are shared with counterparties.
+Party identities are cryptographically bound to their SDK instances. Cross-party compliance signals include the issuing party’s verified identity, preventing impersonation or spoofing of compliance status.
+
+## 9.3 Shared Assurance Context
+The shared assurance context is the set of compliance signals that parties make visible to their counterparties. This is configurable per-party and per-interaction:
+Parties SHALL NOT be able to access raw telemetry, individual ACR results, internal configuration, or proprietary operational data of their counterparties through the multi-party integration.
+
+## 9.4 Interaction Boundary Monitoring
+The accredited CAPO’s CAP monitors interaction boundaries by correlating telemetry from both sides of the boundary. This requires each party’s SDK to tag events that involve cross-party interaction with the following additional fields:
+
+## 9.5 Data Isolation and Privacy
+Multi-party data isolation is enforced at the platform level through cryptographic access controls. Each party’s telemetry is encrypted with party-specific keys. The accredited CAPO’s CAP compliance engine processes telemetry in isolated execution contexts. Cross-party compliance signals are generated from aggregate analysis, not raw data access. Audit logs record all cross-party signal generation and delivery.
+The multi-party architecture is designed to provide assurance without trust. Each party receives verified signals from a neutral platform without requiring access to, or trust in, the other party’s internal operations.
+
+# Article 10 — Operational Guidance
+
+## 10.1 Deployment Patterns
+The SDK supports deployment across cloud, on-premises, hybrid, and edge environments.
+
+## 10.2 High Availability
+The SDK is designed to operate reliably even when the platform is temporarily unavailable. High availability mechanisms include:
+Local Buffering: Events are buffered locally during platform outages. The buffer survives process restarts (disk-backed) and SDK upgrades. Buffer integrity is maintained via the same hash chain used for telemetry events.
+Graceful Degradation: The SDK SHALL NOT cause the autonomous system to fail if the platform is unreachable. Telemetry capture continues locally. The SDK reports its connectivity status via the metrics endpoint.
+Reconciliation: When connectivity is restored, the SDK transmits buffered events in chronological order. The platform reconciles buffered events with its timeline and recomputes compliance scores retroactively.
+
+## 10.3 Performance Considerations
+The SDK is designed for minimal performance impact on the autonomous system:
+
+## 10.4 Versioning and Upgrades
+SDK versions follow semantic versioning (MAJOR.MINOR.PATCH). The platform guarantees backward compatibility within a major version.
+Patch Updates (x.x.PATCH): Bug fixes only. Drop-in replacement with no configuration changes. Zero downtime upgrade supported.
+Minor Updates (x.MINOR.x): New features and optional schema fields. Drop-in replacement. New features require explicit opt-in via configuration.
+Major Updates (MAJOR.x.x): Potentially breaking changes. Migration guide provided. Minimum 6-month overlap period where both old and new major versions are supported. Revalidation of monitoring-related ACRs (Domain 10) is required after major version upgrade.
+
+## 10.5 Troubleshooting
+Common issues and resolution:
+
+# Appendix A — API Quick Reference
+
+## REST API Endpoints
+
+## gRPC Service Summary
+
+# Appendix B — Schema Quick Reference
+Summary of required fields per schema (all fields listed are required):
+
+# Appendix C — ACR-to-SDK Mapping
+This appendix maps the ACRs most directly supported by SDK integration to specific SDK capabilities. This is not exhaustive; many ACRs benefit from SDK telemetry indirectly.
+
+# Appendix D — Glossary
+
+--- TABLE 1 ---
+Field | Value
+Document ID | ARAF-ARA-SDK-2026-002
+Title | Behavioral Telemetry SDK Reference
+Version | 1.1 (Approved)
+Date | March 2026
+Classification | Public
+Issuing Body | Autonomous Reliability Assurance Foundation (ARAF)
+Parent Standard | ARAF-ARA-STD-2026-002 (ARA Standard v1.1)
+Supersedes | ARAF-ARA-SDK-2026-001 (v1.0 Public Review Draft)
+Related Documents | ARAF-ARA-ACR-2026-002 (ACR Control Matrix), ARAF-ARA-EVL-2026-002, ARAF-ARA-AVB-2026-002, ARAF-ARA-REG-2026-002, ARAF-ARA-GOV-2026-001 (Ecosystem and Governance Guide)
+Approved By | Technical Standards Board (TSB)
+
+--- TABLE 2 ---
+Version | Date | Author | Description
+0.1 | 2026-Q1 | Founding Committee | Initial SDK specification outline
+0.5 | 2026-Q1 | Technical Standards Board | Core data schemas and API surface defined
+0.8 | 2026-Q2 | Platform Engineering | Integration patterns, security model, multi-party specs
+1.0 | 2026-Q2 | ARAF Technical Standards Board | Public Review Draft aligned with ARA Standard v1.0
+1.1 | March 2026 | ARAF TSB | Major update: 15-domain renumbering, Domain 5 PII/privacy telemetry hooks, Domain 13 societal impact telemetry hooks, insurance data feed specification, privacy-preserving telemetry modes
+
+--- TABLE 3 ---
+Reference | Description
+ARAF-ARA-STD-2026-002 | ARA Standard v1.1 (Parent Standard)
+ARAF-ARA-ACR-2026-002 | Complete ACR Control Matrix (410 ACRs, 15 Domains)
+ARAF-ARA-EVL-2026-002 | Evaluation Methodology Guide v1.1
+ARAF-ARA-AVB-2026-002 | AVB Authorization Guide v1.1
+ARAF-ARA-REG-2026-002 | Regulatory Compliance Mapping Guide v1.1
+NIST SP 800-53 Rev. 5 | Security and Privacy Controls for Information Systems
+ISO/IEC 27001:2022 | Information Security Management Systems
+OWASP Top 10 for LLM Applications (2025) | LLM Security Risks
+RFC 7519 | JSON Web Token (JWT)
+RFC 7540 | HTTP/2 (gRPC transport)
+RFC 8446 | TLS 1.3
+RFC 9110 | HTTP Semantics
+OpenTelemetry Specification v1.x | Observability framework (informative)
+
+--- TABLE 4 ---
+Pattern | Description | When to Use
+In-Process | SDK library linked directly into the autonomous system’s process. Lowest latency, direct memory access to decision context. | Single-process agents, latency-critical systems, systems where telemetry must capture pre-decision state.
+Sidecar | SDK runs as a co-located process alongside the autonomous system. Communicates via local IPC (Unix sockets, localhost). | Containerized deployments, microservice architectures, systems where isolation between telemetry and core logic is required.
+Gateway | SDK runs as a centralized telemetry gateway receiving events from multiple autonomous system instances. | Multi-instance deployments, fleet monitoring, environments where agents cannot embed libraries directly.
+
+--- TABLE 5 ---
+Method | Endpoint | Purpose | Request Body
+POST | /v1/traces | Submit action traces | ActionTrace[] (batched)
+POST | /v1/decisions | Submit decision logs | DecisionLog[] (batched)
+POST | /v1/boundaries | Submit boundary events | BoundaryEvent[] (batched)
+POST | /v1/drift | Submit drift signals | DriftSignal[] (batched)
+POST | /v1/resources | Submit resource utilization | ResourceUtilization[] (batched)
+POST | /v1/privacy | Submit privacy events | PrivacyEvent[] (batched)
+POST | /v1/societal | Submit societal impact events | SocietalImpactEvent[] (batched)
+POST | /v1/checkin | Agent check-in | CheckInPayload
+GET | /v1/health | Platform health check | None
+GET | /v1/status/{systemId} | Certification status | None
+POST | /v1/batch | Multi-type batch submission | BatchPayload
+GET | /v1/insurance/{systemId} | Insurance data feed | None
+
+--- TABLE 6 ---
+Certification Level | Events per Second | Burst Allowance
+Level 1 Foundation | 100 events/second | 500 events burst (10s window)
+Level 2 Operational | 500 events/second | 2,500 events burst (10s window)
+Level 3 Comprehensive | 2,000 events/second | 10,000 events burst (10s window)
+
+--- TABLE 7 ---
+Code | Status | Description
+200 | OK | Events accepted and acknowledged
+202 | Accepted | Events queued for processing (async mode)
+400 | Bad Request | Schema validation failure; response body contains per-event errors
+401 | Unauthorized | Invalid or expired bearer token
+403 | Forbidden | System not authorized for this endpoint or certification expired
+409 | Conflict | Duplicate event IDs detected; resubmission rejected
+429 | Too Many Requests | Rate limit exceeded; Retry-After header included
+503 | Service Unavailable | Platform temporarily unavailable; SDK SHALL buffer and retry
+
+--- TABLE 8 ---
+Mode | Description | Use Case
+Unary | Standard request-response per batch | Low-volume systems, periodic batch submission
+Client Streaming | Client sends continuous event stream; server acknowledges per-window | High-volume telemetry from single-process agents
+Bidirectional | Client streams telemetry; server streams directives (revalidation triggers, configuration updates) | Level 2/3 systems requiring real-time platform interaction
+
+--- TABLE 9 ---
+Language | Package | Min Version | Transport | Async Support
+Python | ara-telemetry | Python 3.10+ | gRPC (default), REST | asyncio native
+Node.js | @ara/telemetry | Node 18+ | gRPC (default), REST | Promise/async-await
+Java | org.ara.telemetry | Java 17+ | gRPC (default), REST | CompletableFuture
+Go | go.ara.dev/telemetry | Go 1.21+ | gRPC (default), REST | goroutine native
+Rust | ara-telemetry | Rust 1.70+ | gRPC (default), REST | tokio async
+
+--- TABLE 10 ---
+Criterion | REST | gRPC | Native Binding | Recommendation
+Latency sensitivity | Moderate | Low | Lowest | gRPC or native for latency-critical systems
+Throughput | Good | Excellent | Excellent | gRPC streaming for high-volume telemetry
+Language constraints | Any | Any with gRPC support | Python, Node, Java, Go, Rust | REST as universal fallback
+Bidirectional needs | No | Yes | Yes (via gRPC) | gRPC/native for Level 2/3 platform directives
+Agent-to-agent | Limited | Supported | Supported | gRPC for autonomous agent integration
+Deployment simplicity | Simplest | Moderate | Language-specific | REST for rapid prototyping and PoC
+
+--- TABLE 11 ---
+Field | Type | Required | Description
+event_id | string (UUID) | YES | Globally unique event identifier
+schema_version | string | YES | Schema version (e.g., '1.1')
+timestamp | string (ISO 8601) | YES | Event capture time with millisecond precision (UTC)
+system_id | string | YES | Registered system identifier
+trace_id | string (UUID) | YES | Correlation ID linking related events within a transaction
+span_id | string (UUID) | NO | Sub-trace identifier for nested actions
+parent_span_id | string (UUID) | NO | Parent span for hierarchical traces
+action_type | string (enum) | YES | Action category: api_call, data_access, computation, communication, tool_invocation, physical_actuation
+action_class | string | YES | Specific action classification per operational boundary spec
+inputs | object | YES | Structured input context (redaction rules apply per 7.4)
+outputs | object | YES | Structured output results
+decision_rationale | string | NO | Why this action was selected over alternatives
+duration_ms | integer | YES | Execution duration in milliseconds
+outcome | string (enum) | YES | Result: success, failure, timeout, partial, escalated
+error_details | object | NO | Error classification and context (when outcome != success)
+boundary_status | string (enum) | YES | Whether action was within certified boundaries: within, approaching, violation
+resource_consumed | object | NO | Resources consumed (API calls, tokens, compute)
+privacy_flags | object | NO | Privacy-relevant metadata: pii_detected, data_category, redaction_applied
+integrity_hash | string | YES | SHA-256 hash of the event payload for tamper detection
+chain_hash | string | YES | Hash incorporating previous event’s integrity_hash
+
+--- TABLE 12 ---
+Field | Type | Required | Description
+event_id | string (UUID) | YES | Globally unique event identifier
+schema_version | string | YES | Schema version
+timestamp | string (ISO 8601) | YES | Decision evaluation time (UTC)
+system_id | string | YES | Registered system identifier
+trace_id | string (UUID) | YES | Correlation ID linking to associated action traces
+decision_type | string (enum) | YES | Category: classification, selection, routing, approval, escalation, rejection
+decision_context | object | YES | Input state and environmental context at decision time
+alternatives_considered | array | YES | List of alternatives evaluated with confidence scores
+selected_alternative | string | YES | Identifier of the chosen alternative
+selection_rationale | string | YES | Explanation of why this alternative was selected
+confidence_score | number (0-1) | YES | System’s confidence in the decision
+decision_rules_applied | array | YES | Policy rules and constraints that influenced the decision
+human_override | boolean | YES | Whether a human overrode or modified the decision
+override_details | object | NO | Override context (when human_override is true)
+risk_assessment | object | NO | Risk evaluation associated with the decision
+integrity_hash | string | YES | SHA-256 hash for tamper detection
+chain_hash | string | YES | Sequential hash chain link
+
+--- TABLE 13 ---
+Field | Type | Required | Description
+event_id | string (UUID) | YES | Globally unique event identifier
+schema_version | string | YES | Schema version
+timestamp | string (ISO 8601) | YES | Event time (UTC)
+system_id | string | YES | Registered system identifier
+trace_id | string (UUID) | NO | Correlation ID to triggering action
+boundary_type | string (enum) | YES | Type: operational_scope, resource_limit, authority_boundary, temporal_constraint, geographic_constraint, interaction_limit, data_privacy_boundary
+boundary_id | string | YES | Reference to specific boundary in operational specification
+boundary_status | string (enum) | YES | Status: approaching (>80% threshold), reached, violation, recovered
+threshold_value | number | YES | The defined boundary threshold
+current_value | number | YES | The observed value at event time
+proximity_pct | number (0-100) | YES | Percentage of threshold consumed
+auto_response | string (enum) | YES | System’s automatic response: none, throttled, restricted, halted, escalated
+escalation_target | string | NO | Human or system escalation destination
+integrity_hash | string | YES | SHA-256 hash for tamper detection
+chain_hash | string | YES | Sequential hash chain link
+
+--- TABLE 14 ---
+Field | Type | Required | Description
+event_id | string (UUID) | YES | Globally unique event identifier
+schema_version | string | YES | Schema version
+timestamp | string (ISO 8601) | YES | Detection time (UTC)
+system_id | string | YES | Registered system identifier
+drift_type | string (enum) | YES | Type: output_distribution, decision_pattern, latency_profile, error_rate, resource_consumption, confidence_distribution, fairness_metric
+metric_name | string | YES | Specific metric exhibiting drift
+baseline_value | object | YES | Certified baseline distribution or value
+current_value | object | YES | Current observed distribution or value
+detection_method | string (enum) | YES | Statistical method: kl_divergence, ks_test, psi, z_score, iqr, custom
+drift_magnitude | number | YES | Quantified magnitude of drift
+severity | string (enum) | YES | Classification: informational, warning, critical, emergency
+window_start | string (ISO 8601) | YES | Start of the observation window
+window_end | string (ISO 8601) | YES | End of the observation window
+sample_count | integer | YES | Number of observations in the window
+recommended_action | string | NO | SDK-suggested response based on severity
+integrity_hash | string | YES | SHA-256 hash for tamper detection
+
+--- TABLE 15 ---
+Field | Type | Required | Description
+event_id | string (UUID) | YES | Globally unique event identifier
+schema_version | string | YES | Schema version
+timestamp | string (ISO 8601) | YES | Measurement time (UTC)
+system_id | string | YES | Registered system identifier
+resource_type | string (enum) | YES | Type: compute_cpu, compute_gpu, memory, storage, network_bandwidth, api_calls, llm_tokens, custom
+resource_id | string | YES | Specific resource identifier
+current_usage | number | YES | Current utilization value
+unit | string | YES | Unit of measurement (percent, bytes, calls, tokens)
+limit | number | NO | Configured or allocated limit
+utilization_pct | number (0-100) | NO | Percentage of limit consumed
+period_seconds | integer | YES | Measurement period duration
+trend | string (enum) | NO | Trend: increasing, stable, decreasing
+integrity_hash | string | YES | SHA-256 hash for tamper detection
+
+--- TABLE 16 ---
+Field | Type | Required | Description
+event_id | string (UUID) | YES | Globally unique event identifier
+schema_version | string | YES | Schema version
+timestamp | string (ISO 8601) | YES | Event time (UTC)
+system_id | string | YES | Registered system identifier
+trace_id | string (UUID) | NO | Correlation ID to triggering action
+privacy_event_type | string (enum) | YES | Type: pii_detection, pii_redaction, consent_event, data_flow, cross_tenant_access, breach_signal, data_subject_request, retention_action
+data_category | string (enum) | YES | Category: pii_direct, pii_indirect, sensitive_pii, proprietary, public, system_internal
+detection_method | string | YES | How the privacy event was detected (e.g., NER model, regex, classification model)
+pii_types_detected | array | NO | Specific PII types found: name, email, ssn, address, phone, biometric, financial, health
+action_taken | string (enum) | YES | Response: redacted, masked, blocked, logged, escalated, permitted
+data_flow_source | string | NO | Source system or component of data flow
+data_flow_destination | string | NO | Destination system or component of data flow
+tenant_id | string | NO | Tenant identifier for cross-tenant isolation events
+consent_status | string (enum) | NO | Consent state: granted, withdrawn, not_required, pending
+breach_severity | string (enum) | NO | Breach classification: suspected, confirmed, contained, resolved
+data_subject_count | integer | NO | Number of data subjects affected
+regulation_reference | string | NO | Applicable regulation (e.g., GDPR Art. 17, CCPA 1798.105)
+integrity_hash | string | YES | SHA-256 hash for tamper detection
+chain_hash | string | YES | Sequential hash chain link
+
+--- TABLE 17 ---
+Field | Type | Required | Description
+event_id | string (UUID) | YES | Globally unique event identifier
+schema_version | string | YES | Schema version
+timestamp | string (ISO 8601) | YES | Event time (UTC)
+system_id | string | YES | Registered system identifier
+trace_id | string (UUID) | NO | Correlation ID to triggering action
+societal_event_type | string (enum) | YES | Type: content_safety_violation, bias_metric, cbrn_guardrail_trigger, cyber_guardrail_trigger, hallucination_detection, harmful_content_block, fairness_evaluation, deepfake_detection
+risk_category | string (enum) | YES | Category: cbrn, cyber, harmful_content, bias_fairness, misinformation, manipulation, hate_speech, ip_violation
+severity | string (enum) | YES | Classification: informational, warning, critical, emergency
+guardrail_id | string | YES | Reference to specific guardrail or control that triggered
+input_context | object | NO | Sanitized context of the triggering input (no raw content)
+action_taken | string (enum) | YES | Response: blocked, modified, flagged, escalated, permitted_with_warning
+confidence_score | number (0-1) | YES | Detection confidence
+affected_population | string | NO | Demographic or population group affected (for bias events)
+fairness_metric_name | string | NO | Specific fairness metric (e.g., demographic_parity, equalized_odds)
+fairness_metric_value | number | NO | Measured fairness metric value
+fairness_threshold | number | NO | Configured fairness threshold
+hallucination_type | string (enum) | NO | Type: factual_error, unsupported_claim, fabricated_citation, contradictory_output
+groundedness_score | number (0-1) | NO | Degree to which output is grounded in source material
+integrity_hash | string | YES | SHA-256 hash for tamper detection
+chain_hash | string | YES | Sequential hash chain link
+
+--- TABLE 18 ---
+Field | Type | Required | Description
+system_id | string | YES | Registered system identifier
+checkin_id | string (UUID) | YES | Unique check-in identifier
+timestamp | string (ISO 8601) | YES | Check-in time (UTC)
+certification_id | string | YES | Active certification reference
+system_version | string | YES | Current deployed system version
+config_hash | string | YES | SHA-256 hash of current system configuration
+model_hash | string | NO | SHA-256 hash of active model weights (ML/LLM systems)
+operational_status | string (enum) | YES | Status: operational, degraded, maintenance, offline
+system_profile | string (enum) | YES | Certified system profile: foundational, standard, advanced, comprehensive
+uptime_seconds | integer | YES | Seconds since last restart
+telemetry_status | object | YES | SDK health: events_buffered, last_successful_transmit, error_count
+boundary_summary | object | YES | Aggregate boundary status: violations_count, approaching_count, last_violation
+drift_summary | object | YES | Aggregate drift status: active_warnings, active_criticals, last_detection
+resource_summary | object | YES | Aggregate resource status: utilization by type
+privacy_summary | object | YES | Aggregate privacy status: pii_detections, redactions, active_breaches
+societal_summary | object | YES | Aggregate societal impact: guardrail_triggers, bias_alerts, blocked_outputs
+change_log | array | NO | Material changes since last check-in
+integrity_hash | string | YES | SHA-256 hash of the check-in payload
+
+--- TABLE 19 ---
+Mode | Frequency | Certification Level | Description
+Periodic | Configurable (default: 5 min) | All levels | Scheduled check-in at fixed intervals. Minimum: 1 hour (Level 1), 15 minutes (Level 2), 5 minutes (Level 3).
+Event-Triggered | On material change | Level 2+ | Immediate check-in triggered by configuration changes, model updates, version deployments, or boundary violations.
+Continuous | Streaming (embedded in telemetry) | Level 3 | Check-in state continuously maintained as metadata on the telemetry stream.
+
+--- TABLE 20 ---
+Field | Type | Description
+certification_status | string (enum) | Current status: active, warning, suspended, expired, revoked
+compliance_score | number (0-100) | Current real-time compliance score
+issues | array | Active compliance issues requiring attention
+directives | array | Platform directives: revalidation_required, config_update_required, sdk_upgrade_required
+next_reassessment | string (ISO 8601) | Scheduled reassessment date
+revalidation_triggers | array | ACRs requiring revalidation based on detected changes
+
+--- TABLE 21 ---
+Trigger Type | Example | Revalidation Scope | Deadline
+Version change | System version changed from 2.3.1 to 2.4.0 | All ACRs in domains affected by code changes | 48 hours (Level 1), 24 hours (Level 2), 4 hours (Level 3)
+Config change | Operational boundary widened | Domain 1 ACRs + affected behavioral domains | 24 hours (all levels)
+Model update | LLM fine-tuned or weights updated | Domains 2, 7, 8, 9 (Decision, Behavioral, Adversarial, Drift) | 4 hours (all levels)
+Drift detection | Critical drift signal confirmed | ACRs in the drifting domain | Immediate (Level 3), 12 hours (Level 2), 48 hours (Level 1)
+Boundary violation | Operational boundary breached | Domain 1 + relevant operational domain | Immediate (all levels)
+Privacy incident | PII exposure or breach detected | Domain 5 ACRs + affected operational domains | 4 hours (all levels)
+Societal safety trigger | CBRN or bias guardrail failure | Domain 13 ACRs + Domain 2 (Decision Integrity) | Immediate (all levels)
+
+--- TABLE 22 ---
+Severity | Trigger Examples | Default Response | Notification
+Informational | Drift signal (informational severity), resource utilization >70% | Logged, no action required | Dashboard only
+Warning | Drift signal (warning severity), boundary approaching, check-in overdue, fairness metric approaching threshold | Compliance score reduction, investigation recommended | Dashboard + email
+Critical | Drift signal (critical severity), boundary violation, blocking ACR failure, CBRN guardrail trigger, PII breach detected | Certification status downgraded to 'warning', revalidation required | Dashboard + email + webhook
+Emergency | Multiple boundary violations, system halt failure, tamper detection, confirmed data breach, repeated CBRN bypass attempts | Certification suspended pending investigation | Dashboard + email + webhook + SMS
+
+--- TABLE 23 ---
+Feed | Content | Update Frequency
+Certification Health | Overall compliance score, active issues, certification status | Real-time (sub-second)
+Domain Scores | Per-domain compliance scores with trend indicators (15 domains) | Every 5 minutes
+ACR Status | Individual ACR pass/fail/conditional status (410 ACRs) | On change
+Drift Indicators | Active drift signals with magnitude and severity | Real-time
+Boundary Status | Boundary proximity and violation history | Real-time
+Privacy Events | PII detection rate, redaction coverage, breach status | Real-time
+Societal Impact | Guardrail trigger rate, bias metrics, content safety status | Real-time
+Telemetry Health | SDK connectivity, buffer status, event throughput | Every 60 seconds
+Insurance Feed | Risk-relevant event summary for insurer consumption | Every 15 minutes
+Audit Trail | Certification decisions, revalidation history, human reviews | On event
+
+--- TABLE 24 ---
+Event Category | Risk Signal | Data Fields | Update Frequency
+Certification Health | Overall certification status and compliance score | certification_status, compliance_score, system_profile, certification_level, days_since_certification, revalidation_count | Every 15 minutes
+Boundary Incidents | Operational boundary violations and near-misses | incident_count, violation_severity_distribution, mean_time_to_recovery, boundary_type_distribution | On event (batched every 15 min)
+Drift Alerts | Behavioral drift from certified baseline | active_drift_count, severity_distribution, drift_domains, mean_drift_magnitude | Every 15 minutes
+Availability | System uptime and degradation history | uptime_pct_30d, degradation_incidents, mean_time_between_failures, planned_maintenance_hours | Hourly
+Privacy Incidents | Data privacy events and breach signals | pii_detection_rate, breach_count, breach_severity, data_subject_impact_count, mean_time_to_containment | On event (batched every 15 min)
+Societal Safety | Content safety and fairness events | guardrail_trigger_rate, cbrn_block_count, bias_alert_count, hallucination_rate, content_block_rate | Every 15 minutes
+Revalidation History | Revalidation triggers and outcomes | revalidation_count_90d, pass_rate, mean_time_to_revalidate, failure_domains | Daily
+
+--- TABLE 25 ---
+Field | Type | Description
+incident_id | string (UUID) | Globally unique incident identifier
+incident_timestamp | string (ISO 8601) | Incident detection time (UTC)
+incident_type | string (enum) | Type: boundary_violation, certification_suspension, data_breach, system_failure, societal_harm_event
+severity | string (enum) | Classification: minor, moderate, major, critical
+affected_domains | array | List of ARA domains involved in the incident
+affected_acrs | array | List of specific ACRs that were non-compliant at incident time
+system_state_at_incident | object | Snapshot of compliance scores, active drift signals, and boundary status
+root_cause_classification | string (enum) | Preliminary root cause: model_drift, config_error, adversarial_attack, operational_failure, privacy_breach, content_safety_failure
+mitigation_actions | array | Actions taken to contain and resolve the incident
+resolution_timestamp | string (ISO 8601) | Incident resolution time (if resolved)
+human_review_status | string (enum) | Status: pending, in_progress, completed, waived
+certification_impact | string (enum) | Impact on certification: none, warning_issued, suspended, revoked
+integrity_hash | string | SHA-256 hash of the incident record for tamper detection
+
+--- TABLE 26 ---
+Requirement | Level 1 Foundation | Level 2 Operational | Level 3 Comprehensive
+Token type | Bearer (JWT) | Bearer (JWT) | Bearer (JWT) + mTLS
+Token expiration | 1 hour (configurable) | 30 minutes (configurable) | 15 minutes (non-configurable)
+Token refresh | Automatic (background) | Automatic (background) | Automatic with key rotation
+Key algorithm | RS256 or ES256 | ES256 | ES256 with HSM-backed keys
+Client certificate | Not required | Recommended | Required (mTLS)
+IP allowlisting | Optional | Recommended | Required
+
+--- TABLE 27 ---
+Permission | SDK Credential | System Operator | AVB Auditor | ARAF Admin | Insurance Partner
+Submit telemetry | YES | NO | NO | NO | NO
+Read own telemetry | NO | YES | YES (during eval) | YES | NO
+Read other systems' telemetry | NO | NO | NO | YES (with cause) | NO
+Modify telemetry | NO | NO | NO | NO (append-only) | NO
+Delete telemetry | NO | NO | NO | NO (retention-bound) | NO
+View compliance dashboard | NO | YES | YES (during eval) | YES | NO
+Issue revalidation | NO | NO | YES | YES | NO
+Read insurance data feed | NO | NO | NO | YES | YES
+
+--- TABLE 28 ---
+Configuration | Setting | Effect
+ARA_SDK_PRIVACY_MINIMIZATION | enabled | Strip all optional fields; replace content with structural summaries
+ARA_SDK_PRIVACY_MINIMIZATION_LEVEL | standard | strict | Standard: retain optional metadata fields. Strict: mandatory fields only
+ARA_SDK_PRIVACY_INPUT_REDACTION | hash | summary | omit | How input context is handled: hash (SHA-256), summary (structure only), or omit entirely
+ARA_SDK_PRIVACY_OUTPUT_REDACTION | hash | summary | omit | How output context is handled
+
+--- TABLE 29 ---
+Parameter | Default | Description
+privacy_budget_epsilon | 1.0 | Privacy budget per reporting period (lower = more privacy, less utility)
+noise_mechanism | gaussian | Noise addition mechanism: gaussian (continuous metrics), laplace (count queries)
+reporting_period | 3600 | Aggregation period in seconds before applying differential privacy
+composition_method | advanced | Privacy budget composition: basic (conservative), advanced (tighter bounds)
+minimum_sample_size | 100 | Minimum events in aggregation window before reporting (suppresses small counts)
+
+--- TABLE 30 ---
+Requirement | Specification
+Storage | Keys SHALL NOT be stored in source code, environment variables (production), or unencrypted configuration files. Approved storage: secret managers (AWS Secrets Manager, HashiCorp Vault, Azure Key Vault, GCP Secret Manager), HSMs, or platform-native credential stores.
+Rotation | API keys SHALL be rotated at minimum every 90 days (Level 1), 30 days (Level 2), or 7 days (Level 3). Rotation SHALL be automated.
+Revocation | Compromised keys SHALL be revocable immediately via the platform API. Revocation takes effect within 60 seconds.
+Scope | Each key SHALL be scoped to a single registered system. Cross-system key sharing is a blocking certification violation.
+Audit | All key creation, rotation, and revocation events SHALL be logged in the system’s audit trail.
+
+--- TABLE 31 ---
+Parameter | Type | Default | Description
+system_id | string | (required) | Registered system identifier issued during platform registration
+api_key | string | (required) | Authentication credential (JWT or API key reference)
+endpoint | string | telemetry.ara-platform.org:443 | Platform telemetry endpoint
+transport | enum | grpc | Transport protocol: grpc, rest
+tls_enabled | boolean | true | Enable TLS encryption (SHALL be true in production)
+mtls_enabled | boolean | false | Enable mutual TLS (REQUIRED for Level 3)
+mtls_cert_path | string | null | Path to client certificate for mTLS
+mtls_key_path | string | null | Path to client private key for mTLS
+buffer_max_events | integer | 100000 | Maximum events in local buffer before oldest are persisted to disk
+buffer_max_duration_hours | integer | 24 | Maximum hours to retain buffered events
+buffer_persist_path | string | /var/ara/buffer | Local path for persistent buffer storage
+batch_size | integer | 100 | Number of events per transmission batch
+batch_interval_ms | integer | 1000 | Maximum interval between batch transmissions
+retry_max_attempts | integer | 10 | Maximum retry attempts for failed transmissions
+retry_initial_delay_ms | integer | 100 | Initial retry delay (exponential backoff)
+retry_max_delay_ms | integer | 30000 | Maximum retry delay
+checkin_mode | enum | periodic | Check-in mode: periodic, event_triggered, continuous
+checkin_interval_seconds | integer | 300 | Interval for periodic check-in (seconds)
+redaction_rules_path | string | null | Path to redaction rules configuration file
+privacy_minimization | enum | disabled | Data minimization mode: disabled, standard, strict
+privacy_local_only | boolean | false | Enable local-only processing mode
+privacy_differential | boolean | false | Enable differential privacy mode
+privacy_budget_epsilon | number | 1.0 | Differential privacy budget per reporting period
+pii_detection_enabled | boolean | true | Enable automatic PII detection in telemetry streams
+pii_detection_model | enum | default | PII detection model: default, healthcare, financial, custom
+insurance_feed_enabled | boolean | false | Enable insurance data feed generation
+log_level | enum | info | SDK logging level: debug, info, warn, error
+log_output | string | stdout | Log output destination: stdout, stderr, file path
+metrics_enabled | boolean | true | Enable SDK internal metrics collection
+metrics_port | integer | 9090 | Port for SDK metrics endpoint (Prometheus format)
+
+--- TABLE 32 ---
+Parameter | Default | High-Throughput Recommendation | Notes
+batch_size | 100 | 500-1000 | Larger batches reduce HTTP/gRPC overhead
+batch_interval_ms | 1000 | 250-500 | More frequent flushes reduce latency at cost of overhead
+buffer_max_events | 100000 | 500000-1000000 | Increase for systems with burst patterns
+grpc_max_concurrent_streams | 100 | 500-1000 | Per-connection stream limit for gRPC
+grpc_keepalive_time_ms | 60000 | 30000 | More aggressive keepalive for unstable networks
+compression | none | gzip or snappy | Reduces bandwidth at cost of CPU
+
+--- TABLE 33 ---
+Signal Type | Description | Default Visibility
+Certification Status | Active/warning/suspended status | Always visible to registered counterparties
+Certification Level | Level 1/2/3 designation | Always visible to registered counterparties
+System Profile | Foundational/Standard/Advanced/Comprehensive designation | Always visible to registered counterparties
+Domain Scores | Aggregate compliance scores by domain (15 domains) | Visible if opted-in by party
+Boundary Compliance | Real-time boundary adherence status | Visible at the interaction boundary
+Drift Alerts | Active drift warnings/criticals | Visible if opted-in by party
+Privacy Compliance | Data privacy and PII handling compliance status | Visible if opted-in by party
+Revalidation Status | Active revalidation in progress | Always visible to registered counterparties
+
+--- TABLE 34 ---
+Field | Type | Required | Description
+interaction_id | string (UUID) | YES | Shared identifier for the cross-party interaction (agreed by both parties)
+counterparty_id | string | YES | Registered identity of the counterparty system
+boundary_role | string (enum) | YES | This system’s role: initiator, responder, observer
+boundary_protocol | string | YES | Protocol used for the interaction (API endpoint, message queue, shared database)
+boundary_data_hash | string | YES | Hash of data exchanged at the boundary (for correlation without exposing content)
+
+--- TABLE 35 ---
+Environment | Recommended Pattern | Key Considerations
+Cloud (single region) | In-Process or Sidecar | Standard deployment; low-latency to platform endpoints
+Cloud (multi-region) | Sidecar with regional gateway | Regional gateway reduces cross-region latency; replicates to central platform
+On-premises | Gateway | Gateway handles outbound connectivity; buffer for network restrictions
+Hybrid | Mixed (In-Process + Gateway) | In-process for cloud components; gateway for on-prem components
+Edge / IoT | Gateway (centralized) | Edge devices report to local gateway; gateway aggregates and transmits
+Air-gapped | Gateway with batch export | Gateway collects telemetry; periodic batch export via secure transfer
+
+--- TABLE 36 ---
+Metric | Target | Measurement Method
+CPU overhead | <2% of system CPU at P99 | SDK internal metrics; validated during certification
+Memory footprint | <50 MB base + 1 KB per buffered event | Process memory monitoring
+Latency impact | <1ms per instrumentation point (P99) | SDK internal timing; excludes network transmission
+Network bandwidth | <100 KB/s sustained (typical); configurable | Network interface monitoring
+Startup time | <500ms to first event capture | SDK initialization timing
+
+--- TABLE 37 ---
+Symptom | Likely Cause | Resolution
+Events buffering but not transmitting | Network connectivity or authentication failure | Check ARA_SDK_ENDPOINT reachability; verify API key validity; check TLS certificate chain
+Schema validation errors | SDK/platform schema version mismatch | Verify schema_version in events matches platform-supported versions; upgrade SDK if needed
+High buffer utilization | Platform ingestion slower than event generation | Increase batch_size; enable compression; verify rate limit tier matches certification level
+Hash chain verification failures | Event ordering disruption (concurrent writes) | Ensure single-writer per hash chain; use SDK’s built-in sequencing; check for clock skew
+Check-in response: revalidation_required | Material change detected by platform | Review change_log in check-in payload; initiate revalidation for specified ACRs within deadline
+mTLS handshake failure | Certificate mismatch or expiration | Verify client certificate matches registered system; check certificate expiration; ensure CA chain is complete
+PII detection false positives | PII model miscalibrated for domain | Tune pii_detection_model parameter; use custom model for specialized domains; adjust sensitivity thresholds
+Insurance feed data gaps | Feed generation interval misaligned with event volume | Verify insurance_feed_enabled is true; check event throughput meets minimum sample sizes
+
+--- TABLE 38 ---
+Method | Endpoint | Auth | Request | Response | Notes
+POST | /v1/traces | Bearer JWT | ActionTrace[] | 200: Ack | Batched; max 1000, 5 MB
+POST | /v1/decisions | Bearer JWT | DecisionLog[] | 200: Ack | Batched; max 1000, 5 MB
+POST | /v1/boundaries | Bearer JWT | BoundaryEvent[] | 200: Ack | Batched; max 1000, 5 MB
+POST | /v1/drift | Bearer JWT | DriftSignal[] | 200: Ack | Batched; max 1000, 5 MB
+POST | /v1/resources | Bearer JWT | ResourceUtil[] | 200: Ack | Batched; max 1000, 5 MB
+POST | /v1/privacy | Bearer JWT | PrivacyEvent[] | 200: Ack | Batched; max 1000, 5 MB
+POST | /v1/societal | Bearer JWT | SocietalEvent[] | 200: Ack | Batched; max 1000, 5 MB
+POST | /v1/batch | Bearer JWT | BatchPayload | 200: Ack | Mixed types; max 1000 total
+POST | /v1/checkin | Bearer JWT | CheckInPayload | 200: HealthStatus | Agent check-in
+GET | /v1/health | None | N/A | 200: PlatformHealth | Platform health check
+GET | /v1/status/{id} | Bearer JWT | N/A | 200: CertStatus | System certification status
+GET | /v1/insurance/{id} | Insurance JWT | N/A | 200: InsuranceFeed | Insurance data feed
+GET | /.well-known/ara-telemetry | None | N/A | 200: DiscoveryDoc | Agent-to-agent discovery
+
+--- TABLE 39 ---
+RPC | Type | Request | Response | Notes
+SubmitTraces | Unary | TracesBatch | Ack | Batched submission
+SubmitDecisions | Unary | DecisionsBatch | Ack | Batched submission
+SubmitBoundaries | Unary | BoundariesBatch | Ack | Batched submission
+SubmitDrift | Unary | DriftBatch | Ack | Batched submission
+SubmitResources | Unary | ResourcesBatch | Ack | Batched submission
+SubmitPrivacy | Unary | PrivacyBatch | Ack | Batched submission
+SubmitSocietal | Unary | SocietalBatch | Ack | Batched submission
+CheckIn | Unary | CheckInPayload | HealthStatus | Agent check-in
+StreamTraces | Client streaming | stream ActionTrace | stream Ack | Continuous traces
+StreamAll | Client streaming | stream TelemetryEvent | stream Ack | Mixed telemetry
+Monitor | Bidirectional | stream TelemetryEvent | stream PlatformDirective | Level 2/3
+
+--- TABLE 40 ---
+Schema | Required Fields | Key Purpose
+Action Trace | event_id, schema_version, timestamp, system_id, trace_id, action_type, action_class, inputs, outputs, duration_ms, outcome, boundary_status, integrity_hash, chain_hash | Record every autonomous action
+Decision Log | event_id, schema_version, timestamp, system_id, trace_id, decision_type, decision_context, alternatives_considered, selected_alternative, selection_rationale, confidence_score, decision_rules_applied, human_override, integrity_hash, chain_hash | Record why decisions were made
+Boundary Event | event_id, schema_version, timestamp, system_id, boundary_type, boundary_id, boundary_status, threshold_value, current_value, proximity_pct, auto_response, integrity_hash, chain_hash | Track operational boundary status
+Drift Signal | event_id, schema_version, timestamp, system_id, drift_type, metric_name, baseline_value, current_value, detection_method, drift_magnitude, severity, window_start, window_end, sample_count, integrity_hash | Report behavioral drift
+Resource Util | event_id, schema_version, timestamp, system_id, resource_type, resource_id, current_usage, unit, period_seconds, integrity_hash | Track resource consumption
+Privacy Event | event_id, schema_version, timestamp, system_id, privacy_event_type, data_category, detection_method, action_taken, integrity_hash, chain_hash | Track data privacy compliance
+Societal Impact | event_id, schema_version, timestamp, system_id, societal_event_type, risk_category, severity, guardrail_id, action_taken, confidence_score, integrity_hash, chain_hash | Monitor societal safety controls
+Check-In | system_id, checkin_id, timestamp, certification_id, system_version, config_hash, operational_status, system_profile, uptime_seconds, telemetry_status, boundary_summary, drift_summary, resource_summary, privacy_summary, societal_summary, integrity_hash | Proactive compliance assertion
+
+--- TABLE 41 ---
+ACR ID | Requirement Summary | SDK Component | Telemetry Schema
+ACR-1.01 | Machine-readable operational boundary spec | Boundary monitoring | Boundary Event
+ACR-1.05 | Runtime boundary enforcement | Boundary violation logging | Boundary Event
+ACR-2.01 | Decision logic documentation | Decision trace capture | Decision Log
+ACR-2.05 | Confidence scoring for decisions | Confidence field capture | Decision Log
+ACR-5.04 | Data flow map documentation | Data flow monitoring | Privacy Event
+ACR-5.06 | User consent management | Consent event logging | Privacy Event
+ACR-5.09 | PII detection and prevention | PII detection event streaming | Privacy Event
+ACR-5.10 | Cross-tenant data isolation | Cross-tenant isolation telemetry | Privacy Event
+ACR-5.12 | Telemetry sanitization | Telemetry PII redaction | Privacy Event
+ACR-5.18 | Training data extraction resistance | Extraction attempt detection | Privacy Event
+ACR-5.24 | Data breach detection | Breach detection signals | Privacy Event
+ACR-6.01 | Failure mode documentation | Error detail capture | Action Trace (error_details)
+ACR-6.10 | Graceful degradation under failure | Outcome tracking | Action Trace (outcome)
+ACR-7.01 | Behavioral consistency under normal load | Behavioral baselining | Drift Signal
+ACR-7.15 | Performance under resource constraints | Resource monitoring | Resource Utilization
+ACR-9.01 | Output distribution monitoring | Drift detection | Drift Signal
+ACR-9.05 | Drift alerting with configurable thresholds | Drift signal reporting | Drift Signal
+ACR-10.01 | Action logging with full context | Action trace streaming | Action Trace
+ACR-10.05 | Tamper-evident logging | Hash chain integrity | All schemas (integrity_hash, chain_hash)
+ACR-10.10 | Structured logging with consistent schema | Schema validation | All schemas
+ACR-10.15 | Real-time anomaly alerts | Anomaly detection | Drift Signal + Alert routing
+ACR-10.20 | Telemetry data retention | Buffer + platform storage | Configuration (retention)
+ACR-11.01 | Human escalation pathways | Escalation event capture | Boundary Event (auto_response: escalated)
+ACR-12.01 | Decision log maintenance | Decision log capture | Decision Log
+ACR-12.05 | Audit trail completeness | Comprehensive event capture | All schemas
+ACR-13.01 | CBRN content guardrails | CBRN guardrail trigger events | Societal Impact Event
+ACR-13.02 | Cyber safety guardrails | Cyber guardrail trigger events | Societal Impact Event
+ACR-13.04 | Harmful content safeguards | Content safety violation events | Societal Impact Event
+ACR-13.06 | Hallucination detection | Hallucination detection signals | Societal Impact Event
+ACR-13.08 | Deepfake detection and watermarking | Deepfake detection events | Societal Impact Event
+ACR-13.09 | Hate speech and harassment controls | Content safety violation events | Societal Impact Event
+ACR-13.10 | Bias and fairness monitoring | Bias/fairness metric streaming | Societal Impact Event
+ACR-13.22 | Adversarial red-team testing | Red-team result telemetry | Societal Impact Event
+ACR-14.01 | Version control documentation | Version tracking in check-in | Check-In (system_version, config_hash)
+ACR-14.10 | Change management procedures | Change detection and reporting | Check-In (change_log)
+
+--- TABLE 42 ---
+Term | Definition
+ACR | Autonomous Control Requirement. Individual testable requirement within the ARA Standard.
+Action Trace | Telemetry record of a single autonomous action including inputs, outputs, timing, and outcome.
+ARAF | Autonomous Reliability Assurance Foundation. The independent standards body governing ARA certification.
+ARA | Autonomous Reliability Assurance. The certification standard published by ARAF.
+AVB | Authorized Validation Body. Third-party organization authorized by ARAF to conduct ARA evaluations.
+Boundary Event | Telemetry record of an operational boundary approach, reach, violation, or recovery.
+CAP | Continuous Assurance Platform. The technology infrastructure operated by an accredited CAPO for real-time telemetry ingestion and compliance monitoring. The SDK transmits to the CAP; CAPOs are the entities that operate and maintain it.
+CAPO | Continuous Assurance Platform Operator. An ARAF-accredited company that operates a CAP and provides telemetry ingestion, compliance monitoring, insurance data feeds, and ARAF Interoperability Protocol support. Certified organizations select their CAPO from the ARAF CAPO Directory. See ARAF-ARA-GOV-2026-001, Article 4.
+Chain Hash | Sequential hash linking consecutive telemetry events to detect insertion, deletion, or reordering.
+Check-In | Structured assertion of operational state submitted by an autonomous system to its accredited CAPO’s CAP.
+Decision Log | Telemetry record of an autonomous decision including alternatives, rationale, and confidence.
+Differential Privacy | Mathematical framework providing formal privacy guarantees by adding calibrated noise to aggregate data.
+Drift Signal | Telemetry record indicating behavioral deviation from certified baseline.
+Enterprise Risk Dimension | One of six organizational risk categories grouping related ARA domains for governance reporting.
+HITL | Human-in-the-Loop. Human participation in governance, review, and certification decision-making.
+Integrity Hash | SHA-256 hash of a telemetry event payload for individual tamper detection.
+Insurance Data Feed | Standardized API providing risk-relevant certification signals to partner insurance providers.
+mTLS | Mutual TLS. Two-way certificate authentication required for Level 3 certifications.
+Multi-Party Integration | CAP capability for monitoring autonomous systems operating across organizational boundaries.
+PII Detection | Automated identification of personally identifiable information in telemetry data streams.
+Privacy Event | Telemetry record of data privacy activities including PII detection, consent, and breach signals.
+Revalidation | Re-evaluation of specific ACRs triggered by material system changes.
+SDK | Software Development Kit. The Behavioral Telemetry SDK documented in this reference.
+Societal Impact Event | Telemetry record of content safety, bias, and responsible deployment control activities.
+Statement of Applicability | Organization’s documented justification for inclusion/exclusion of each ACR, modeled on ISO 27001.
+System Profile | Classification of system complexity determining applicable ACRs: Foundational, Standard, Advanced, Comprehensive.
+TSB | Technical Standards Board. Ultimate technical authority within ARAF.
+Assurance Class | Classification assigned to a certified system that determines the intensity of runtime monitoring obligations. Three classes: Class A (Periodic), Class B (Monitored), Class C (Continuously Assured).
+Assurance Lapse | The condition in which a certified system fails to meet the continuous telemetry or check-in obligations required for its Assurance Class, resulting in automatic downgrade of certification status.
+Certification Inheritance | The conditional transfer of a platform vendor’s Platform Certification to deployer systems that integrate the certified platform component, subject to Deployment Certification and compliance with all applicable ACRs not covered by the platform scope.
+Certified Technology Partner (CTP) | A consulting or implementation firm listed in the ARAF CTP Registry as having demonstrated ARA implementation competency. Not a certification — a registry designation. Does not confer evaluation authority or certification rights.
+Class A — Periodic | Assurance Class designation for certified systems with lower operational risk profiles. Requires periodic compliance reporting. Continuous real-time telemetry is not mandated; SDK integration is optional.
+Class B — Monitored | Assurance Class designation for certified systems with elevated operational risk profiles. Requires real-time telemetry transmission and mandatory SDK integration. Drift detection events are required.
+Class C — Continuously Assured | Assurance Class designation for certified systems with the highest operational risk profiles. Requires full SDK integration, all seven telemetry event types, continuous check-in mode, and anomaly event emission within CAPO SLA latency thresholds.
+Deployment Certification | The ARA certification issued to an organization that deploys an autonomous system in production, covering the full deployed system including any integrated Platform Certified components. Distinct from Platform Certification.
+Evaluation Level | One axis of the ARA three-axis certification model. Defines the rigor of the certification assessment: Level 1 (Foundation), Level 2 (Operational), Level 3 (Comprehensive).
+Platform Certification | An ARA certification variant issued to a platform vendor or technology provider for a defined component or capability evaluated within a Reference Environment. Platform Certification covers only the ACR domains within its documented scope; deployer systems must obtain Deployment Certification for remaining ACRs.
+Reference Environment | A controlled, reproducible environment specification used for evaluating Platform Certifications. Documents the simulated telemetry mechanism, system version, and ACR domain scope applicable to the evaluation.
+Risk Classification | The ARA framework designation assigned to a system or component that determines its required Assurance Class and applicable ACR set, based on assessed operational risk, deployment context, and potential for harm.
