@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
+import { ExampleWatermark } from '@/components/ui/ExampleWatermark';
 import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
 import type { AssuranceClass, CAPOEntry } from '@/types';
 
@@ -66,7 +66,6 @@ export function CAPODirectoryClient({ capos }: Props) {
         </p>
       </header>
 
-      <ExampleBanner />
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-8">

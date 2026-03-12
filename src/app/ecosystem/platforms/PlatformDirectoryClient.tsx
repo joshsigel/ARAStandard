@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
+import { ExampleWatermark } from '@/components/ui/ExampleWatermark';
 import { CertTypeBadge } from '@/components/badges/CertTypeBadge';
 import type { PlatformCertEntry } from '@/types';
 
@@ -84,7 +84,6 @@ export function PlatformDirectoryClient({ platforms }: Props) {
         </p>
       </header>
 
-      <ExampleBanner />
 
       {/* Search */}
       <div className="mb-6">

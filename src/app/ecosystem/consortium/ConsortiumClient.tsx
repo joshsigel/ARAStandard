@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
+import { ExampleWatermark } from '@/components/ui/ExampleWatermark';
 import type { ConsortiumMember } from '@/types';
 
 function SectorBadge({ sector }: { sector: string }) {
@@ -108,7 +108,6 @@ export function ConsortiumClient({
         </p>
       </header>
 
-      <ExampleBanner />
 
       <TierSection
         title="Founding Members"

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
+import { ExampleWatermark } from '@/components/ui/ExampleWatermark';
 import { AraBadgeCompact } from '@/components/badges/AraBadgeCompact';
 import { registryEntryToBadgeData } from '@/components/badges/types';
 import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
@@ -197,7 +197,6 @@ export function RegistryClient({ initialEntries }: Props) {
         </p>
       </header>
 
-      <ExampleBanner />
 
       {/* Verification ID Lookup */}
       <section className="mb-10">
