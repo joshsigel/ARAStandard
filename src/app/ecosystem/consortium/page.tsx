@@ -11,12 +11,13 @@ export const metadata: Metadata = {
 
 // Fallback data used when Supabase returns empty (e.g. during initial setup)
 const fallbackMembers: ConsortiumMember[] = [
-  { id: 'f1', name: 'Apex Reliability Partners', role: 'Founding', sector: 'Assessment', joinDate: '2025-06' },
-  { id: 'f2', name: 'AgentStack', role: 'Founding', sector: 'Platform Vendor', joinDate: '2025-06' },
-  { id: 'f3', name: 'Meridian AI', role: 'Founding', sector: 'Platform Vendor', joinDate: '2025-06' },
-  { id: 'c1', name: 'CertAssure Global', role: 'Contributing', sector: 'Assessment', joinDate: '2025-09' },
-  { id: 'c2', name: 'Assurance Cloud', role: 'Contributing', sector: 'Monitoring', joinDate: '2025-10' },
-  { id: 'c3', name: 'NeuralForge', role: 'Contributing', sector: 'Platform Vendor', joinDate: '2025-11' },
+  { id: 'f1', name: 'Apex Reliability Partners', role: 'Founding', sector: 'Assessment', joinDate: '2025-10' },
+  { id: 'f2', name: 'AgentStack', role: 'Founding', sector: 'Platform Vendor', joinDate: '2025-10' },
+  { id: 'f3', name: 'Meridian AI', role: 'Founding', sector: 'Platform Vendor', joinDate: '2025-10' },
+  { id: 'f4', name: 'xlogix Inc', role: 'Founding', sector: 'Platform Vendor', joinDate: '2025-10' },
+  { id: 'c1', name: 'CertAssure Global', role: 'Contributing', sector: 'Assessment', joinDate: '2025-11' },
+  { id: 'c2', name: 'Assurance Cloud', role: 'Contributing', sector: 'Monitoring', joinDate: '2025-11' },
+  { id: 'c3', name: 'NeuralForge', role: 'Contributing', sector: 'Platform Vendor', joinDate: '2025-12' },
   { id: 'c4', name: 'TrustBridge Assessment', role: 'Contributing', sector: 'Assessment', joinDate: '2025-12' },
   { id: 'o1', name: 'Autonomous Risk Underwriters', role: 'Observer', sector: 'Insurance', joinDate: '2026-01' },
   { id: 'o2', name: 'TechShield Insurance', role: 'Observer', sector: 'Insurance', joinDate: '2026-01' },
