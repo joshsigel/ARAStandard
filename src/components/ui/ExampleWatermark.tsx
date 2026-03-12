@@ -15,7 +15,7 @@ export function ExampleWatermark() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 flex items-center justify-center select-none z-10"
     >
-      <span className="-rotate-18 text-[2rem] font-bold tracking-[0.25em] uppercase text-slate-300/50 whitespace-nowrap">
+      <span className="-rotate-12 text-sm font-semibold tracking-[0.15em] uppercase text-slate-300/40 whitespace-nowrap">
         Example
       </span>
     </span>
