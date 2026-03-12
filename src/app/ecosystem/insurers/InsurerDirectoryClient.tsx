@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
+import { ExampleWatermark } from '@/components/ui/ExampleWatermark';
 import type { InsurerEntry } from '@/types';
 
 interface Props {
@@ -34,7 +34,6 @@ export function InsurerDirectoryClient({ insurers }: Props) {
         </p>
       </header>
 
-      <ExampleBanner />
 
       {/* Insurer Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">

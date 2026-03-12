@@ -21,17 +21,3 @@ export function ExampleWatermark() {
     </span>
   );
 }
-
-/**
- * ExampleBanner — a small notice bar placed at the top of a directory page
- * to explain that all entries are illustrative examples.
- */
-export function ExampleBanner() {
-  return (
-    <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-      <strong className="font-semibold">Note:</strong> All entries shown below
-      are illustrative examples created for demonstration purposes. They do not
-      represent real organizations or certifications.
-    </div>
-  );
-}
