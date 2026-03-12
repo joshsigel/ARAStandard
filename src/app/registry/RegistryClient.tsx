@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
 import { AraBadgeCompact } from '@/components/badges/AraBadgeCompact';
 import { registryEntryToBadgeData } from '@/components/badges/types';
 import { AssuranceClassBadge } from '@/components/badges/AssuranceClassBadge';
@@ -195,6 +196,8 @@ export function RegistryClient({ initialEntries }: Props) {
           as status changes occur.
         </p>
       </header>
+
+      <ExampleBanner />
 
       {/* Verification ID Lookup */}
       <section className="mb-10">
@@ -425,8 +428,9 @@ export function RegistryClient({ initialEntries }: Props) {
               <Link
                 key={entry.certificationId}
                 href={`/registry/verify/${entry.certificationId}`}
-                className="block border border-border rounded-lg p-4 hover:bg-slate-50 transition-colors"
+                className="relative overflow-hidden block border border-border rounded-lg p-4 hover:bg-slate-50 transition-colors"
               >
+                {!entry.organization.toLowerCase().includes('xlogix') && <ExampleWatermark />}
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <AraBadgeCompact data={registryEntryToBadgeData(entry)} />
@@ -455,7 +459,8 @@ export function RegistryClient({ initialEntries }: Props) {
 
       {/* Results — Desktop Table */}
       <section className="hidden lg:block">
-        <div className="overflow-x-auto border border-border rounded-lg">
+        <div className="relative overflow-x-auto border border-border rounded-lg">
+          <ExampleWatermark />
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-50 border-b border-border">

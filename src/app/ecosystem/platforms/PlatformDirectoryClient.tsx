@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
 import { CertTypeBadge } from '@/components/badges/CertTypeBadge';
 import type { PlatformCertEntry } from '@/types';
 
@@ -83,6 +84,8 @@ export function PlatformDirectoryClient({ platforms }: Props) {
         </p>
       </header>
 
+      <ExampleBanner />
+
       {/* Search */}
       <div className="mb-6">
         <input
@@ -97,7 +100,8 @@ export function PlatformDirectoryClient({ platforms }: Props) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border border-border rounded-lg">
+      <div className="relative overflow-x-auto border border-border rounded-lg">
+        <ExampleWatermark />
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b-2 border-border-dark bg-slate-50">
@@ -167,8 +171,9 @@ export function PlatformDirectoryClient({ platforms }: Props) {
         {filtered.map((p) => (
           <div
             key={`${p.vendor}-detail`}
-            className="border border-border rounded-lg p-4 bg-slate-50"
+            className="relative overflow-hidden border border-border rounded-lg p-4 bg-slate-50"
           >
+            {!p.vendor.toLowerCase().includes('xlogix') && <ExampleWatermark />}
             <h3 className="text-sm font-semibold text-charcoal mb-2">
               {p.platformName}{' '}
               <span className="text-muted font-normal">v{p.platformVersion}</span>

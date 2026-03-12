@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
 import type { AVBEntry } from '@/types';
 
 const allLevels: AVBEntry['authorizationLevel'][] = ['Basic', 'Enhanced', 'Full'];
@@ -75,6 +76,8 @@ export function AVBDirectoryClient({ avbs }: Props) {
         </p>
       </header>
 
+      <ExampleBanner />
+
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-8">
         <input
@@ -119,8 +122,9 @@ export function AVBDirectoryClient({ avbs }: Props) {
         {filtered.map((avb) => (
           <div
             key={avb.id}
-            className="border border-border rounded-lg p-6 hover:border-border-dark transition-colors"
+            className="relative overflow-hidden border border-border rounded-lg p-6 hover:border-border-dark transition-colors"
           >
+            {!avb.name.toLowerCase().includes('xlogix') && <ExampleWatermark />}
             <div className="flex items-start justify-between gap-4 mb-4">
               <h3 className="text-base font-semibold text-charcoal">
                 {avb.name}
