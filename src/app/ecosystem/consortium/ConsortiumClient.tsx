@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
 import type { ConsortiumMember } from '@/types';
 
 function SectorBadge({ sector }: { sector: string }) {
@@ -25,8 +26,10 @@ function SectorBadge({ sector }: { sector: string }) {
 }
 
 function MemberCard({ member }: { member: ConsortiumMember }) {
+  const isReal = member.name.toLowerCase().includes('xlogix');
   return (
-    <div className="border border-border rounded-lg p-5 hover:border-border-dark transition-colors">
+    <div className="relative overflow-hidden border border-border rounded-lg p-5 hover:border-border-dark transition-colors">
+      {!isReal && <ExampleWatermark />}
       <div className="flex items-start justify-between gap-3 mb-2">
         <h3 className="text-sm font-semibold text-charcoal">{member.name}</h3>
         <SectorBadge sector={member.sector} />
@@ -104,6 +107,8 @@ export function ConsortiumClient({
           public comment processes, and governance elections.
         </p>
       </header>
+
+      <ExampleBanner />
 
       <TierSection
         title="Founding Members"

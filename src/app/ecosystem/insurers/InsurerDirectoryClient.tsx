@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { ExampleWatermark, ExampleBanner } from '@/components/ui/ExampleWatermark';
 import type { InsurerEntry } from '@/types';
 
 interface Props {
@@ -33,13 +34,16 @@ export function InsurerDirectoryClient({ insurers }: Props) {
         </p>
       </header>
 
+      <ExampleBanner />
+
       {/* Insurer Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {insurers.map((insurer) => (
           <div
             key={insurer.id}
-            className="border border-border rounded-lg p-6 hover:border-border-dark transition-colors"
+            className="relative overflow-hidden border border-border rounded-lg p-6 hover:border-border-dark transition-colors"
           >
+            {!insurer.name.toLowerCase().includes('xlogix') && <ExampleWatermark />}
             <div className="flex items-start justify-between gap-3 mb-4">
               <h3 className="text-base font-semibold text-charcoal">
                 {insurer.name}
